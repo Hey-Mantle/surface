@@ -1,9 +1,9 @@
-import { Box, HorizontalStack, Icon, Text } from "@shopify/polaris";
+import { Box, InlineStack, Icon, Text } from "@shopify/polaris";
 import { CircleCancelMinor, CircleTickMinor } from "@shopify/polaris-icons";
 import { featureEnabled } from "../../utils";
 
 export const PlanFeatureListItem = ({ feature }) => (
-  <HorizontalStack gap="2" align="start" wrap={false} blockAlign="start">
+  <InlineStack gap="2" align="start" wrap={false} blockAlign="start">
     <Box>
       <Icon
         source={featureEnabled(feature) ? CircleTickMinor : CircleCancelMinor}
@@ -18,5 +18,5 @@ export const PlanFeatureListItem = ({ feature }) => (
           : ""}
       </Text>
     </Box>
-  </HorizontalStack>
+  </InlineStack>
 );

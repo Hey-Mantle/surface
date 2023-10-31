@@ -1,26 +1,26 @@
-import { VerticalStack, HorizontalStack, Text, Badge } from "@shopify/polaris";
+import { BlockStack, InlineStack, Text, Badge } from "@shopify/polaris";
 import { intervalLabelShort, money } from "../../utils";
 
 export const PlanCardHeader = ({ plan }) => {
-  const hasUsageCharges = Object.keys(plan.usageCharges).length > 0;
+  const hasUsageCharges = !!plan.usageCharges ? Object.keys(plan.usageCharges).length > 0 : false;
   const hasTrial = plan.trialDays > 0;
 
   return (
-    <VerticalStack gap="2">
-      <VerticalStack gap="1">
-        <HorizontalStack align="space-between" blockAlign="center">
+    <BlockStack gap="2">
+      <BlockStack gap="1">
+        <InlineStack align="space-between" blockAlign="center">
           <Text variant="headingMd" color="subdued">
             {plan.name}
           </Text>
           {hasTrial && <Badge status="success">{plan.trialDays} day free trial!</Badge>}
-        </HorizontalStack>
-        <HorizontalStack blockAlign="end" align="start">
+        </InlineStack>
+        <InlineStack blockAlign="end" align="start">
           <Text variant="headingXl">
-            {money({ amount: plan.amount, currency: plan.currencyCode })}
+            {money({ amount: plan.subtotal, currency: plan.currencyCode })}
           </Text>
-          {plan.amount > 0 && <Text variant="bodySm">/{intervalLabelShort(plan.interval)}</Text>}
-        </HorizontalStack>
-      </VerticalStack>
+          {plan.subtotal > 0 && <Text variant="bodySm">/{intervalLabelShort(plan.interval)}</Text>}
+        </InlineStack>
+      </BlockStack>
       {hasUsageCharges ? (
         <Text variant="bodySm" color="subdued">
           +{" "}
@@ -33,6 +33,6 @@ export const PlanCardHeader = ({ plan }) => {
           &mdash;
         </Text>
       )}
-    </VerticalStack>
+    </BlockStack>
   );
 };

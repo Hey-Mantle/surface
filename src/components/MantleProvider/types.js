@@ -84,6 +84,9 @@
  * @property {string} id - The ID of the plan
  * @property {string} name - The name of the plan
  * @property {string} currencyCode - The currency code of the plan
+ * @property {number} total - The total amount of the plan, after discounts if applicable
+ * @property {number} subtotal - The subtotal amount of the plan, before discounts if applicable
+ * @property {number} amount - [Deprecated] use subtotal instead
  * @property {boolean} public - Whether the plan is public
  * @property {number} trialDays - The number of days in the trial period
  * @property {"EVERY_30_DAYS"|"ANNUAL"} interval - The interval of the plan
@@ -94,9 +97,6 @@
  * @property {Object.<string, Object>} [customFields] - The custom fields on the plan
  * @property {Array.<Discount>} discounts - The discounts on the plan
  * @property {Discount} [autoAppliedDiscount] - The auto apply discount on the plan, if any
- * @property {number} total - The total amount of the plan, after discounts if applicable
- * @property {number} subtotal - The subtotal amount of the plan, before discounts if applicable
- * @property {number} amount - [Deprecated] use subtotal instead
  * @property {string} [createdAt] - The date the plan was created
  * @property {string} [updatedAt] - The date the plan was last updated
  */

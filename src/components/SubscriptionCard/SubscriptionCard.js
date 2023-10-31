@@ -1,4 +1,4 @@
-import { Box, Button, Divider, HorizontalStack, Text, VerticalStack } from "@shopify/polaris";
+import { Box, Button, Divider, InlineStack, Text, BlockStack } from "@shopify/polaris";
 import { PlanCardHeader } from "../PlanCard";
 import { PlanFeatureListItem } from "../PlanFeatureListItem";
 import { featureSort } from "../../utils";
@@ -29,11 +29,11 @@ export const SubscriptionCard = ({
   },
 }) => (
   <Box padding="5" background="bg" borderRadius="2" shadow="sm">
-    <VerticalStack gap="4">
+    <BlockStack gap="4">
       <Text variant="headingMd">Current subscription</Text>
       <Divider />
       {!subscription ? (
-        <HorizontalStack wrap={false} blockAlign="center" align="space-between">
+        <InlineStack wrap={false} blockAlign="center" align="space-between">
           <Text>You are not currently subscribed to a plan.</Text>
           <Button
             primary={subscribeAction.primary}
@@ -43,26 +43,26 @@ export const SubscriptionCard = ({
           >
             {subscribeAction.content}
           </Button>
-        </HorizontalStack>
+        </InlineStack>
       ) : (
-        <VerticalStack gap="4">
-          <HorizontalStack wrap={false} align="space-between" blockAlign="start">
+        <BlockStack gap="4">
+          <InlineStack wrap={false} align="space-between" blockAlign="start">
             <PlanCardHeader plan={subscription.plan} hasUsageCharges showTrialBadge={false} />
 
             <Box width="50%">
               {Object.keys(subscription.features).length > 0 && (
-                <VerticalStack gap="2">
+                <BlockStack gap="2">
                   {Object.values(subscription.features)
                     .sort(featureSort)
                     .map((feature) => (
                       <PlanFeatureListItem key={feature.id} feature={feature} />
                     ))}
-                </VerticalStack>
+                </BlockStack>
               )}
             </Box>
-          </HorizontalStack>
+          </InlineStack>
 
-          <HorizontalStack align="end" gap="2">
+          <InlineStack align="end" gap="2">
             <Button
               primary={cancelAction.primary}
               destructive={cancelAction.destructive}
@@ -80,9 +80,9 @@ export const SubscriptionCard = ({
             >
               {changePlanAction.content}
             </Button>
-          </HorizontalStack>
-        </VerticalStack>
+          </InlineStack>
+        </BlockStack>
       )}
-    </VerticalStack>
+    </BlockStack>
   </Box>
 );
