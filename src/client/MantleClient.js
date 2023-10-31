@@ -1,6 +1,7 @@
 /**
  * @typedef {import('./types').Customer} Customer
  * @typedef {import('./types').Plan} Plan
+ * @typedef {import('./types').Subscription} Subscription
  */
 
 export class MantleClient {
@@ -55,17 +56,9 @@ export class MantleClient {
    * @param {Object} options - The subscription options
    * @param {string} options.planId - The ID of the plan to subscribe to
    * @param {string} options.returnUrl - The URL to redirect to after the subscription is complete
-   * @returns {Promise<{subscription: import('./types.js').Subscription}>} - The subscription
+   * @returns {Promise<Subscription>} - The subscription
    */
   async subscribe({ planId, returnUrl }) {
-    const customer = await this.getCustomer();
-    
-    customer.plans.map(plan => {
-      plan.discounts.map(discount => {
-        
-      })
-    })
-
     return await this.mantleRequest({
       resource: "subscriptions",
       method: "POST",
@@ -79,7 +72,7 @@ export class MantleClient {
    * @param {string} [options.eventId] - The ID of the event
    * @param {string} options.eventName - The name of the event which can be tracked by usage metrics
    * @param {JSON} options.properties - The event properties
-   * @returns {Promise<{usageEvent: import('./types.js').UsageEvent}>} - The usage event
+   * @returns {Promise<boolean>} - The usage event
    */
   async sendUsageEvent({ eventId, eventName, properties = {} }) {
     return await this.mantleRequest({
@@ -93,6 +86,10 @@ export class MantleClient {
     });
   }
 
+  /**
+   * Cancel the current subscription
+   * @returns {Promise<Subscription>} - The cancelled subscription
+   */
   async cancelSubscription() {
     return await this.mantleRequest({ resource: "subscriptions", method: "DELETE" });
   }
