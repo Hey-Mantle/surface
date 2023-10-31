@@ -1,11 +1,25 @@
 /**
  * @typedef {import('./types').Feature} Feature
  * @typedef {import('./types').Customer} Customer
+ * @typedef {import('./types').Subscription} Subscription
+ * @typedef {import('./types').Plan} Plan
  */
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { MantleClient } from "./MantleClient";
 
+/**
+ * @typedef TMantleContext
+ * @property {Customer} customer - The current customer
+ * @property {Subscription} subscription - The current subscription
+ * @property {Plan} currentPlan - The current plan
+ * @property {Array.<Plan>} plans - The available plans
+ * @property {boolean} loading - Whether the current customer is loading
+ * @property {Function} refetch - A function to refetch the current customer
+ * @property {MantleClient} client - The MantleClient instance
+ */
+
+/** @type {React.Context<TMantleContext>} */
 const MantleContext = createContext();
 
 /**
@@ -70,38 +84,23 @@ export const MantleProvider = ({
     currentPlan,
     plans,
     loading,
-    subscribe: async ({ planId, returnUrl }) => {
-      console.log(`[MantleProvider] subscribe: `, { planId, returnUrl });
-      const result = await mantleClient.subscribe({ planId, returnUrl });
-      console.log(`[MantleProvider] subscribe result: `, result);
-      return result;
-    },
-    cancelSubscription: async () => {
-      const result = await mantleClient.cancelSubscription();
-      console.log(`[MantleProvider] cancel subscription result: `, result);
-      return result;
-    },
-    sendUsageEvent: async ({ eventId = uuidv4(), eventName, properties }) => {
-      const result = await mantleClient.sendUsageEvent({ eventId, eventName, properties });
-      console.log(`[MantleProvider] send usage event result: `, result);
-      return result;
-    },
-    hasFeature: ({ feature, count = 0 }) => {
-      if (currentPlan?.features[feature]) {
-        return evaluateFeature(currentPlan.features[feature], count);
+    client: mantleClient,
+    hasFeature: ({ featureKey, count = 0 }) => {
+      if (!!currentPlan?.features[featureKey]) {
+        return evaluateFeature(currentPlan.features[featureKey], count);
       }
       return false;
     },
-    featureLimit: ({ feature }) => {
-      if (currentPlan?.features[feature] && currentPlan.features[feature].type === "limit") {
-        return currentPlan.features[feature].value;
+    featureLimit: ({ featureKey }) => {
+      if (currentPlan?.features[featureKey] && currentPlan.features[featureKey].type === "limit") {
+        return currentPlan.features[featureKey].value;
       }
       return -1;
     },
-    requiredPlan: ({ feature, count = 0 }) => {
+    requiredPlan: ({ featureKey, count = 0 }) => {
       return plans
         .sort((a, b) => a.amount - b.amount)
-        .find((plan) => evaluateFeature(plan.features[feature], count));
+        .find((plan) => evaluateFeature(plan.features[featureKey], count));
     },
     refetch: async () => {
       await fetchCurrentCustomer();
@@ -111,6 +110,10 @@ export const MantleProvider = ({
   return <MantleContext.Provider value={ctx}>{children}</MantleContext.Provider>;
 };
 
+/**
+ * useMantle is a React hook that returns the current MantleContext
+ * @returns {TMantleContext} the MantleContext
+ */
 export const useMantle = () => {
   const context = useContext(MantleContext);
 
@@ -118,18 +121,5 @@ export const useMantle = () => {
     throw new Error("useMantle must be used within a MantleProvider");
   }
 
-  return {
-    subscription: context.subscription,
-    currentPlan: context.currentPlan,
-    plans: context.plans,
-    customer: context.customer,
-    isLoading: context.isLoading,
-    subscribe: context.subscribe,
-    cancelSubscription: context.cancelSubscription,
-    sendUsageEvent: context.sendUsageEvent,
-    hasFeature: context.hasFeature,
-    featureLimit: context.featureLimit,
-    requiredPlan: context.requiredPlan,
-    refetch: context.refetch,
-  };
+  return context;
 };
