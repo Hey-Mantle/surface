@@ -1,3 +1,8 @@
+/**
+ * @typedef {import('./types').Customer} Customer
+ * @typedef {import('./types').Plan} Plan
+ */
+
 export class MantleClient {
   /**
    * Creates a new MantleClient
@@ -18,6 +23,7 @@ export class MantleClient {
    * @param {"customer"|"usage_events"|"subscriptions"} options.resource - The Mantle resource to request
    * @param {"GET"|"POST"|"PUT"|"DELETE"} options.method - The HTTP method to use. Defaults to GET
    * @param {JSON} [options.body] - The request body
+   * @returns {Promise<JSON>} - The response body
    */
   async mantleRequest({ resource, method = "GET", body }) {
     const response = await fetch(`${this.apiUrl}/${resource}`, {
@@ -38,7 +44,7 @@ export class MantleClient {
 
   /**
    * Get the customer associated with the current customer API token
-   * @returns {Promise<{customer: import('./types.js').Customer}>} - The current customer
+   * @returns {Promise<Customer>} - The customer
    */
   async getCustomer() {
     return (await this.mantleRequest({ resource: "customer" })).customer;
@@ -52,6 +58,14 @@ export class MantleClient {
    * @returns {Promise<{subscription: import('./types.js').Subscription}>} - The subscription
    */
   async subscribe({ planId, returnUrl }) {
+    const customer = await this.getCustomer();
+    
+    customer.plans.map(plan => {
+      plan.discounts.map(discount => {
+        
+      })
+    })
+
     return await this.mantleRequest({
       resource: "subscriptions",
       method: "POST",
@@ -63,8 +77,8 @@ export class MantleClient {
    * Send a usage event
    * @param {Object} options - The usage event options
    * @param {string} [options.eventId] - The ID of the event
-   * @param {string} options.eventName - The name of the event
-   * @param {JSON} [options.properties] - The event properties
+   * @param {string} options.eventName - The name of the event which can be tracked by usage metrics
+   * @param {JSON} options.properties - The event properties
    * @returns {Promise<{usageEvent: import('./types.js').UsageEvent}>} - The usage event
    */
   async sendUsageEvent({ eventId, eventName, properties = {} }) {
