@@ -3,7 +3,6 @@
  * @typedef {import('./types').Plan} Plan
  * @typedef {import('./types').Subscription} Subscription
  */
-
 export class MantleClient {
   /**
    * Creates a new MantleClient
