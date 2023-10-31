@@ -3,7 +3,7 @@ import { CircleCancelMinor, CircleTickMinor } from "@shopify/polaris-icons";
 import { featureEnabled } from "../../utils";
 
 export const PlanFeatureListItem = ({ feature }) => (
-  <InlineStack gap="200"align="start" wrap={false} blockAlign="center">
+  <InlineStack gap="200" align="start" wrap={false} blockAlign="center">
     <Box>
       <Icon
         source={featureEnabled(feature) ? CircleTickMinor : CircleCancelMinor}
@@ -13,7 +13,7 @@ export const PlanFeatureListItem = ({ feature }) => (
     <Box width="100%">
       <Text>
         {feature.name}
-        {feature.type === "limit"
+        {feature.type === "limit" && featureEnabled(feature)
           ? `: ${feature.value < 0 ? "unlimited" : `up to ${feature.value}`}`
           : ""}
       </Text>

@@ -1,4 +1,3 @@
-import React from "react";
 import PropTypes from "prop-types";
 import { Box, Button, Divider, BlockStack } from "@shopify/polaris";
 import { useState } from "react";
