@@ -8,7 +8,7 @@ export const PlanCardHeader = ({ plan }) => {
   return (
     <BlockStack gap="200">
       <BlockStack gap="100">
-        <InlineStack align="space-between" blockAlign="center">
+        <InlineStack align="space-between" blockAlign="center" gap="400">
           <Text variant="headingMd" color="subdued">
             {plan.name}
           </Text>
