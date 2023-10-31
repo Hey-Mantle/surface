@@ -6,8 +6,8 @@ export const PlanCardHeader = ({ plan }) => {
   const hasTrial = plan.trialDays > 0;
 
   return (
-    <BlockStack gap="2">
-      <BlockStack gap="1">
+    <BlockStack gap="200">
+      <BlockStack gap="100">
         <InlineStack align="space-between" blockAlign="center">
           <Text variant="headingMd" color="subdued">
             {plan.name}
@@ -21,16 +21,12 @@ export const PlanCardHeader = ({ plan }) => {
           {plan.subtotal > 0 && <Text variant="bodySm">/{intervalLabelShort(plan.interval)}</Text>}
         </InlineStack>
       </BlockStack>
-      {hasUsageCharges ? (
+      {hasUsageCharges && (
         <Text variant="bodySm" color="subdued">
           +{" "}
           {Object.values(plan.usageCharges)
             .map((charge) => charge.terms)
             .join(", ")}
-        </Text>
-      ) : (
-        <Text variant="bodySm" color="subdued">
-          &mdash;
         </Text>
       )}
     </BlockStack>

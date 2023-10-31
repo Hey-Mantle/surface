@@ -8,14 +8,14 @@ import { PlanCardHeader } from ".";
 
 export const PlanCard = ({ plan, selected = false, onSubscribe }) => {
   const [loading, setLoading] = useState(false);
-  
+
   return (
-    <Box padding="5" background="bg" borderRadius="2" shadow="sm">
-      <BlockStack gap="4" align="space-between">
-        <BlockStack gap="4">
+    <Box background="bg-fill" borderRadius="200" shadow="200" padding="400" minWidth="200px">
+      <BlockStack gap="400" align="space-between">
+        <BlockStack gap="400">
           <PlanCardHeader plan={plan} />
-          <Divider />
-          <BlockStack gap="1">
+          <Divider borderColor="border" />
+          <BlockStack gap="100">
             {Object.values(plan.features)
               .sort(featureSort)
               .map((feature) => (
@@ -31,7 +31,7 @@ export const PlanCard = ({ plan, selected = false, onSubscribe }) => {
           onClick={async () => {
             setLoading(true);
             if (onSubscribe) {
-              await onSubscribe(plan);  
+              await onSubscribe(plan);
             }
             setLoading(false);
           }}

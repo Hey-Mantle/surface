@@ -17,8 +17,26 @@ export default {
           "name": "Local pickup",
           "value": true,
           "type": "boolean",
-          "id": 12345
-        }
+          "id": 12345,
+        },
+        "local_delivery": {
+          "name": "Local delivery",
+          "value": true,
+          "type": "boolean",
+          "id": 12346
+        },
+        "sms_notifications": {
+          "name": "SMS notifications",
+          "value": 200,
+          "type": "limit",
+          "id": 12347
+        },
+        "email_notifications": {
+          "name": "Email notifications",
+          "value": true,
+          "type": "boolean",
+          "id": 12348
+        },
       },
       "interval": "EVERY_30_DAYS",
       "usageCharges": {},

@@ -3,7 +3,7 @@ import { CircleCancelMinor, CircleTickMinor } from "@shopify/polaris-icons";
 import { featureEnabled } from "../../utils";
 
 export const PlanFeatureListItem = ({ feature }) => (
-  <InlineStack gap="2" align="start" wrap={false} blockAlign="start">
+  <InlineStack gap="200"align="start" wrap={false} blockAlign="center">
     <Box>
       <Icon
         source={featureEnabled(feature) ? CircleTickMinor : CircleCancelMinor}
