@@ -67,6 +67,29 @@ export class MantleClient {
   }
 
   /**
+   * Cancel the current subscription
+   * @returns {Promise<Subscription>} - The cancelled subscription
+   */
+  async cancelSubscription() {
+    return await this.mantleRequest({ resource: "subscriptions", method: "DELETE" });
+  }
+
+  /**
+   * Update the subscription
+   * @param {Object} options - The subscription options
+   * @param {string} options.id - The ID of the subscription to update
+   * @param {number} options.cappedAmount - The capped amount of the usage charge
+   * @returns {Promise<Subscription>} - The updated subscription
+   */
+  async updateSubscription({ id, cappedAmount }) {
+    return await this.mantleRequest({
+      resource: "subscriptions",
+      method: "PUT",
+      body: { id, cappedAmount },
+    });
+  }
+
+  /**
    * Send a usage event
    * @param {Object} options - The usage event options
    * @param {string} [options.eventId] - The ID of the event
@@ -84,13 +107,5 @@ export class MantleClient {
         properties,
       },
     });
-  }
-
-  /**
-   * Cancel the current subscription
-   * @returns {Promise<Subscription>} - The cancelled subscription
-   */
-  async cancelSubscription() {
-    return await this.mantleRequest({ resource: "subscriptions", method: "DELETE" });
   }
 }
