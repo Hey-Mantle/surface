@@ -1,4 +1,8 @@
 /**
+ * Client types
+ */
+
+/**
  * @typedef UsageMetric
  * @property {string} id - The ID of the usage metric
  * @property {string} name - The name of the usage metric
@@ -106,6 +110,41 @@
  * @property {Object.<string, Feature>} features - The features enabled for the current customer
  * @property {Object.<string, UsageMetric>} usage - The usage metrics for the current customer
  * @property {Object.<string, Object>} [customFields] - The custom fields on the customer
+ */
+
+// Context types
+
+/**
+ * @typedef TMantleContext
+ * @property {Customer} customer - The current customer
+ * @property {Subscription} subscription - The current subscription
+ * @property {Plan} currentPlan - The current plan
+ * @property {Array.<Plan>} plans - The available plans
+ * @property {boolean} loading - Whether the current customer is loading
+ * @property {RefetchCallback} refetch - A function to refetch the current customer
+ * @property {FeatureEnabledCallback} isFeatureEnabled - A function to check if a feature is enabled
+ * @property {FeatureLimitCallback} limitForFeature - A function to get the limit for a feature
+ * @property {MantleClient} client - The MantleClient instance
+ */
+
+/**
+ * @callback RefetchCallback
+ * @returns {Promise<void>} a promise that resolves when the customer is refetched
+ */
+
+/**
+ * @callback FeatureEnabledCallback
+ * @param {Object} params
+ * @param {string} params.featureKey - The key of the feature to evaluate
+ * @param {number} [params.count] - The count to evaluate against the feature limit if there is one
+ * @returns {boolean} whether the feature is enabled for this customer
+ */
+
+/**
+ * @callback FeatureLimitCallback
+ * @param {Object} params
+ * @param {string} params.featureKey - The key of the feature to evaluate
+ * @returns {number} the max limit for this feature, returns -1 if there is no limit
  */
 
 module.exports = {};

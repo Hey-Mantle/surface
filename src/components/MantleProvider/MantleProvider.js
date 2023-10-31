@@ -3,21 +3,11 @@
  * @typedef {import('./types').Customer} Customer
  * @typedef {import('./types').Subscription} Subscription
  * @typedef {import('./types').Plan} Plan
+ * @typedef {import('./types').TMantleContext} TMantleContext
  */
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { MantleClient } from "./MantleClient";
-
-/**
- * @typedef TMantleContext
- * @property {Customer} customer - The current customer
- * @property {Subscription} subscription - The current subscription
- * @property {Plan} currentPlan - The current plan
- * @property {Array.<Plan>} plans - The available plans
- * @property {boolean} loading - Whether the current customer is loading
- * @property {Function} refetch - A function to refetch the current customer
- * @property {MantleClient} client - The MantleClient instance
- */
 
 /** @type {React.Context<TMantleContext>} */
 const MantleContext = createContext();
@@ -78,36 +68,35 @@ export const MantleProvider = ({
   const subscription = customer?.subscription;
   const currentPlan = subscription?.plan || plans.find((plan) => plan.amount === 0 && plan.public);
 
-  const ctx = {
-    customer,
-    subscription,
-    currentPlan,
-    plans,
-    loading,
-    client: mantleClient,
-    hasFeature: ({ featureKey, count = 0 }) => {
-      if (!!currentPlan?.features[featureKey]) {
-        return evaluateFeature(currentPlan.features[featureKey], count);
-      }
-      return false;
-    },
-    featureLimit: ({ featureKey }) => {
-      if (currentPlan?.features[featureKey] && currentPlan.features[featureKey].type === "limit") {
-        return currentPlan.features[featureKey].value;
-      }
-      return -1;
-    },
-    requiredPlan: ({ featureKey, count = 0 }) => {
-      return plans
-        .sort((a, b) => a.amount - b.amount)
-        .find((plan) => evaluateFeature(plan.features[featureKey], count));
-    },
-    refetch: async () => {
-      await fetchCurrentCustomer();
-    },
-  };
-
-  return <MantleContext.Provider value={ctx}>{children}</MantleContext.Provider>;
+  return (
+    <MantleContext.Provider
+      value={{
+        customer,
+        subscription,
+        currentPlan,
+        plans,
+        loading,
+        client: mantleClient,
+        isFeatureEnabled: ({ featureKey, count = 0 }) => {
+          if (!!customer?.features[featureKey]) {
+            return evaluateFeature(customer.features[featureKey], count);
+          }
+          return false;
+        },
+        limitForFeature: ({ featureKey }) => {
+          if (customer?.features[featureKey] && currentPlan.features[featureKey].type === "limit") {
+            return customer.features[featureKey].value;
+          }
+          return -1;
+        },
+        refetch: async () => {
+          await fetchCurrentCustomer();
+        },
+      }}
+    >
+      {children}
+    </MantleContext.Provider>
+  );
 };
 
 /**
