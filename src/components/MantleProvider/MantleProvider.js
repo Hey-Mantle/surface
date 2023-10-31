@@ -1,9 +1,37 @@
+/**
+ * @typedef {import('./types').Feature} Feature
+ * @typedef {import('./types').Customer} Customer
+ */
+
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Loading } from "@shopify/polaris";
-import { MantleClient } from "../../client/MantleClient";
+import { MantleClient } from "./MantleClient";
 
 const MantleContext = createContext();
 
+/**
+ * @param {Object} params
+ * @param {Feature} params.feature - The feature to evaluate
+ * @param {number} [params.count] - The count to evaluate the feature with if it is a limit
+ * @returns {boolean} whether the feature is considered enabled
+ */
+const evaluateFeature = ({ feature, count = 0 }) => {
+  if (feature?.type === "boolean") {
+    return feature.value;
+  } else if (feature?.type === "limit") {
+    return count < feature.value || feature.value === -1;
+  }
+  return false;
+};
+
+/**
+ * MantleProvider uses the React Context API to provide a MantleClient instance and
+ * the current customer to its children, which can be accessed using the useMantle hook.
+ * @param {Object} params
+ * @param {string} params.appId - The Mantle App ID provided by Mantle
+ * @param {string} params.customerApiToken - The Mantle Customer API Token returned by the `identify` endpoint
+ * @param {string} [params.apiUrl] - The Mantle API URL to use
+ * @param {React.ReactNode} params.children - The children to render
+ */
 export const MantleProvider = ({
   appId,
   customerApiToken,
@@ -12,32 +40,25 @@ export const MantleProvider = ({
 }) => {
   const mantleClient = new MantleClient({ appId, customerApiToken, apiUrl });
 
+  /**
+   * @type {[Customer, React.Dispatch<React.SetStateAction<Customer>>, boolean, React.Dispatch<React.SetStateAction<boolean>>]}
+   */
   const [customer, setCustomer] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const fetchCurrentCustomer = async () => {
+  const fetchCustomer = async () => {
     try {
-      setIsLoading(true);
+      setLoading(true);
       const customer = await mantleClient.getCustomer();
       setCustomer(customer);
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchCurrentCustomer();
+    fetchCustomer();
   }, []);
-
-  const evaluateFeature = (feature, count = 0) => {
-    if (feature?.type === "boolean") {
-      return feature.value;
-    } else if (feature?.type === "limit") {
-      return count < feature.value || feature.value === -1;
-    }
-
-    return false;
-  };
 
   const plans = customer?.plans || [];
   const subscription = customer?.subscription;
@@ -48,7 +69,7 @@ export const MantleProvider = ({
     subscription,
     currentPlan,
     plans,
-    isLoading,
+    loading,
     subscribe: async ({ planId, returnUrl }) => {
       console.log(`[MantleProvider] subscribe: `, { planId, returnUrl });
       const result = await mantleClient.subscribe({ planId, returnUrl });
@@ -86,10 +107,6 @@ export const MantleProvider = ({
       await fetchCurrentCustomer();
     },
   };
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   return <MantleContext.Provider value={ctx}>{children}</MantleContext.Provider>;
 };

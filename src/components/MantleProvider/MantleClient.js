@@ -3,13 +3,14 @@
  * @typedef {import('./types').Plan} Plan
  * @typedef {import('./types').Subscription} Subscription
  */
+
 export class MantleClient {
   /**
    * Creates a new MantleClient
-   * @param {Object} options
-   * @param {string} options.appId - The Mantle App ID provided by Mantle
-   * @param {string} options.customerApiToken - The Mantle Customer API Token returned by the /identity endpoint
-   * @param {string} options.apiUrl - The Mantle API URL to use
+   * @param {Object} params
+   * @param {string} params.appId - The Mantle App ID provided by Mantle
+   * @param {string} params.customerApiToken - The Mantle Customer API Token returned by the /identify endpoint
+   * @param {string} params.apiUrl - The Mantle API URL to use
    */
   constructor({ appId, customerApiToken, apiUrl = "https://appapi.heymantle.com/v1" }) {
     this.appId = appId;
@@ -19,11 +20,11 @@ export class MantleClient {
 
   /**
    * Makes a request to the Mantle API
-   * @param {Object} options
-   * @param {"customer"|"usage_events"|"subscriptions"} options.resource - The Mantle resource to request
-   * @param {"GET"|"POST"|"PUT"|"DELETE"} options.method - The HTTP method to use. Defaults to GET
-   * @param {JSON} [options.body] - The request body
-   * @returns {Promise<JSON>} - The response body
+   * @param {Object} params
+   * @param {"customer"|"usage_events"|"subscriptions"} params.resource - The Mantle resource to request
+   * @param {"GET"|"POST"|"PUT"|"DELETE"} params.method - The HTTP method to use. Defaults to GET
+   * @param {JSON} [params.body] - The request body
+   * @returns {Promise<JSON>} a promise that resolves to the response body
    */
   async mantleRequest({ resource, method = "GET", body }) {
     const response = await fetch(`${this.apiUrl}/${resource}`, {
@@ -44,7 +45,7 @@ export class MantleClient {
 
   /**
    * Get the customer associated with the current customer API token
-   * @returns {Promise<Customer>} - The customer
+   * @returns {Promise<Customer>} a promise that resolves to the current customer
    */
   async getCustomer() {
     return (await this.mantleRequest({ resource: "customer" })).customer;
@@ -52,10 +53,10 @@ export class MantleClient {
 
   /**
    * Subscribe to a plan
-   * @param {Object} options - The subscription options
-   * @param {string} options.planId - The ID of the plan to subscribe to
-   * @param {string} options.returnUrl - The URL to redirect to after the subscription is complete
-   * @returns {Promise<Subscription>} - The subscription
+   * @param {Object} params - The subscription options
+   * @param {string} params.planId - The ID of the plan to subscribe to
+   * @param {string} params.returnUrl - The URL to redirect to after the subscription is complete
+   * @returns {Promise<Subscription>} a promise that resolves to the created subscription
    */
   async subscribe({ planId, returnUrl }) {
     return await this.mantleRequest({
@@ -67,7 +68,7 @@ export class MantleClient {
 
   /**
    * Cancel the current subscription
-   * @returns {Promise<Subscription>} - The cancelled subscription
+   * @returns {Promise<Subscription>} a promise that resolves to the cancelled subscription
    */
   async cancelSubscription() {
     return await this.mantleRequest({ resource: "subscriptions", method: "DELETE" });
@@ -75,10 +76,10 @@ export class MantleClient {
 
   /**
    * Update the subscription
-   * @param {Object} options - The subscription options
-   * @param {string} options.id - The ID of the subscription to update
-   * @param {number} options.cappedAmount - The capped amount of the usage charge
-   * @returns {Promise<Subscription>} - The updated subscription
+   * @param {Object} params - The subscription options
+   * @param {string} params.id - The ID of the subscription to update
+   * @param {number} params.cappedAmount - The capped amount of the usage charge
+   * @returns {Promise<Subscription>} a promise that resolves to the updated subscription
    */
   async updateSubscription({ id, cappedAmount }) {
     return await this.mantleRequest({
@@ -90,11 +91,11 @@ export class MantleClient {
 
   /**
    * Send a usage event
-   * @param {Object} options - The usage event options
-   * @param {string} [options.eventId] - The ID of the event
-   * @param {string} options.eventName - The name of the event which can be tracked by usage metrics
-   * @param {JSON} options.properties - The event properties
-   * @returns {Promise<boolean>} - The usage event
+   * @param {Object} params - The usage event options
+   * @param {string} [params.eventId] - The ID of the event
+   * @param {string} params.eventName - The name of the event which can be tracked by usage metrics
+   * @param {JSON} params.properties - The event properties
+   * @returns {Promise<boolean>} true if the event was sent successfully
    */
   async sendUsageEvent({ eventId, eventName, properties = {} }) {
     return await this.mantleRequest({
