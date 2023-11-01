@@ -61,6 +61,7 @@
     "@shopify/polaris-icons": "^7.9.0"
   },
   "publishConfig": {
-    "@heymantle:registry": "https://registry.npmjs.org/"
+    "@heymantle:registry": "https://registry.npmjs.org/",
+    "access": "public"
   }
 }
