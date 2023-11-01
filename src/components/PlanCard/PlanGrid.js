@@ -16,7 +16,7 @@ export const PlanGrid = ({
   onSubscribe,
   columns = { xs: 1, sm: 3, lg: 5 },
 }) => (
-    <InlineGrid columns={columns} gap="400">
+    <InlineGrid columns={columns} gap="400" alignItems="start">
       {plans.map((plan) => (
         <PlanCard
           key={plan.id}

@@ -16,7 +16,7 @@ export const PlanCard = ({ plan, selected = false, onSubscribe }) => {
   const [loading, setLoading] = useState(false);
 
   return (
-    <Box background="bg-fill" borderRadius="200" shadow="200" padding="500" minWidth="250px">
+    <Box background="bg-fill" borderRadius="200" shadow="200" padding="500" minHeight="100%">
       <BlockStack gap="400" align="space-between">
         <BlockStack gap="400">
           <PlanCardHeader plan={plan} />

@@ -13,6 +13,12 @@
   "engines": {
     "node": "^16.17.0 || >=18.12.0"
   },
+  "main": "index.js",
+  "scripts": {
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "build": "vite build"
+  },
   "keywords": [
     "mantle",
     "shopify",
@@ -25,14 +31,6 @@
   "devDependencies": {
     "@babel/preset-env": "^7.23.2",
     "@babel/preset-react": "^7.22.15",
-    "@rollup/plugin-babel": "^6.0.3",
-    "@rollup/plugin-commonjs": "^24.0.1",
-    "@rollup/plugin-image": "^3.0.2",
-    "@rollup/plugin-json": "^6.0.0",
-    "@rollup/plugin-node-resolve": "^15.0.1",
-    "@rollup/plugin-replace": "^5.0.2",
-    "@rollup/plugin-virtual": "^3.0.1",
-    "@rollup/pluginutils": "^5.0.2",
     "@storybook/addon-essentials": "^7.5.2",
     "@storybook/addon-interactions": "^7.5.2",
     "@storybook/addon-links": "^7.5.2",
@@ -46,15 +44,15 @@
     "react-dom": "^18.2.0",
     "rollup": "^3.12.0",
     "rollup-plugin-node-externals": "^5.1.0",
-    "storybook": "^7.5.2"
+    "storybook": "^7.5.2",
+    "vite": "^4.5.0"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@shopify/polaris": "^12.0.2",
     "@shopify/polaris-icons": "^7.9.0"
-  },
-  "scripts": {
-    "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
   }
 }

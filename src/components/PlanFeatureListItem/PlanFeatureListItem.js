@@ -9,7 +9,7 @@ import { featureEnabled } from "../../utils";
  * @returns {JSX.Element} the feature list item
  */
 export const PlanFeatureListItem = ({ feature }) => (
-  <InlineStack gap="200" align="start" wrap={false} blockAlign="center">
+  <InlineStack gap="200" align="start" wrap={false} blockAlign="start">
     <Box>
       <Icon
         source={featureEnabled(feature) ? CircleTickMinor : CircleCancelMinor}

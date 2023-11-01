@@ -49,12 +49,15 @@ export const MantleProvider = ({
    */
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchCustomer = async () => {
     try {
       setLoading(true);
       const customer = await mantleClient.getCustomer();
       setCustomer(customer);
+    } catch (error) {
+      setError(error);
     } finally {
       setLoading(false);
     }
@@ -76,6 +79,7 @@ export const MantleProvider = ({
         currentPlan,
         plans,
         loading,
+        error,
         client: mantleClient,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (!!customer?.features[featureKey]) {
