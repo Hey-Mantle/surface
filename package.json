@@ -1,5 +1,5 @@
 {
-  "name": "@mantle/surface",
+  "name": "@heymantle/surface",
   "description": "Mantle's frontend component library",
   "version": "0.1.0",
   "private": false,
@@ -61,6 +61,6 @@
     "@shopify/polaris-icons": "^7.9.0"
   },
   "publishConfig": {
-    "@mantle:registry": "https://npm.pkg.github.com/"
+    "@heymantle:registry": "https://registry.npmjs.org/"
   }
 }
