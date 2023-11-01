@@ -28,8 +28,9 @@ export default defineConfig ({
   build: {
     lib: {
       entry: resolve(__dirname, "src/index.js"),
-      name: "@mantle/surface",
+      name: "@heymantle/surface",
       fileName: "index",
+      formats: ["cjs", "es"]
     },
     rollupOptions: {
       external: ["react"],
