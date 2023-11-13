@@ -1,4 +1,8 @@
 /**
+  * @typedef {import('./MantleClient').MantleClient} MantleClient
+  */
+
+/**
  * Client types
  */
 
@@ -122,14 +126,30 @@
  * @property {Array.<Plan>} plans - The available plans
  * @property {boolean} loading - Whether the current customer is loading
  * @property {RefetchCallback} refetch - A function to refetch the current customer
+ * @property {PushEventCallback} pushEvent - A function to push an event to the event queue
  * @property {FeatureEnabledCallback} isFeatureEnabled - A function to check if a feature is enabled
  * @property {FeatureLimitCallback} limitForFeature - A function to get the limit for a feature
+ * @property {ClearEventQueueCallback} clearEventQueue - An function to clear the event queue
  * @property {MantleClient} client - The MantleClient instance
  */
 
 /**
  * @callback RefetchCallback
  * @returns {Promise<void>} a promise that resolves when the customer is refetched
+ */
+
+/**
+ * @callback ClearEventQueueCallback
+ * @returns {Promise<void>} a promise that resolves when the event queue is cleared
+ */
+
+/**
+ * @callback PushEventCallback
+ * @param {Object} event - The event to push into the stored event queue
+ * @param {string} event.eventName - The name of the event
+ * @param {Object} event.properties - The properties of the event
+ * @param {boolean} [clearEventQueue=false] - Whether to purge the event queue before pushing the event
+ * @returns {Promise<void>} a promise that resolves when the event is pushed
  */
 
 /**

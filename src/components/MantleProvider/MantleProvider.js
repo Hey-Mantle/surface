@@ -3,11 +3,13 @@
  * @typedef {import('./types').Customer} Customer
  * @typedef {import('./types').Subscription} Subscription
  * @typedef {import('./types').Plan} Plan
+ * @typedef {import('./MantleClient').MantleClient} MantleClient
  * @typedef {import('./types').TMantleContext} TMantleContext
  */
 
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { MantleClient } from "./MantleClient";
+import { useStateWithLocalStorage } from "../../hooks/useStateWithLocalStorage";
 
 /** @type {React.Context<TMantleContext>} */
 const MantleContext = createContext();
@@ -34,6 +36,7 @@ const evaluateFeature = ({ feature, count = 0 }) => {
  * @param {string} params.appId - The Mantle App ID provided by Mantle
  * @param {string} params.customerApiToken - The Mantle Customer API Token returned by the `identify` endpoint
  * @param {string} [params.apiUrl] - The Mantle API URL to use
+ * @param {number} [params.eventQueueSize] - The size of the event queue before sending events
  * @param {React.ReactNode} params.children - The children to render
  */
 export const MantleProvider = ({
@@ -41,7 +44,11 @@ export const MantleProvider = ({
   customerApiToken,
   apiUrl = "https://appapi.heymantle.com/v1",
   children,
+  eventQueueSize = 5,
 }) => {
+  /**
+   * @type {MantleClient}
+   */
   const mantleClient = new MantleClient({ appId, customerApiToken, apiUrl });
 
   /**
@@ -50,6 +57,11 @@ export const MantleProvider = ({
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [eventQueue, setEventQueue] = useStateWithLocalStorage(
+    "mantleProviderEventQueue",
+    [],
+    true
+  );
 
   const fetchCustomer = async () => {
     try {
@@ -63,9 +75,52 @@ export const MantleProvider = ({
     }
   };
 
+  const clearEventQueue = async () => {
+    try {
+      if (eventQueue.length > 0) {
+        const eventsToPush = eventQueue.slice(0, eventQueue.length);
+        setEventQueue((draft) => {
+          draft.splice(0, eventsToPush.length);
+        });
+        await mantleClient.sendUsageEvents({
+          events: eventsToPush,
+        });
+      }
+    } catch (error) {
+      console.error(`[MANTLE] Error processing event queue: ${error}`);
+    }
+  };
+
+  const pushEvent = (event, _clearEventQueue = false) => {
+    const { eventName, properties } = event;
+
+    if (_clearEventQueue) {
+      clearEventQueue();
+    }
+
+    setEventQueue((draft) => {
+      draft.push({
+        eventName,
+        properties,
+        timestamp: Date.now(),
+      });
+    });
+  };
+
   useEffect(() => {
-    fetchCustomer();
-  }, []);
+    const processQueue = async () => {
+      if (eventQueue.length >= eventQueueSize) {
+        await clearEventQueue();
+      }
+    };
+    processQueue();
+  }, [eventQueue]);
+
+  useEffect(() => {
+    if (customerApiToken) {
+      fetchCustomer();
+    }
+  }, [customerApiToken]);
 
   const plans = customer?.plans || [];
   const subscription = customer?.subscription;
@@ -81,6 +136,8 @@ export const MantleProvider = ({
         loading,
         error,
         client: mantleClient,
+        pushEvent,
+        clearEventQueue,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (!!customer?.features[featureKey]) {
             return evaluateFeature(customer.features[featureKey], count);

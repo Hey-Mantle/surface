@@ -27,20 +27,25 @@ export class MantleClient {
    * @returns {Promise<JSON>} a promise that resolves to the response body
    */
   async mantleRequest({ resource, method = "GET", body }) {
-    const response = await fetch(`${this.apiUrl}/${resource}`, {
-      method,
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-        "X-Mantle-App-Id": this.appId,
-        "X-Mantle-Customer-Api-Token": this.customerApiToken,
-      },
-      ...(body && {
-        body: JSON.stringify(body),
-      }),
-    });
-    const result = await response.json();
-    return result;
+    try {
+      const response = await fetch(`${this.apiUrl}/v1/${resource}`, {
+        method,
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+          "X-Mantle-App-Id": this.appId,
+          "X-Mantle-Customer-Api-Token": this.customerApiToken,
+        },
+        ...(body && {
+          body: JSON.stringify(body),
+        }),
+      });
+      const result = await response.json();
+      return result;
+    } catch (e) {
+      // Basically handle HMR breaking on reload
+      console.log('MantleClient can only be used in the browser')
+    }
   }
 
   /**
@@ -105,6 +110,22 @@ export class MantleClient {
         event_id: eventId,
         event_name: eventName,
         properties,
+      },
+    });
+  }
+
+  /**
+   * Send multiple usage events of the same type in bulk, for example, when tracking page views
+   * @param {Object} params - The usage event options
+   * @param {Array} params.events - The events to send
+   * @returns {Promise<boolean>} true if the events were sent successfully
+   */
+  async sendUsageEvents({ events }) {
+    return await this.mantleRequest({
+      resource: "usage_events",
+      method: "POST",
+      body: {
+        events
       },
     });
   }
