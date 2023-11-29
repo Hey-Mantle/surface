@@ -140,7 +140,7 @@ export const MantleProvider = ({
         clearEventQueue,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (!!customer?.features[featureKey]) {
-            return evaluateFeature(customer.features[featureKey], count);
+            return evaluateFeature({ feature: customer.features[featureKey], count });
           }
           return false;
         },
@@ -151,7 +151,7 @@ export const MantleProvider = ({
           return -1;
         },
         refetch: async () => {
-          await fetchCurrentCustomer();
+          await fetchCustomer();
         },
       }}
     >
