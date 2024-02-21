@@ -22,8 +22,7 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build": "vite build",
-    "test": "exit 0",
-    "build-static-webapp":"expo build:web"
+    "test": "exit 0"
   },
   "keywords": [
     "mantle",
