@@ -57,10 +57,10 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
-    "@shopify/polaris": "^12.0.2",
+    "@shopify/polaris": "12.16.0",
     "immer": "^10.0.1",
     "use-immer": "^0.9.0",
-    "@shopify/polaris-icons": "^7.9.0"
+    "@shopify/polaris-icons": "^8.1.0"
   },
   "publishConfig": {
     "@heymantle:registry": "https://registry.npmjs.org/",

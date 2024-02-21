@@ -1,28 +1,53 @@
+// TODO: iframe and set args via URL ?path=/story/avatar--default&args=style:rounded;size:100
+
 import { HorizontalCards } from '../components';
 import { Plans } from './test_data/plans';
+import { Customer } from './test_data/customer';
 
 export default {
   title: 'Example/HorizontalCards',
   component: HorizontalCards,
-  parameters: {
-    layout: 'centered',
+  argTypes: {
+    pageWidth: {
+      options: ["default", "narrow", "full"],
+      control: { type: 'radio' },
+    },
   },
   args: {
+    pageWidth: "default",
+    showRecommendedBadge: true,
+    showCurrencySymbol: true,
+    showPlanIntervalToggle: true,
+    showTrialDaysAsFeature: true,
+    useShortFormPlanIntevals: true,
+    customFieldCta: null,
+    customFieldPlanRecommended: "Recommended",
+    showCustomPlans: false,
+    backUrl: "",
     onSubscribe: () => {},
+    customer: Customer,
+    plans: Plans,
   }
 };
 
-export const CurrentlySubscribed = {
-  args: {
-    subscription: {
-      plan: Plans[0],
-      features: Plans[0].features,
-    }
-  }
+export const FourColumns = {
+  args: {},
 };
 
-export const NotSubscribed = {
+export const ThreeColumns = {
   args: {
-    subscription: null,
+    plans: Plans.filter(plan => plan.name !== "Ultra"),
   },
+};
+
+export const TwoColumns = {
+  args: {
+    plans: Plans.filter(plan => plan.name !== "Ultra" && plan.name !== "Advanced"),
+  }
+};
+
+export const OneColumn = {
+  args: {
+    plans: Plans.filter(plan => plan.name !== "Ultra" && plan.name !== "Advanced" && plan.name !== "Pro"),
+  }
 };
