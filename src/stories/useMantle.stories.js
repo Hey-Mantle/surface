@@ -2,7 +2,7 @@ import { MantleProvider } from "..";
 import { AuthenticatedPage } from "./AuthenticatedPage";
 
 export default {
-  title: "Example/useMantle",
+  title: "General/useMantle",
   component: AuthenticatedPage,
   decorators: [
     (Story, context) => (

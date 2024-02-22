@@ -5,7 +5,7 @@ import { Plans } from './test_data/plans';
 import { Customer } from './test_data/customer';
 
 export default {
-  title: 'Example/HorizontalCards',
+  title: 'Plans/HorizontalCards',
   component: HorizontalCards,
   argTypes: {
     pageWidth: {
