@@ -3,14 +3,29 @@
 import { HorizontalCards } from '../components';
 import { Plans } from './test_data/plans';
 import { Customer } from './test_data/customer';
+import { Meta, Source } from '@storybook/blocks';
 
 export default {
   title: 'Plans/HorizontalCards',
   component: HorizontalCards,
+  tags: ['autodocs'],
   argTypes: {
     pageWidth: {
       options: ["default", "narrow", "full"],
       control: { type: 'radio' },
+    },
+  },
+  paramaters: {
+    docs: {
+      page: () => (
+        <>
+          <Meta title="HorizontalCards" />
+          <Source code={`const thisIsCustomSource = true;
+            if (isSyntaxHighlighted) {
+              console.log('syntax highlighting is working');
+            }`} />
+        </>
+      ),
     },
   },
   args: {
