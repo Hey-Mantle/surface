@@ -1,4 +1,4 @@
-import { Banner, Badge, Box, Button, ButtonGroup, Card, Divider, InlineStack, Icon, Layout, Grid, Page, Text, BlockStack } from "@shopify/polaris";
+import { Badge, Banner, Box, BlockStack, Button, ButtonGroup, Card, Divider, Grid, InlineStack, Icon, Layout, Page, Text } from "@shopify/polaris";
 import { CheckIcon, PlusIcon } from "@shopify/polaris-icons";
 import { useState } from "react";
 
@@ -39,7 +39,7 @@ export const HorizontalCards = ({
     showCurrencySymbol = true, // boolean
     showPlanIntervalToggle = true, // boolean
     showTrialDaysAsFeature = true, // boolean
-    useShortFormPlanIntevals = true, // boolean: e.g. show "$ / mo" instead of "$ / month"
+    useShortFormPlanIntervals = true, // boolean: e.g. show "$ / mo" instead of "$ / month"
     pageWidth = "default", // string: "full", "narrow", or "default"
     showCustomPlans = true, // boolean: show custom plans
   }) => {
@@ -76,11 +76,6 @@ export const HorizontalCards = ({
         {plan.description && (
           <Text tone="subdued">
             {plan.description}
-          </Text>
-        )}
-        {!showTrialDaysAsFeature && plan.trialDays !== 0 && (
-          <Text tone="subdued">
-            {LABELS.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", plan.trialDays)}
           </Text>
         )}
       </BlockStack>
@@ -136,7 +131,7 @@ export const HorizontalCards = ({
               {plan.amount}
             </Text>
             <Text variant="bodyLg" tone="subdued">
-              {LABELS.PER} {plan.interval === PLAN_INTERVALS.ANNUAL ? useShortFormPlanIntevals ? LABELS.YEAR_SHORT : LABELS.YEAR : useShortFormPlanIntevals ? LABELS.MONTH_SHORT : LABELS.MONTH}
+              {LABELS.PER} {plan.interval === PLAN_INTERVALS.ANNUAL ? useShortFormPlanIntervals ? LABELS.YEAR_SHORT : LABELS.YEAR : useShortFormPlanIntervals ? LABELS.MONTH_SHORT : LABELS.MONTH}
             </Text>
           </InlineStack>
         ) : (
@@ -145,7 +140,7 @@ export const HorizontalCards = ({
               {showCurrencySymbol && LABELS.CURRENCY_SYMBOL}{plan.amount}
             </Text>
             <Text alignment="center" variant="bodyLg" tone="subdued">
-              {LABELS.PER} {plan.interval === PLAN_INTERVALS.ANNUAL ? useShortFormPlanIntevals ? LABELS.YEAR_SHORT : LABELS.YEAR : useShortFormPlanIntevals ? LABELS.MONTH_SHORT : LABELS.MONTH}
+              {LABELS.PER} {plan.interval === PLAN_INTERVALS.ANNUAL ? useShortFormPlanIntervals ? LABELS.YEAR_SHORT : LABELS.YEAR : useShortFormPlanIntervals ? LABELS.MONTH_SHORT : LABELS.MONTH}
             </Text>
           </InlineStack>
         )}

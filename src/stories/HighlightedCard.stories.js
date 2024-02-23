@@ -1,10 +1,10 @@
-import { HorizontalCards } from '../components';
+import { HighlightedCard } from '../components';
 import { Plans } from './test_data/plans';
 import { Customer } from './test_data/customer';
 
 export default {
-  title: 'Plans/HorizontalCards',
-  component: HorizontalCards,
+  title: 'Plans/HighlightedCard',
+  component: HighlightedCard,
   tags: ['autodocs'],
   argTypes: {
     pageWidth: {
@@ -19,6 +19,7 @@ export default {
     showPlanIntervalToggle: true,
     showTrialDaysAsFeature: true,
     useShortFormPlanIntevals: true,
+    addSpacingToNonRecommendedPlans: true,
     customFieldCta: null,
     customFieldPlanRecommended: "Recommended",
     showCustomPlans: false,
