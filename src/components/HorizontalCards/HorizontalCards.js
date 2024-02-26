@@ -1,6 +1,6 @@
-import { Badge, Banner, Box, BlockStack, Button, ButtonGroup, Card, Divider, Grid, InlineStack, Icon, Layout, Page, Text } from "@shopify/polaris";
-import { CheckIcon, PlusIcon } from "@shopify/polaris-icons";
 import { useState } from "react";
+import { CheckIcon, PlusIcon } from "@shopify/polaris-icons";
+import { Badge, Banner, Box, BlockStack, Button, ButtonGroup, Card, Divider, Grid, InlineStack, Icon, Layout, Page, Text } from "@shopify/polaris";
 
 const LABELS = {
   BACK: "Back",
