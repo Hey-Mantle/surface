@@ -9,14 +9,14 @@ class oe {
    * @param {string} params.customerApiToken - The Mantle Customer API Token returned by the /identify endpoint
    * @param {string} params.apiUrl - The Mantle API URL to use
    */
-  constructor({ appId: r, apiKey: R, customerApiToken: h, apiUrl: p = "https://appapi.heymantle.com/v1" }) {
+  constructor({ appId: r, apiKey: h, customerApiToken: d, apiUrl: p = "https://appapi.heymantle.com/v1" }) {
     if (!r)
       throw new Error("MantleClient appId is required");
-    if (typeof window < "u" && R)
+    if (typeof window < "u" && h)
       throw new Error("MantleClient apiKey should never be used in the browser");
-    if (!R && !h)
+    if (!h && !d)
       throw new Error("MantleClient one of apiKey or customerApiToken is required");
-    this.appId = r, this.apiKey = R, this.customerApiToken = h, this.apiUrl = p;
+    this.appId = r, this.apiKey = h, this.customerApiToken = d, this.apiUrl = p;
   }
   /**
    * Makes a request to the Mantle API
@@ -26,10 +26,10 @@ class oe {
    * @param {JSON} [params.body] - The request body
    * @returns {Promise<JSON>} a promise that resolves to the response body
    */
-  async mantleRequest({ path: r, method: R = "GET", body: h }) {
+  async mantleRequest({ path: r, method: h = "GET", body: d }) {
     try {
-      return await (await fetch(`${this.apiUrl}/v1${r.startsWith("/") ? "" : "/"}${r}`, {
-        method: R,
+      return await (await fetch(`${this.apiUrl}${r.startsWith("/") ? "" : "/"}${r}`, {
+        method: h,
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -37,8 +37,8 @@ class oe {
           ...this.apiKey ? { "X-Mantle-App-Api-Key": this.apiKey } : {},
           ...this.customerApiToken ? { "X-Mantle-Customer-Api-Token": this.customerApiToken } : {}
         },
-        ...h && {
-          body: JSON.stringify(h)
+        ...d && {
+          body: JSON.stringify(d)
         }
       })).json();
     } catch (p) {
@@ -56,11 +56,11 @@ class oe {
    * @param {Object} customFields - Any custom fields to send to Mantle
    * @returns {Promise<JSON>} a promise that resolves to the response body
    */
-  async identify({ platformId: r, myshopifyDomain: R, platform: h = "shopify", accessToken: p, name: c, email: O, customFields: b }) {
+  async identify({ platformId: r, myshopifyDomain: h, platform: d = "shopify", accessToken: p, name: c, email: O, customFields: b }) {
     return await this.mantleRequest({
       path: "identify",
       method: "POST",
-      body: { platformId: r, myshopifyDomain: R, platform: h, accessToken: p, name: c, email: O, customFields: b }
+      body: { platformId: r, myshopifyDomain: h, platform: d, accessToken: p, name: c, email: O, customFields: b }
     });
   }
   /**
@@ -74,14 +74,15 @@ class oe {
    * Subscribe to a plan
    * @param {Object} params - The subscription options
    * @param {string} params.planId - The ID of the plan to subscribe to
+   * @param {string} params.discountId - The ID of the discount to apply to the subscription
    * @param {string} params.returnUrl - The URL to redirect to after the subscription is complete
    * @returns {Promise<Subscription>} a promise that resolves to the created subscription
    */
-  async subscribe({ planId: r, returnUrl: R }) {
+  async subscribe({ planId: r, discountId: h, returnUrl: d }) {
     return await this.mantleRequest({
       path: "subscriptions",
       method: "POST",
-      body: { planId: r, returnUrl: R }
+      body: { planId: r, discountId: h, returnUrl: d }
     });
   }
   /**
@@ -98,11 +99,11 @@ class oe {
    * @param {number} params.cappedAmount - The capped amount of the usage charge
    * @returns {Promise<Subscription>} a promise that resolves to the updated subscription
    */
-  async updateSubscription({ id: r, cappedAmount: R }) {
+  async updateSubscription({ id: r, cappedAmount: h }) {
     return await this.mantleRequest({
       path: "subscriptions",
       method: "PUT",
-      body: { id: r, cappedAmount: R }
+      body: { id: r, cappedAmount: h }
     });
   }
   /**
@@ -114,14 +115,14 @@ class oe {
    * @param {JSON} params.properties - The event properties
    * @returns {Promise<boolean>} true if the event was sent successfully
    */
-  async sendUsageEvent({ eventId: r, eventName: R, customerId: h, properties: p = {} }) {
+  async sendUsageEvent({ eventId: r, eventName: h, customerId: d, properties: p = {} }) {
     return await this.mantleRequest({
       path: "usage_events",
       method: "POST",
       body: {
         eventId: r,
-        eventName: R,
-        ...h ? { customerId: h } : {},
+        eventName: h,
+        ...d ? { customerId: d } : {},
         properties: p
       }
     });
@@ -148,22 +149,22 @@ var ue = {
 const le = se(), me = ({ feature: u, count: r = 0 }) => (u == null ? void 0 : u.type) === "boolean" ? u.value : (u == null ? void 0 : u.type) === "limit" ? r < u.value || u.value === -1 : !1, ge = ({
   appId: u,
   customerApiToken: r,
-  apiUrl: R = "https://appapi.heymantle.com/v1",
-  children: h
+  apiUrl: h = "https://appapi.heymantle.com/v1",
+  children: d
 }) => {
-  const p = new ue.MantleClient({ appId: u, customerApiToken: r, apiUrl: R }), [c, O] = x(null), [b, U] = x(!0), [V, y] = x(null), T = async () => {
+  const p = new ue.MantleClient({ appId: u, customerApiToken: r, apiUrl: h }), [c, O] = x(null), [b, U] = x(!0), [V, y] = x(null), T = async () => {
     try {
       U(!0);
-      const d = await p.getCustomer();
-      O(d);
-    } catch (d) {
-      y(d);
+      const g = await p.getCustomer();
+      O(g);
+    } catch (g) {
+      y(g);
     } finally {
       U(!1);
     }
-  }, F = async ({ eventId: d, eventName: N, properties: B = {} }) => {
-    await p.sendUsageEvent({ eventId: d, eventName: N, properties: B });
-  }, M = async ({ planId: d, discountId: N, returnUrl: B }) => await p.subscribe({ planId: d, discountId: N, returnUrl: B }), D = async () => await p.cancelSubscription();
+  }, F = async ({ eventId: g, eventName: N, properties: B = {} }) => {
+    await p.sendUsageEvent({ eventId: g, eventName: N, properties: B });
+  }, M = async ({ planId: g, discountId: N, returnUrl: B }) => await p.subscribe({ planId: g, discountId: N, returnUrl: B }), D = async () => await p.cancelSubscription();
   ie(() => {
     r && T();
   }, [r]);
@@ -181,14 +182,14 @@ const le = se(), me = ({ feature: u, count: r = 0 }) => (u == null ? void 0 : u.
         pushEvent: F,
         subscribe: M,
         cancelSubscription: D,
-        isFeatureEnabled: ({ featureKey: d, count: N = 0 }) => c != null && c.features[d] ? me({ feature: c.features[d], count: N }) : !1,
-        limitForFeature: ({ featureKey: d }) => c != null && c.features[d] && Y.features[d].type === "limit" ? c.features[d].value : -1,
+        isFeatureEnabled: ({ featureKey: g, count: N = 0 }) => c != null && c.features[g] ? me({ feature: c.features[g], count: N }) : !1,
+        limitForFeature: ({ featureKey: g }) => c != null && c.features[g] && Y.features[g].type === "limit" ? c.features[g].value : -1,
         refetch: async () => {
           await T();
         }
       }
     },
-    h
+    d
   );
 }, Se = () => {
   const u = ce(le);
@@ -213,7 +214,7 @@ var Q = function(r) {
   }));
 };
 Q.displayName = "PlusIcon";
-const S = {
+const A = {
   BACK: "Back",
   CURRENCY_SYMBOL: "$",
   CURRENT_PLAN: "Current plan",
@@ -238,8 +239,8 @@ const S = {
 }, Ae = ({
   customer: u,
   plans: r,
-  onSubscribe: R,
-  backUrl: h = "",
+  onSubscribe: h,
+  backUrl: d = "",
   // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
   showRecommendedBadge: p = !0,
   // boolean
@@ -260,45 +261,45 @@ const S = {
   showCustomPlans: F = !0
   // boolean: show custom plans
 }) => {
-  const M = u == null ? void 0 : u.subscription, D = new URLSearchParams(window.location.search), w = r.some((n) => n.interval === P.ANNUAL) && r.some((n) => n.interval === P.EVERY_30_DAYS), E = r.find((n) => n.id === (M == null ? void 0 : M.plan.id)), [Y, d] = x(E ? E.interval : w ? P.ANNUAL : P.EVERY_30_DAYS), N = r.filter((n) => n.availability !== "customerTag" && n.availability !== "customer"), B = U && w ? N.filter((n) => n.interval === Y) : N, C = F ? r.filter((n) => n.availability === "customerTag" || n.availability === "customer") : [], [f, Z] = x(D.get("subscribed") === "true"), W = (n = B.length) => n % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : n % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : n % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : n === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, q = ({ plan: n, discount: t }) => {
+  const M = u == null ? void 0 : u.subscription, D = new URLSearchParams(window.location.search), w = r.some((n) => n.interval === P.ANNUAL) && r.some((n) => n.interval === P.EVERY_30_DAYS), E = r.find((n) => n.id === (M == null ? void 0 : M.plan.id)), [Y, g] = x(E ? E.interval : w ? P.ANNUAL : P.EVERY_30_DAYS), N = r.filter((n) => n.availability !== "customerTag" && n.availability !== "customer"), B = U && w ? N.filter((n) => n.interval === Y) : N, C = F ? r.filter((n) => n.availability === "customerTag" || n.availability === "customer") : [], [f, Z] = x(D.get("subscribed") === "true"), W = (n = B.length) => n % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : n % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : n % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : n === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, q = ({ plan: n, discount: t }) => {
     const l = n.customFields && n.customFields[O];
-    return /* @__PURE__ */ e.createElement(m, null, /* @__PURE__ */ e.createElement(_, { align: "space-between", gap: "100" }, /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, n.name), l && p && /* @__PURE__ */ e.createElement(re, { tone: "success" }, S.MOST_POPULAR)), n.description && /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, n.description));
-  }, X = ({ plan: n, discount: t }) => /* @__PURE__ */ e.createElement(m, { gap: "100" }, V && n.trialDays !== 0 && /* @__PURE__ */ e.createElement(_, { align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, S.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", n.trialDays))), n.featuresOrder.map((l, s) => {
+    return /* @__PURE__ */ e.createElement(m, null, /* @__PURE__ */ e.createElement(_, { align: "space-between", gap: "100" }, /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, n.name), l && p && /* @__PURE__ */ e.createElement(re, { tone: "success" }, A.MOST_POPULAR)), n.description && /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, n.description));
+  }, X = ({ plan: n, discount: t }) => /* @__PURE__ */ e.createElement(m, { gap: "100" }, V && n.trialDays !== 0 && /* @__PURE__ */ e.createElement(_, { align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, A.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", n.trialDays))), n.featuresOrder.map((l, s) => {
     const o = n.features[l];
     if (o.type !== "boolean" || o.value === !0)
       return /* @__PURE__ */ e.createElement(_, { key: `plan-feature-${s}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), o.type === "boolean" ? /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, o.name) : /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, o.value, " ", o.name));
-  })), G = ({ plan: n, discount: t }) => /* @__PURE__ */ e.createElement(m, { gap: "100" }, t ? /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { variant: "headingXl" }, b && S.CURRENCY_SYMBOL, t.discountedAmount), /* @__PURE__ */ e.createElement(i, { variant: "headingXl", tone: "subdued", fontWeight: "medium", textDecorationLine: "line-through" }, n.amount), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg", tone: "subdued" }, S.PER, " ", n.interval === P.ANNUAL ? y ? S.YEAR_SHORT : S.YEAR : y ? S.MONTH_SHORT : S.MONTH)) : /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "headingXl" }, b && S.CURRENCY_SYMBOL, n.amount), /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "bodyLg", tone: "subdued" }, S.PER, " ", n.interval === P.ANNUAL ? y ? S.YEAR_SHORT : S.YEAR : y ? S.MONTH_SHORT : S.MONTH)), n.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(m, null, n.usageCharges.map((l, s) => /* @__PURE__ */ e.createElement(_, { key: `plan-usageCharge-${s}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: Q, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, l.terms))))), a = ({ plan: n, discount: t }) => {
+  })), G = ({ plan: n, discount: t }) => /* @__PURE__ */ e.createElement(m, { gap: "100" }, t ? /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { variant: "headingXl" }, b && A.CURRENCY_SYMBOL, t.discountedAmount), /* @__PURE__ */ e.createElement(i, { variant: "headingXl", tone: "subdued", fontWeight: "medium", textDecorationLine: "line-through" }, n.amount), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg", tone: "subdued" }, A.PER, " ", n.interval === P.ANNUAL ? y ? A.YEAR_SHORT : A.YEAR : y ? A.MONTH_SHORT : A.MONTH)) : /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "headingXl" }, b && A.CURRENCY_SYMBOL, n.amount), /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "bodyLg", tone: "subdued" }, A.PER, " ", n.interval === P.ANNUAL ? y ? A.YEAR_SHORT : A.YEAR : y ? A.MONTH_SHORT : A.MONTH)), n.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(m, null, n.usageCharges.map((l, s) => /* @__PURE__ */ e.createElement(_, { key: `plan-usageCharge-${s}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: Q, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, l.terms))))), a = ({ plan: n, discount: t }) => {
     const l = c && n.customFields[c], s = n.customFields && n.customFields[O];
     return /* @__PURE__ */ e.createElement(
       k,
       {
         size: "large",
         variant: s ? "primary" : "secondary",
-        onClick: () => R({ planId: n.id, discountId: t == null ? void 0 : t.id }),
+        onClick: () => h({ planId: n.id, discountId: t == null ? void 0 : t.id }),
         disabled: (E == null ? void 0 : E.id) === n.id
       },
-      (E == null ? void 0 : E.id) === n.id ? S.CURRENT_PLAN : l ? n.customFields[c] : S.SELECT_PLAN
+      (E == null ? void 0 : E.id) === n.id ? A.CURRENT_PLAN : l ? n.customFields[c] : A.SELECT_PLAN
     );
   };
   return /* @__PURE__ */ e.createElement(
     ee,
     {
-      title: S.PLANS,
-      backAction: h !== "" ? { content: S.BACK, url: h } : void 0,
+      title: A.PLANS,
+      backAction: d !== "" ? { content: A.BACK, url: d } : void 0,
       secondaryActions: U && w ? /* @__PURE__ */ e.createElement(te, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
         k,
         {
           pressed: Y === P.EVERY_30_DAYS,
-          onClick: () => d(P.EVERY_30_DAYS)
+          onClick: () => g(P.EVERY_30_DAYS)
         },
-        S.MONTHLY
+        A.MONTHLY
       ), /* @__PURE__ */ e.createElement(
         k,
         {
           pressed: Y === P.ANNUAL,
-          onClick: () => d(P.ANNUAL)
+          onClick: () => g(P.ANNUAL)
         },
-        S.YEARLY
+        A.YEARLY
       )) : void 0,
       fullWidth: T === "full",
       narrowWidth: T === "narrow"
@@ -307,23 +308,23 @@ const S = {
       ne,
       {
         tone: "success",
-        title: S.SUBSCRIBE_SUCCESS_TITLE,
+        title: A.SUBSCRIBE_SUCCESS_TITLE,
         onDismiss: () => {
           Z(!1), window.history.replaceState({}, document.title, window.location.pathname);
         }
       },
-      S.SUBSCRIBE_SUCCESS_BODY
+      A.SUBSCRIBE_SUCCESS_BODY
     ), /* @__PURE__ */ e.createElement(v, null, B.map((n, t) => {
       var s;
       const l = ((s = n.discounts) == null ? void 0 : s.length) > 0 ? n.discounts.reduce((o, K) => o.discountedAmount < K.discountedAmount ? o : K) : null;
       return /* @__PURE__ */ e.createElement(v.Cell, { key: `plan-${t}`, columnSpan: W() }, /* @__PURE__ */ e.createElement(J, null, /* @__PURE__ */ e.createElement(m, { gap: "400" }, q({ plan: n, discount: l }), G({ plan: n, discount: l }), a({ plan: n, discount: l }), X({ plan: n, discount: l }))));
-    })), (C == null ? void 0 : C.length) > 0 && /* @__PURE__ */ e.createElement(ae, { borderColor: "border" }), (C == null ? void 0 : C.length) > 0 && /* @__PURE__ */ e.createElement(m, { gap: "300" }, /* @__PURE__ */ e.createElement(L, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(i, { variant: "headingMd" }, S.CUSTOM_PLANS)), /* @__PURE__ */ e.createElement(v, null, C.map((n, t) => {
+    })), (C == null ? void 0 : C.length) > 0 && /* @__PURE__ */ e.createElement(ae, { borderColor: "border" }), (C == null ? void 0 : C.length) > 0 && /* @__PURE__ */ e.createElement(m, { gap: "300" }, /* @__PURE__ */ e.createElement(L, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(i, { variant: "headingMd" }, A.CUSTOM_PLANS)), /* @__PURE__ */ e.createElement(v, null, C.map((n, t) => {
       var s;
       const l = ((s = n.discounts) == null ? void 0 : s.length) > 0 ? n.discounts.reduce((o, K) => o.discountedAmount < K.discountedAmount ? o : K) : null;
       return /* @__PURE__ */ e.createElement(v.Cell, { key: `custom-plan-${t}`, columnSpan: W() }, /* @__PURE__ */ e.createElement(J, null, /* @__PURE__ */ e.createElement(m, { gap: "400" }, q({ plan: n, discount: l }), G({ plan: n, discount: l }), a({ plan: n, discount: l }), X({ plan: n, discount: l }))));
     }))))))
   );
-}, A = {
+}, R = {
   BACK: "Back",
   CURRENCY_SYMBOL: "$",
   CURRENT_PLAN: "Current plan",
@@ -348,8 +349,8 @@ const S = {
 }, Re = ({
   customer: u,
   plans: r,
-  onSubscribe: R,
-  backUrl: h = "",
+  onSubscribe: h,
+  backUrl: d = "",
   // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
   showRecommendedBadge: p = !0,
   // boolean
@@ -372,7 +373,7 @@ const S = {
   showCustomPlans: M = !0
   // boolean: show custom plans
 }) => {
-  const D = u == null ? void 0 : u.subscription, w = new URLSearchParams(window.location.search), E = r.some((t) => t.interval === H.ANNUAL) && r.some((t) => t.interval === H.EVERY_30_DAYS), Y = r.find((t) => t.id === (D == null ? void 0 : D.plan.id)), [d, N] = x(Y ? Y.interval : E ? H.ANNUAL : H.EVERY_30_DAYS), B = r.filter((t) => t.availability !== "customerTag" && t.availability !== "customer"), C = V && E ? B.filter((t) => t.interval === d) : B, f = M ? r.filter((t) => t.availability === "customerTag" || t.availability === "customer") : [], [Z, W] = x(w.get("subscribed") === "true"), q = (t = C.length) => t % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : t % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : t % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : t === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, X = () => C.length % 4 === 0 ? 4 : C.length % 3 === 0 ? 3 : C.length % 2 === 0 ? 2 : C.length === 1 ? 1 : 4, G = (t) => /* @__PURE__ */ e.createElement(m, { gap: "100" }, /* @__PURE__ */ e.createElement(i, { variant: "headingMd", alignment: "center" }, t.name), t.description && /* @__PURE__ */ e.createElement(i, { variant: "bodyLg", tone: "subdued", alignment: "center" }, t.description)), a = (t) => /* @__PURE__ */ e.createElement(m, { gap: "300" }, y && t.trialDays !== 0 && /* @__PURE__ */ e.createElement(_, { align: "center", blockAlign: "center", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, A.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", t.trialDays))), t.featuresOrder.map((l, s) => {
+  const D = u == null ? void 0 : u.subscription, w = new URLSearchParams(window.location.search), E = r.some((t) => t.interval === H.ANNUAL) && r.some((t) => t.interval === H.EVERY_30_DAYS), Y = r.find((t) => t.id === (D == null ? void 0 : D.plan.id)), [g, N] = x(Y ? Y.interval : E ? H.ANNUAL : H.EVERY_30_DAYS), B = r.filter((t) => t.availability !== "customerTag" && t.availability !== "customer"), C = V && E ? B.filter((t) => t.interval === g) : B, f = M ? r.filter((t) => t.availability === "customerTag" || t.availability === "customer") : [], [Z, W] = x(w.get("subscribed") === "true"), q = (t = C.length) => t % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : t % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : t % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : t === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, X = () => C.length % 4 === 0 ? 4 : C.length % 3 === 0 ? 3 : C.length % 2 === 0 ? 2 : C.length === 1 ? 1 : 4, G = (t) => /* @__PURE__ */ e.createElement(m, { gap: "100" }, /* @__PURE__ */ e.createElement(i, { variant: "headingMd", alignment: "center" }, t.name), t.description && /* @__PURE__ */ e.createElement(i, { variant: "bodyLg", tone: "subdued", alignment: "center" }, t.description)), a = (t) => /* @__PURE__ */ e.createElement(m, { gap: "300" }, y && t.trialDays !== 0 && /* @__PURE__ */ e.createElement(_, { align: "center", blockAlign: "center", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, R.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", t.trialDays))), t.featuresOrder.map((l, s) => {
     const o = t.features[l];
     if (o.type !== "boolean" || o.value === !0)
       return /* @__PURE__ */ e.createElement(_, { key: `plan-feature-${s}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), o.type === "boolean" ? /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, o.name) : /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, o.value, " ", o.name));
@@ -380,27 +381,27 @@ const S = {
     let l = t.amount;
     for (const s of t.discounts)
       l = s.percentage ? t.amount - t.amount * (s.percentage / 100) : t.amount - s.amount;
-    return /* @__PURE__ */ e.createElement(m, { gap: "100" }, t.discounts.length > 0 ? /* @__PURE__ */ e.createElement(_, { align: "center", blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { variant: "heading3xl" }, U && A.CURRENCY_SYMBOL, l), /* @__PURE__ */ e.createElement(i, { variant: "heading3xl", tone: "subdued", fontWeight: "medium", textDecorationLine: "line-through" }, t.amount), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg", tone: "subdued" }, A.PER, " ", t.interval === H.ANNUAL ? T ? A.YEAR_SHORT : A.YEAR : T ? A.MONTH_SHORT : A.MONTH)) : /* @__PURE__ */ e.createElement(_, { align: "center", blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "heading3xl" }, U && A.CURRENCY_SYMBOL, t.amount), /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "bodyLg", tone: "subdued" }, A.PER, " ", t.interval === H.ANNUAL ? T ? A.YEAR_SHORT : A.YEAR : T ? A.MONTH_SHORT : A.MONTH)), t.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(m, null, t.usageCharges.map((s, o) => /* @__PURE__ */ e.createElement(_, { key: `plan-usageCharge-${o}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: Q, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, s.terms)))));
+    return /* @__PURE__ */ e.createElement(m, { gap: "100" }, t.discounts.length > 0 ? /* @__PURE__ */ e.createElement(_, { align: "center", blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { variant: "heading3xl" }, U && R.CURRENCY_SYMBOL, l), /* @__PURE__ */ e.createElement(i, { variant: "heading3xl", tone: "subdued", fontWeight: "medium", textDecorationLine: "line-through" }, t.amount), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg", tone: "subdued" }, R.PER, " ", t.interval === H.ANNUAL ? T ? R.YEAR_SHORT : R.YEAR : T ? R.MONTH_SHORT : R.MONTH)) : /* @__PURE__ */ e.createElement(_, { align: "center", blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "heading3xl" }, U && R.CURRENCY_SYMBOL, t.amount), /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "bodyLg", tone: "subdued" }, R.PER, " ", t.interval === H.ANNUAL ? T ? R.YEAR_SHORT : R.YEAR : T ? R.MONTH_SHORT : R.MONTH)), t.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(m, null, t.usageCharges.map((s, o) => /* @__PURE__ */ e.createElement(_, { key: `plan-usageCharge-${o}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: Q, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, s.terms)))));
   };
   return /* @__PURE__ */ e.createElement(
     ee,
     {
-      title: A.PLANS,
-      backAction: h && h !== "" ? { content: A.BACK, url: h } : void 0,
+      title: R.PLANS,
+      backAction: d && d !== "" ? { content: R.BACK, url: d } : void 0,
       secondaryActions: V && E ? /* @__PURE__ */ e.createElement(te, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
         k,
         {
-          pressed: d === H.EVERY_30_DAYS,
+          pressed: g === H.EVERY_30_DAYS,
           onClick: () => N(H.EVERY_30_DAYS)
         },
-        A.MONTHLY
+        R.MONTHLY
       ), /* @__PURE__ */ e.createElement(
         k,
         {
-          pressed: d === H.ANNUAL,
+          pressed: g === H.ANNUAL,
           onClick: () => N(H.ANNUAL)
         },
-        A.YEARLY
+        R.YEARLY
       )) : void 0,
       fullWidth: F === "full",
       narrowWidth: F === "narrow"
@@ -409,12 +410,12 @@ const S = {
       ne,
       {
         tone: "success",
-        title: A.SUBSCRIBE_SUCCESS_TITLE,
+        title: R.SUBSCRIBE_SUCCESS_TITLE,
         onDismiss: () => {
           W(!1), window.history.replaceState({}, document.title, window.location.pathname);
         }
       },
-      A.SUBSCRIBE_SUCCESS_BODY
+      R.SUBSCRIBE_SUCCESS_BODY
     ), /* @__PURE__ */ e.createElement(v, { columns: X() }, C.map((t, l) => {
       const s = t.customFields && t.customFields[O], o = c && t.customFields[c];
       return /* @__PURE__ */ e.createElement(v.Cell, { key: `plan-${l}`, columnSpan: q() }, /* @__PURE__ */ e.createElement(
@@ -446,27 +447,27 @@ const S = {
               {
                 size: "large",
                 variant: s ? "primary" : "secondary",
-                onClick: () => R(t)
+                onClick: () => h(t)
               },
-              o ? t.customFields[c] : A.SELECT_PLAN
-            ), a(t), s && p && /* @__PURE__ */ e.createElement(_, { key: `plan-feature-${l}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(re, { tone: "success" }, A.MOST_POPULAR)))
+              o ? t.customFields[c] : R.SELECT_PLAN
+            ), a(t), s && p && /* @__PURE__ */ e.createElement(_, { key: `plan-feature-${l}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(re, { tone: "success" }, R.MOST_POPULAR)))
           )
         )
       ));
-    })), (f == null ? void 0 : f.length) > 0 && /* @__PURE__ */ e.createElement(ae, { borderColor: "border" }), (f == null ? void 0 : f.length) > 0 && /* @__PURE__ */ e.createElement(m, { gap: "300" }, /* @__PURE__ */ e.createElement(L, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(i, { variant: "headingMd" }, A.CUSTOM_PLANS)), /* @__PURE__ */ e.createElement(v, null, f.map((t, l) => {
+    })), (f == null ? void 0 : f.length) > 0 && /* @__PURE__ */ e.createElement(ae, { borderColor: "border" }), (f == null ? void 0 : f.length) > 0 && /* @__PURE__ */ e.createElement(m, { gap: "300" }, /* @__PURE__ */ e.createElement(L, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(i, { variant: "headingMd" }, R.CUSTOM_PLANS)), /* @__PURE__ */ e.createElement(v, null, f.map((t, l) => {
       const s = t.customFields && t.customFields[O], o = c && t.customFields[c];
       return /* @__PURE__ */ e.createElement(v.Cell, { key: `custom-plan-${l}`, columnSpan: q(f.length) }, /* @__PURE__ */ e.createElement(J, null, /* @__PURE__ */ e.createElement(m, { gap: "400" }, G(t), n(t), /* @__PURE__ */ e.createElement(
         k,
         {
           size: "large",
           variant: s ? "primary" : "secondary",
-          onClick: () => R(t)
+          onClick: () => h(t)
         },
-        o ? t.customFields[c] : A.SELECT_PLAN
+        o ? t.customFields[c] : R.SELECT_PLAN
       ), a(t))));
     })))))))
   );
-}, g = {
+}, S = {
   BACK: "Back",
   CURRENCY_SYMBOL: "$",
   CURRENT_PLAN: "Current plan",
@@ -492,8 +493,8 @@ const S = {
 }, he = ({
   customer: u,
   plans: r,
-  onSubscribe: R,
-  backUrl: h = "",
+  onSubscribe: h,
+  backUrl: d = "",
   // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
   showRecommendedBadge: p = !0,
   // boolean
@@ -514,42 +515,42 @@ const S = {
   showCustomPlans: F = !0
   // boolean: show custom plans
 }) => {
-  const M = u == null ? void 0 : u.subscription, D = new URLSearchParams(window.location.search), w = r.some((a) => a.interval === I.ANNUAL) && r.some((a) => a.interval === I.EVERY_30_DAYS), E = r.find((a) => a.id === (M == null ? void 0 : M.plan.id)), [Y, d] = x(E ? E.interval : w ? I.ANNUAL : I.EVERY_30_DAYS), N = r.filter((a) => a.availability !== "customerTag" && a.availability !== "customer"), B = U && w ? N.filter((a) => a.interval === Y) : N, C = F ? r.filter((a) => a.availability === "customerTag" || a.availability === "customer") : [], [f, Z] = x(D.get("subscribed") === "true"), W = ({ plan: a, discount: n }) => /* @__PURE__ */ e.createElement(m, null, /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, a.name), a.description && /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, a.description)), q = ({ plan: a, discount: n }) => /* @__PURE__ */ e.createElement(m, { gap: "200" }, /* @__PURE__ */ e.createElement(i, { fontWeight: "medium" }, g.FEATURES), /* @__PURE__ */ e.createElement(m, { gap: "100" }, V && a.trialDays !== 0 && /* @__PURE__ */ e.createElement(_, { align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, g.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", a.trialDays))), a.featuresOrder.map((t, l) => {
+  const M = u == null ? void 0 : u.subscription, D = new URLSearchParams(window.location.search), w = r.some((a) => a.interval === I.ANNUAL) && r.some((a) => a.interval === I.EVERY_30_DAYS), E = r.find((a) => a.id === (M == null ? void 0 : M.plan.id)), [Y, g] = x(E ? E.interval : w ? I.ANNUAL : I.EVERY_30_DAYS), N = r.filter((a) => a.availability !== "customerTag" && a.availability !== "customer"), B = U && w ? N.filter((a) => a.interval === Y) : N, C = F ? r.filter((a) => a.availability === "customerTag" || a.availability === "customer") : [], [f, Z] = x(D.get("subscribed") === "true"), W = ({ plan: a, discount: n }) => /* @__PURE__ */ e.createElement(m, null, /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, a.name), a.description && /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, a.description)), q = ({ plan: a, discount: n }) => /* @__PURE__ */ e.createElement(m, { gap: "200" }, /* @__PURE__ */ e.createElement(i, { fontWeight: "medium" }, S.FEATURES), /* @__PURE__ */ e.createElement(m, { gap: "100" }, V && a.trialDays !== 0 && /* @__PURE__ */ e.createElement(_, { align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, S.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", a.trialDays))), a.featuresOrder.map((t, l) => {
     const s = a.features[t];
     if (s.type !== "boolean" || s.value === !0)
       return /* @__PURE__ */ e.createElement(_, { key: `plan-feature-${l}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: j, tone: "positive" })), s.type === "boolean" ? /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, s.name) : /* @__PURE__ */ e.createElement(i, { tone: "subdued" }, s.value, " ", s.name));
-  }))), X = ({ plan: a, discount: n }) => /* @__PURE__ */ e.createElement(m, { gap: "100" }, n ? /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { variant: "headingXl" }, b && g.CURRENCY_SYMBOL, n.discountedAmount), /* @__PURE__ */ e.createElement(i, { variant: "headingXl", tone: "subdued", fontWeight: "medium", textDecorationLine: "line-through" }, a.amount), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg", tone: "subdued" }, g.PER, " ", a.interval === I.ANNUAL ? y ? g.YEAR_SHORT : g.YEAR : y ? g.MONTH_SHORT : g.MONTH)) : /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "headingXl" }, b && g.CURRENCY_SYMBOL, a.amount), /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "bodyLg", tone: "subdued" }, g.PER, " ", a.interval === I.ANNUAL ? y ? g.YEAR_SHORT : g.YEAR : y ? g.MONTH_SHORT : g.MONTH)), a.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(m, null, a.usageCharges.map((t, l) => /* @__PURE__ */ e.createElement(_, { key: `plan-usageCharge-${l}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: Q, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, t.terms))))), G = ({ plan: a, discount: n }) => {
+  }))), X = ({ plan: a, discount: n }) => /* @__PURE__ */ e.createElement(m, { gap: "100" }, n ? /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { variant: "headingXl" }, b && S.CURRENCY_SYMBOL, n.discountedAmount), /* @__PURE__ */ e.createElement(i, { variant: "headingXl", tone: "subdued", fontWeight: "medium", textDecorationLine: "line-through" }, a.amount), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg", tone: "subdued" }, S.PER, " ", a.interval === I.ANNUAL ? y ? S.YEAR_SHORT : S.YEAR : y ? S.MONTH_SHORT : S.MONTH)) : /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "headingXl" }, b && S.CURRENCY_SYMBOL, a.amount), /* @__PURE__ */ e.createElement(i, { alignment: "center", variant: "bodyLg", tone: "subdued" }, S.PER, " ", a.interval === I.ANNUAL ? y ? S.YEAR_SHORT : S.YEAR : y ? S.MONTH_SHORT : S.MONTH)), a.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(m, null, a.usageCharges.map((t, l) => /* @__PURE__ */ e.createElement(_, { key: `plan-usageCharge-${l}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement($, { source: Q, tone: "positive" })), /* @__PURE__ */ e.createElement(i, { variant: "bodyLg" }, t.terms))))), G = ({ plan: a, discount: n }) => {
     const t = c && a.customFields[c], l = a.customFields && a.customFields[O];
     return /* @__PURE__ */ e.createElement(_, { blockAlign: "center", gap: "400" }, /* @__PURE__ */ e.createElement(
       k,
       {
         size: "large",
         variant: l ? "primary" : "secondary",
-        onClick: () => R({ planId: a.id, discountId: n == null ? void 0 : n.id }),
+        onClick: () => h({ planId: a.id, discountId: n == null ? void 0 : n.id }),
         disabled: (E == null ? void 0 : E.id) === a.id
       },
-      (E == null ? void 0 : E.id) === a.id ? g.CURRENT_PLAN : t ? a.customFields[c] : g.SELECT_PLAN
-    ), l && p && /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement(re, { tone: "success" }, g.MOST_POPULAR)));
+      (E == null ? void 0 : E.id) === a.id ? S.CURRENT_PLAN : t ? a.customFields[c] : S.SELECT_PLAN
+    ), l && p && /* @__PURE__ */ e.createElement(L, null, /* @__PURE__ */ e.createElement(re, { tone: "success" }, S.MOST_POPULAR)));
   };
   return /* @__PURE__ */ e.createElement(
     ee,
     {
-      title: g.PLANS,
-      backAction: h !== "" ? { content: g.BACK, url: h } : void 0,
+      title: S.PLANS,
+      backAction: d !== "" ? { content: S.BACK, url: d } : void 0,
       secondaryActions: U && w ? /* @__PURE__ */ e.createElement(te, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
         k,
         {
           pressed: Y === I.EVERY_30_DAYS,
-          onClick: () => d(I.EVERY_30_DAYS)
+          onClick: () => g(I.EVERY_30_DAYS)
         },
-        g.MONTHLY
+        S.MONTHLY
       ), /* @__PURE__ */ e.createElement(
         k,
         {
           pressed: Y === I.ANNUAL,
-          onClick: () => d(I.ANNUAL)
+          onClick: () => g(I.ANNUAL)
         },
-        g.YEARLY
+        S.YEARLY
       )) : void 0,
       fullWidth: T === "full",
       narrowWidth: T === "narrow"
@@ -558,17 +559,17 @@ const S = {
       ne,
       {
         tone: "success",
-        title: g.SUBSCRIBE_SUCCESS_TITLE,
+        title: S.SUBSCRIBE_SUCCESS_TITLE,
         onDismiss: () => {
           Z(!1), window.history.replaceState({}, document.title, window.location.pathname);
         }
       },
-      g.SUBSCRIBE_SUCCESS_BODY
+      S.SUBSCRIBE_SUCCESS_BODY
     ), B.map((a, n) => {
       var l;
       const t = ((l = a.discounts) == null ? void 0 : l.length) > 0 ? a.discounts.reduce((s, o) => s.discountedAmount < o.discountedAmount ? s : o) : null;
       return /* @__PURE__ */ e.createElement(J, { key: `plan-${n}` }, /* @__PURE__ */ e.createElement(v, null, /* @__PURE__ */ e.createElement(v.Cell, { columnSpan: { xs: 6, sm: 6, md: 3, lg: 6, xl: 12 } }, /* @__PURE__ */ e.createElement(m, { gap: "400" }, /* @__PURE__ */ e.createElement(m, { gap: "200" }, W({ plan: a, discount: t }), X({ plan: a, discount: t })), /* @__PURE__ */ e.createElement(L, null, G({ plan: a, discount: t })))), /* @__PURE__ */ e.createElement(v.Cell, { columnSpan: { xs: 6, sm: 6, md: 3, lg: 6, xl: 12 } }, q({ plan: a, discount: t }))));
-    }), (C == null ? void 0 : C.length) > 0 && /* @__PURE__ */ e.createElement(ae, { borderColor: "border" }), (C == null ? void 0 : C.length) > 0 && /* @__PURE__ */ e.createElement(m, { gap: "300" }, /* @__PURE__ */ e.createElement(L, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(i, { variant: "headingMd" }, g.CUSTOM_PLANS)), /* @__PURE__ */ e.createElement(v, null, C.map((a, n) => {
+    }), (C == null ? void 0 : C.length) > 0 && /* @__PURE__ */ e.createElement(ae, { borderColor: "border" }), (C == null ? void 0 : C.length) > 0 && /* @__PURE__ */ e.createElement(m, { gap: "300" }, /* @__PURE__ */ e.createElement(L, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(i, { variant: "headingMd" }, S.CUSTOM_PLANS)), /* @__PURE__ */ e.createElement(v, null, C.map((a, n) => {
       var l;
       const t = ((l = a.discounts) == null ? void 0 : l.length) > 0 ? a.discounts.reduce((s, o) => s.discountedAmount < o.discountedAmount ? s : o) : null;
       return /* @__PURE__ */ e.createElement(v.Cell, { key: `custom-plan-${n}`, columnSpan: columnSpan() }, /* @__PURE__ */ e.createElement(J, null, /* @__PURE__ */ e.createElement(m, { gap: "400" }, W({ plan: a, discount: t }), X({ plan: a, discount: t }), G({ plan: a, discount: t }), q({ plan: a, discount: t }))));

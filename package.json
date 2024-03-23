@@ -1,7 +1,7 @@
 {
   "name": "@heymantle/surface",
   "description": "Mantle's frontend component library",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": false,
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",
@@ -59,7 +59,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
-    "@heymantle/client": "^1.0.0",
+    "@heymantle/client": "^1.0.2",
     "@shopify/polaris-icons": "^8.1.0"
   },
   "publishConfig": {
