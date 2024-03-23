@@ -55,10 +55,10 @@ const App = (Component) => {
 Furthur down the stack you can then use the `useMantle` hook for most data and operations, for example:
 
 ```js
-import { useMantle } from "@heymantle/react";
+import { useMantle, HorizontalCards } from "@heymantle/react";
 
 const HomePage = () => {
-  const { customer, subscription, subscribe, cancelSubscription, pushEvent } = useMantle();
+  const { customer, subscription, plans, subscribe, cancelSubscription, pushEvent } = useMantle();
 
   useEffect(() => {
     pushEvent({
@@ -83,9 +83,14 @@ const HomePage = () => {
           </button>
         </div>
       ) : (
-        <div>
-          <a href="/plans">Select plan</a>
-        </div>
+        <HorizontalCards
+          customer={customer}
+          plans={plans}
+          onSubscribe={async ({ planId, discountId }) => {
+            const subscription = await subscribe({ planId, discountId });
+            open(subscription.confirmationUrl, "_top");
+          }}
+        />
       )}
     </div>
   )

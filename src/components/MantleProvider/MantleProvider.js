@@ -70,6 +70,14 @@ export const MantleProvider = ({
     await mantleClient.sendUsageEvent({ eventId, eventName, properties });
   };
 
+  const subscribe = async ({ planId, discountId, returnUrl }) => {
+    return await mantleClient.subscribe({ planId, discountId, returnUrl });
+  }
+
+  const cancelSubscription = async () => {
+    return await mantleClient.cancelSubscription();
+  }
+
   useEffect(() => {
     if (customerApiToken) {
       fetchCustomer();
@@ -90,6 +98,8 @@ export const MantleProvider = ({
         error,
         client: mantleClient,
         pushEvent,
+        subscribe,
+        cancelSubscription,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
           if (!!customer?.features[featureKey]) {
             return evaluateFeature({ feature: customer.features[featureKey], count });
