@@ -33,7 +33,7 @@ export default defineConfig ({
       formats: ["cjs", "es"]
     },
     rollupOptions: {
-      external: ["react"],
+      external: ["react", "@shopify/polaris"],
     },
   },
 });

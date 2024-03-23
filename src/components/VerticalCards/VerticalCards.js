@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { CheckIcon, PlusIcon } from "@shopify/polaris-icons";
 import { Badge, Banner, Box, BlockStack, Button, ButtonGroup, Card, Divider, Grid, InlineStack, Icon, Layout, Page, Text } from "@shopify/polaris";
 
@@ -44,7 +44,7 @@ export const VerticalCards = ({
     pageWidth = "default", // string: "full", "narrow", or "default"
     showCustomPlans = true, // boolean: show custom plans
   }) => {
-  const { subscription } = customer;
+  const subscription = customer?.subscription;
   const urlParams = new URLSearchParams(window.location.search);
   const hasMonthlyAndYearlyPlans = plans.some((plan) => plan.interval === PLAN_INTERVALS.ANNUAL) && plans.some((plan) => plan.interval === PLAN_INTERVALS.EVERY_30_DAYS);
   const currentPlan = plans.find((plan) => plan.id === subscription?.plan.id);

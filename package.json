@@ -50,16 +50,16 @@
     "rollup": "^3.12.0",
     "rollup-plugin-node-externals": "^5.1.0",
     "storybook": "^7.5.2",
-    "vite": "^4.5.0"
+    "vite": "^4.5.0",
+    "@shopify/polaris": "^12.0.0"
   },
   "peerDependencies": {
-    "react": "^18.2.0"
+    "react": "^18.2.0",
+    "@shopify/polaris": "^12.0.0"
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
-    "@shopify/polaris": "12.16.0",
-    "immer": "^10.0.1",
-    "use-immer": "^0.9.0",
+    "@heymantle/client": "^1.0.0",
     "@shopify/polaris-icons": "^8.1.0"
   },
   "publishConfig": {
