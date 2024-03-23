@@ -1,9 +1,9 @@
 /**
- * @typedef {import('./types').Feature} Feature
- * @typedef {import('./types').Customer} Customer
- * @typedef {import('./types').Subscription} Subscription
- * @typedef {import('./types').Plan} Plan
- * @typedef {import('./types').TMantleContext} TMantleContext
+ * @typedef {import('.').Feature} Feature
+ * @typedef {import('.').Customer} Customer
+ * @typedef {import('.').Subscription} Subscription
+ * @typedef {import('.').Plan} Plan
+ * @typedef {import('.').TMantleContext} TMantleContext
  */
 
 import React, { createContext, useContext, useState, useEffect } from "react";

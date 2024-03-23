@@ -1,7 +1,7 @@
 {
   "name": "@heymantle/surface",
   "description": "Mantle's frontend component library",
-  "version": "0.2.5",
+  "version": "0.2.7",
   "private": false,
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",
@@ -15,6 +15,7 @@
   },
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "types": "dist/types/index.d.ts",
   "files": [
     "dist"
   ],
@@ -22,7 +23,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "build": "vite build",
-    "test": "exit 0"
+    "test": "exit 0",
+    "build-and-publish": "npm run build && npx tsc && npm publish"
   },
   "keywords": [
     "mantle",
@@ -60,7 +62,7 @@
   },
   "dependencies": {
     "@emotion/react": "^11.11.1",
-    "@heymantle/client": "^1.0.3",
+    "@heymantle/client": "^1.0.9",
     "@shopify/polaris-icons": "^8.1.0"
   },
   "publishConfig": {
