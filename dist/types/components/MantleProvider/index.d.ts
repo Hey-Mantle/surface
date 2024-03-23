@@ -378,9 +378,9 @@ export type TMantleContext = {
      */
     clearEventQueue: ClearEventQueueCallback;
     /**
-     * - The MantleClient instance
+     * - The Mantle client instance
      */
-    client: MantleClient;
+    mantleClient: MantleClient;
 };
 export type RefetchCallback = () => Promise<void>;
 export type ClearEventQueueCallback = () => Promise<void>;
@@ -395,4 +395,5 @@ export type FeatureEnabledCallback = (params: {
 export type FeatureLimitCallback = (params: {
     featureKey: string;
 }) => number;
+import { MantleClient } from '@heymantle/client';
 //# sourceMappingURL=index.d.ts.map

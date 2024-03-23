@@ -1,3 +1,5 @@
+/// <reference types="@heymantle/client" />
+
 /**
  * @typedef {import('.').Feature} Feature
  * @typedef {import('.').Customer} Customer

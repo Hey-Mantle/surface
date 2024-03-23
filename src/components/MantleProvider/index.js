@@ -1,3 +1,7 @@
+/// <reference types="@heymantle/client" />
+
+import { MantleClient } from '@heymantle/client';
+
 /**
  * Client types
  */
@@ -126,7 +130,7 @@
  * @property {FeatureEnabledCallback} isFeatureEnabled - A function to check if a feature is enabled
  * @property {FeatureLimitCallback} limitForFeature - A function to get the limit for a feature
  * @property {ClearEventQueueCallback} clearEventQueue - An function to clear the event queue
- * @property {MantleClient} client - The MantleClient instance
+ * @property {MantleClient} mantleClient - The Mantle client instance
  */
 
 /**
