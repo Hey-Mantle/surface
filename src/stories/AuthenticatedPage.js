@@ -2,8 +2,8 @@ import { BlockStack, Page, Spinner, Text } from "@shopify/polaris";
 import { useMantle, HorizontalPlanCards } from "..";
 
 export const AuthenticatedPage = () => {
-  const { plans, error, loading, mantleClient } = useMantle();
-  
+  const { plans, error, loading, mantleClient, customer } = useMantle();
+
   return (
     <Page title="Authenticated Page" fullWidth>
       <BlockStack align="center" inlineAlign="center">

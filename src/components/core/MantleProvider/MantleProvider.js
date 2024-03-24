@@ -40,14 +40,11 @@ export const MantleProvider = ({
    * @type {MantleClient}
    */
   const mantleClient = new MantleClient({ appId, customerApiToken, apiUrl });
-  
-  /**
-   * @type {[Customer, React.Dispatch<React.SetStateAction<Customer>>, boolean, React.Dispatch<React.SetStateAction<boolean>>]}
-   */
+
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const fetchCustomer = async () => {
     try {
       setLoading(true);
@@ -60,14 +57,27 @@ export const MantleProvider = ({
     }
   };
 
-  const pushEvent = async ({ eventId, eventName, properties = {} }) => {
-    await mantleClient.sendUsageEvent({ eventId, eventName, properties });
+  const sendUsageEvent = async (usageEvent) => {
+    await mantleClient.sendUsageEvent(usageEvent);
   };
 
-  const subscribe = async ({ planId, discountId, returnUrl }) => {
-    return await mantleClient.subscribe({ planId, discountId, returnUrl });
+  /**
+   * @type {SubscribeCallback}
+  */
+  const subscribe = async ({ planId, planIds, discountId, billingProvider, returnUrl }) => {
+    return await mantleClient.subscribe({
+      planId,
+      planIds,
+      discountId,
+      billingProvider,
+      returnUrl,
+    });
   };
 
+
+  /**
+   * @type {CancelSubscriptionCallback}
+   */
   const cancelSubscription = async () => {
     return await mantleClient.cancelSubscription();
   };
@@ -91,7 +101,7 @@ export const MantleProvider = ({
         loading,
         error,
         client: mantleClient,
-        pushEvent,
+        sendUsageEvent,
         subscribe,
         cancelSubscription,
         isFeatureEnabled: ({ featureKey, count = 0 }) => {
@@ -135,6 +145,7 @@ export const useMantle = () => {
  * @typedef {import('@heymantle/client').Customer} Customer
  * @typedef {import('@heymantle/client').Subscription} Subscription
  * @typedef {import('@heymantle/client').Plan} Plan
+ * @typedef {import('@heymantle/client').UsageEvent} UsageEvent
  */
 
 /**
@@ -144,11 +155,12 @@ export const useMantle = () => {
  * @property {Plan} currentPlan - The current plan
  * @property {Array.<Plan>} plans - The available plans
  * @property {boolean} loading - Whether the current customer is loading
- * @property {RefetchCallback} refetch - A function to refetch the current customer
- * @property {PushEventCallback} pushEvent - A function to push an event to the event queue
- * @property {FeatureEnabledCallback} isFeatureEnabled - A function to check if a feature is enabled
- * @property {FeatureLimitCallback} limitForFeature - A function to get the limit for a feature
- * @property {ClearEventQueueCallback} clearEventQueue - An function to clear the event queue
+ * @property {RefetchCallback} refetch - Refetch the current customer
+ * @property {SendUsageEventCallback} sendUsageEvent - Send a new usage event to Mantle
+ * @property {SubscribeCallback} subscribe - Subscribe to a new plan
+ * @property {CancelSubscriptionCallback} cancelSubscription - Cancel the current subscription
+ * @property {FeatureEnabledCallback} isFeatureEnabled - Check if a feature is enabled
+ * @property {FeatureLimitCallback} limitForFeature - Get the limit for a feature
  * @property {MantleClient} mantleClient - The Mantle client instance
  */
 
@@ -158,17 +170,25 @@ export const useMantle = () => {
  */
 
 /**
- * @callback ClearEventQueueCallback
- * @returns {Promise<void>} a promise that resolves when the event queue is cleared
+ * @callback SendUsageEventCallback
+ * @param {UsageEvent} usageEvent - The usage event to send to Mantle
+ * @returns {Promise<void>} a promise that resolves when the event is pushed
  */
 
 /**
- * @callback PushEventCallback
- * @param {Object} event - The event to push into the stored event queue
- * @param {string} event.eventName - The name of the event
- * @param {Object} event.properties - The properties of the event
- * @param {boolean} [clearEventQueue=false] - Whether to purge the event queue before pushing the event
- * @returns {Promise<void>} a promise that resolves when the event is pushed
+ * @callback SubscribeCallback
+ * @param {Object} params
+ * @param {string} params.planId - The ID of the plan to subscribe to
+ * @param {Array.<string>} [params.planIds] - The IDs of the plans to subscribe to
+ * @param {string} [params.discountId] - The ID of the discount to apply
+ * @param {string} [params.billingProvider] - The billing provider to use
+ * @param {string} [params.returnUrl] - The URL to return to after subscribing
+ * @returns {Promise<Subscription>} a promise that resolves to the created subscription
+ */
+
+/**
+ * @callback CancelSubscriptionCallback
+ * @returns {Promise<Subscription>} a promise that resolves to the canceled subscription
  */
 
 /**
