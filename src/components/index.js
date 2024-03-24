@@ -1,4 +1,2 @@
-export * from './MantleProvider';
-export * from './HorizontalCards';
-export * from './HighlightedCard';
-export * from './VerticalCards';
+export * from './core';
+export * from './shopify';

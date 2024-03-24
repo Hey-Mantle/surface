@@ -74,11 +74,11 @@ export const MantleProvider = ({
 
   const subscribe = async ({ planId, discountId, returnUrl }) => {
     return await mantleClient.subscribe({ planId, discountId, returnUrl });
-  }
+  };
 
   const cancelSubscription = async () => {
     return await mantleClient.cancelSubscription();
-  }
+  };
 
   useEffect(() => {
     if (customerApiToken) {

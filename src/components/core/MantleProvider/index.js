@@ -1,6 +1,6 @@
 /// <reference types="@heymantle/client" />
 
-import { MantleClient } from '@heymantle/client';
+import { MantleClient } from "@heymantle/client";
 
 /**
  * Client types
@@ -167,4 +167,4 @@ import { MantleClient } from '@heymantle/client';
  * @returns {number} the max limit for this feature, returns -1 if there is no limit
  */
 
-export * from './MantleProvider';
+export * from "./MantleProvider";

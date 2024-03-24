@@ -1,6 +1,21 @@
 import React, { useState } from "react";
 import { CheckIcon, PlusIcon } from "@shopify/polaris-icons";
-import { Badge, Banner, Box, BlockStack, Button, ButtonGroup, Card, Divider, Grid, InlineStack, Icon, Layout, Page, Text } from "@shopify/polaris";
+import {
+  Badge,
+  Banner,
+  Box,
+  BlockStack,
+  Button,
+  ButtonGroup,
+  Card,
+  Divider,
+  Grid,
+  InlineStack,
+  Icon,
+  Layout,
+  Page,
+  Text,
+} from "@shopify/polaris";
 
 const LABELS = {
   BACK: "Back",
@@ -21,38 +36,57 @@ const LABELS = {
   YEAR: "year",
   YEAR_SHORT: "yr",
   YEARLY: "Yearly",
-}
+};
 
 const PLAN_INTERVALS = {
   EVERY_30_DAYS: "EVERY_30_DAYS",
   ANNUAL: "ANNUAL",
-}
+};
 
 export const HighlightedCard = ({
-    customer,
-    plans,
-    onSubscribe,
-    backUrl = "", // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
-    showRecommendedBadge = true, // boolean
-    customFieldCta = null, // string: value of the custom plan field to use as the CTA. e.g. "cta"
-    customFieldPlanRecommended = "Recommended", // string: value of the custom plan field to use as the recommended badge
-    addSpacingToNonRecommendedPlans = true, // boolean
-    showCurrencySymbol = true, // boolean
-    showPlanIntervalToggle = true, // boolean
-    showTrialDaysAsFeature = true, // boolean
-    useShortFormPlanIntervals = true, // boolean: e.g. show "$ / mo" instead of "$ / month"
-    pageWidth = "default", // string: "full", "narrow", or "default"
-    showCustomPlans = true, // boolean: show custom plans
-  }) => {
+  customer,
+  plans,
+  onSubscribe,
+  backUrl = "", // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
+  showRecommendedBadge = true, // boolean
+  customFieldCta = null, // string: value of the custom plan field to use as the CTA. e.g. "cta"
+  customFieldPlanRecommended = "Recommended", // string: value of the custom plan field to use as the recommended badge
+  addSpacingToNonRecommendedPlans = true, // boolean
+  showCurrencySymbol = true, // boolean
+  showPlanIntervalToggle = true, // boolean
+  showTrialDaysAsFeature = true, // boolean
+  useShortFormPlanIntervals = true, // boolean: e.g. show "$ / mo" instead of "$ / month"
+  pageWidth = "default", // string: "full", "narrow", or "default"
+  showCustomPlans = true, // boolean: show custom plans
+}) => {
   const subscription = customer?.subscription;
   const urlParams = new URLSearchParams(window.location.search);
-  const hasMonthlyAndYearlyPlans = plans.some((plan) => plan.interval === PLAN_INTERVALS.ANNUAL) && plans.some((plan) => plan.interval === PLAN_INTERVALS.EVERY_30_DAYS);
+  const hasMonthlyAndYearlyPlans =
+    plans.some((plan) => plan.interval === PLAN_INTERVALS.ANNUAL) &&
+    plans.some((plan) => plan.interval === PLAN_INTERVALS.EVERY_30_DAYS);
   const currentPlan = plans.find((plan) => plan.id === subscription?.plan.id);
-  const [planInterval, setPlanInterval] = useState(currentPlan ? currentPlan.interval : hasMonthlyAndYearlyPlans ? PLAN_INTERVALS.ANNUAL : PLAN_INTERVALS.EVERY_30_DAYS);
-  const availablePlans = plans.filter((plan) => plan.availability !== "customerTag" && plan.availability !== "customer");
-  const plansToShow = showPlanIntervalToggle && hasMonthlyAndYearlyPlans ? availablePlans.filter((plan) => plan.interval === planInterval) : availablePlans;
-  const customPlans = showCustomPlans ? plans.filter((plan) => plan.availability === "customerTag" || plan.availability === "customer") : [];
-  const [showSuccessBanner, setShowSuccessBanner] = useState(urlParams.get("subscribed") === "true");
+  const [planInterval, setPlanInterval] = useState(
+    currentPlan
+      ? currentPlan.interval
+      : hasMonthlyAndYearlyPlans
+      ? PLAN_INTERVALS.ANNUAL
+      : PLAN_INTERVALS.EVERY_30_DAYS
+  );
+  const availablePlans = plans.filter(
+    (plan) => plan.availability !== "customerTag" && plan.availability !== "customer"
+  );
+  const plansToShow =
+    showPlanIntervalToggle && hasMonthlyAndYearlyPlans
+      ? availablePlans.filter((plan) => plan.interval === planInterval)
+      : availablePlans;
+  const customPlans = showCustomPlans
+    ? plans.filter(
+        (plan) => plan.availability === "customerTag" || plan.availability === "customer"
+      )
+    : [];
+  const [showSuccessBanner, setShowSuccessBanner] = useState(
+    urlParams.get("subscribed") === "true"
+  );
 
   const columnSpan = (count = plansToShow.length) => {
     if (count % 4 === 0) return { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 };
@@ -60,7 +94,7 @@ export const HighlightedCard = ({
     if (count % 2 === 0) return { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 };
     if (count === 1) return { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 };
     return { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 };
-  }
+  };
 
   const columnCount = () => {
     if (plansToShow.length % 4 === 0) return 4;
@@ -68,7 +102,7 @@ export const HighlightedCard = ({
     if (plansToShow.length % 2 === 0) return 2;
     if (plansToShow.length === 1) return 1;
     return 4;
-  }
+  };
 
   const titleComponent = (plan) => {
     return (
@@ -82,8 +116,8 @@ export const HighlightedCard = ({
           </Text>
         )}
       </BlockStack>
-    )
-  }
+    );
+  };
 
   const featuresComponent = (plan) => {
     return (
@@ -93,7 +127,9 @@ export const HighlightedCard = ({
             <Box>
               <Icon source={CheckIcon} tone="positive" />
             </Box>
-            <Text tone="subdued">{LABELS.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", plan.trialDays)}</Text>
+            <Text tone="subdued">
+              {LABELS.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", plan.trialDays)}
+            </Text>
           </InlineStack>
         )}
         {plan.featuresOrder.map((feature, index) => {
@@ -106,48 +142,69 @@ export const HighlightedCard = ({
                   <Icon source={CheckIcon} tone="positive" />
                 </Box>
                 {planFeature.type === "boolean" ? (
-                  <Text tone="subdued">
-                    {planFeature.name}
-                  </Text>
+                  <Text tone="subdued">{planFeature.name}</Text>
                 ) : (
                   <Text tone="subdued">
                     {planFeature.value} {planFeature.name}
                   </Text>
                 )}
               </InlineStack>
-            )
+            );
           }
         })}
       </BlockStack>
-    )
-  }
+    );
+  };
 
   const pricingComponent = (plan) => {
     let discountedAmount = plan.amount;
     for (const discount of plan.discounts) {
-      discountedAmount = discount.percentage ? plan.amount - (plan.amount * (discount.percentage / 100)) : plan.amount - discount.amount;
+      discountedAmount = discount.percentage
+        ? plan.amount - plan.amount * (discount.percentage / 100)
+        : plan.amount - discount.amount;
     }
     return (
       <BlockStack gap="100">
         {plan.discounts.length > 0 ? (
           <InlineStack align="center" blockAlign="center" gap="200">
             <Text variant="heading3xl">
-              {showCurrencySymbol && LABELS.CURRENCY_SYMBOL}{discountedAmount}
+              {showCurrencySymbol && LABELS.CURRENCY_SYMBOL}
+              {discountedAmount}
             </Text>
-            <Text variant="heading3xl" tone="subdued" fontWeight="medium" textDecorationLine="line-through">
+            <Text
+              variant="heading3xl"
+              tone="subdued"
+              fontWeight="medium"
+              textDecorationLine="line-through"
+            >
               {plan.amount}
             </Text>
             <Text variant="bodyLg" tone="subdued">
-              {LABELS.PER} {plan.interval === PLAN_INTERVALS.ANNUAL ? useShortFormPlanIntervals ? LABELS.YEAR_SHORT : LABELS.YEAR : useShortFormPlanIntervals ? LABELS.MONTH_SHORT : LABELS.MONTH}
+              {LABELS.PER}{" "}
+              {plan.interval === PLAN_INTERVALS.ANNUAL
+                ? useShortFormPlanIntervals
+                  ? LABELS.YEAR_SHORT
+                  : LABELS.YEAR
+                : useShortFormPlanIntervals
+                ? LABELS.MONTH_SHORT
+                : LABELS.MONTH}
             </Text>
           </InlineStack>
         ) : (
           <InlineStack align="center" blockAlign="center" gap="200">
             <Text alignment="center" variant="heading3xl">
-              {showCurrencySymbol && LABELS.CURRENCY_SYMBOL}{plan.amount}
+              {showCurrencySymbol && LABELS.CURRENCY_SYMBOL}
+              {plan.amount}
             </Text>
             <Text alignment="center" variant="bodyLg" tone="subdued">
-              {LABELS.PER} {plan.interval === PLAN_INTERVALS.ANNUAL ? useShortFormPlanIntervals ? LABELS.YEAR_SHORT : LABELS.YEAR : useShortFormPlanIntervals ? LABELS.MONTH_SHORT : LABELS.MONTH}
+              {LABELS.PER}{" "}
+              {plan.interval === PLAN_INTERVALS.ANNUAL
+                ? useShortFormPlanIntervals
+                  ? LABELS.YEAR_SHORT
+                  : LABELS.YEAR
+                : useShortFormPlanIntervals
+                ? LABELS.MONTH_SHORT
+                : LABELS.MONTH}
             </Text>
           </InlineStack>
         )}
@@ -161,34 +218,36 @@ export const HighlightedCard = ({
                   </Box>
                   <Text variant="bodyLg">{usageCharge.terms}</Text>
                 </InlineStack>
-              )
+              );
             })}
           </BlockStack>
         )}
       </BlockStack>
-    )
-  }
+    );
+  };
 
   return (
     <Page
       title={LABELS.PLANS}
       backAction={backUrl && backUrl !== "" ? { content: LABELS.BACK, url: backUrl } : undefined}
-      secondaryActions={showPlanIntervalToggle && hasMonthlyAndYearlyPlans ? (
-        <ButtonGroup variant="segmented">
-          <Button
-            pressed={planInterval === PLAN_INTERVALS.EVERY_30_DAYS}
-            onClick={() => setPlanInterval(PLAN_INTERVALS.EVERY_30_DAYS)}
-          >
-            {LABELS.MONTHLY}
-          </Button>
-          <Button
-            pressed={planInterval === PLAN_INTERVALS.ANNUAL}
-            onClick={() => setPlanInterval(PLAN_INTERVALS.ANNUAL)}
-          >
-            {LABELS.YEARLY}
-          </Button>
-        </ButtonGroup>
-      ) : undefined}
+      secondaryActions={
+        showPlanIntervalToggle && hasMonthlyAndYearlyPlans ? (
+          <ButtonGroup variant="segmented">
+            <Button
+              pressed={planInterval === PLAN_INTERVALS.EVERY_30_DAYS}
+              onClick={() => setPlanInterval(PLAN_INTERVALS.EVERY_30_DAYS)}
+            >
+              {LABELS.MONTHLY}
+            </Button>
+            <Button
+              pressed={planInterval === PLAN_INTERVALS.ANNUAL}
+              onClick={() => setPlanInterval(PLAN_INTERVALS.ANNUAL)}
+            >
+              {LABELS.YEARLY}
+            </Button>
+          </ButtonGroup>
+        ) : undefined
+      }
       fullWidth={pageWidth === "full"}
       narrowWidth={pageWidth === "narrow"}
     >
@@ -210,52 +269,58 @@ export const HighlightedCard = ({
               )}
               <Grid columns={columnCount()}>
                 {plansToShow.map((plan, index) => {
-                  const planIsRecommended = plan.customFields && plan.customFields[customFieldPlanRecommended];
+                  const planIsRecommended =
+                    plan.customFields && plan.customFields[customFieldPlanRecommended];
                   const showCustomCta = customFieldCta && plan.customFields[customFieldCta];
                   return (
                     <Grid.Cell key={`plan-${index}`} columnSpan={columnSpan()}>
-                      <Box
-                        position="relative"
-                        minHeight="100%"
-                      >
+                      <Box position="relative" minHeight="100%">
                         <Box
-                          paddingBlock={!addSpacingToNonRecommendedPlans || planIsRecommended ? undefined : "800"}
+                          paddingBlock={
+                            !addSpacingToNonRecommendedPlans || planIsRecommended
+                              ? undefined
+                              : "800"
+                          }
                           minHeight="100%"
                         >
-                        <Box
-                          background={planIsRecommended ? "bg-surface" : "bg-surface-secondary"}
-                          borderStyle="solid"
-                          borderColor="border"
-                          borderWidth="025"
-                          paddingBlock={addSpacingToNonRecommendedPlans && planIsRecommended ? "1600" : "800"}
-                          paddingInline="400"
-                          borderRadius="200"
-                          minHeight={`calc(100% - calc(var(--p-space-800) * 2))`}
-                        >
-                          <BlockStack gap="800">
-                            <BlockStack gap="400">
-                              {titleComponent(plan)}
-                              {pricingComponent(plan)}
+                          <Box
+                            background={planIsRecommended ? "bg-surface" : "bg-surface-secondary"}
+                            borderStyle="solid"
+                            borderColor="border"
+                            borderWidth="025"
+                            paddingBlock={
+                              addSpacingToNonRecommendedPlans && planIsRecommended ? "1600" : "800"
+                            }
+                            paddingInline="400"
+                            borderRadius="200"
+                            minHeight={`calc(100% - calc(var(--p-space-800) * 2))`}
+                          >
+                            <BlockStack gap="800">
+                              <BlockStack gap="400">
+                                {titleComponent(plan)}
+                                {pricingComponent(plan)}
+                              </BlockStack>
+                              <Button
+                                size="large"
+                                variant={planIsRecommended ? "primary" : "secondary"}
+                                onClick={() => onSubscribe(plan)}
+                              >
+                                {showCustomCta
+                                  ? plan.customFields[customFieldCta]
+                                  : LABELS.SELECT_PLAN}
+                              </Button>
+                              {featuresComponent(plan)}
+                              {planIsRecommended && showRecommendedBadge && (
+                                <InlineStack key={`plan-feature-${index}`} align="center" gap="100">
+                                  <Badge tone="success">{LABELS.MOST_POPULAR}</Badge>
+                                </InlineStack>
+                              )}
                             </BlockStack>
-                            <Button
-                              size="large"
-                              variant={planIsRecommended ? "primary" : "secondary"}
-                              onClick={() => onSubscribe(plan)}
-                            >
-                              {showCustomCta ? plan.customFields[customFieldCta] : LABELS.SELECT_PLAN}
-                            </Button>
-                            {featuresComponent(plan)}
-                            {planIsRecommended && showRecommendedBadge && (
-                              <InlineStack key={`plan-feature-${index}`} align="center" gap="100">
-                                <Badge tone="success">{LABELS.MOST_POPULAR}</Badge>
-                              </InlineStack>
-                            )}
-                          </BlockStack>
-                        </Box>
+                          </Box>
                         </Box>
                       </Box>
                     </Grid.Cell>
-                  )
+                  );
                 })}
               </Grid>
               {customPlans?.length > 0 && <Divider borderColor="border" />}
@@ -266,10 +331,14 @@ export const HighlightedCard = ({
                   </Box>
                   <Grid>
                     {customPlans.map((plan, index) => {
-                      const planIsRecommended = plan.customFields && plan.customFields[customFieldPlanRecommended];
+                      const planIsRecommended =
+                        plan.customFields && plan.customFields[customFieldPlanRecommended];
                       const showCustomCta = customFieldCta && plan.customFields[customFieldCta];
                       return (
-                        <Grid.Cell key={`custom-plan-${index}`} columnSpan={columnSpan(customPlans.length)}>
+                        <Grid.Cell
+                          key={`custom-plan-${index}`}
+                          columnSpan={columnSpan(customPlans.length)}
+                        >
                           <Card>
                             <BlockStack gap="400">
                               {titleComponent(plan)}
@@ -279,13 +348,15 @@ export const HighlightedCard = ({
                                 variant={planIsRecommended ? "primary" : "secondary"}
                                 onClick={() => onSubscribe(plan)}
                               >
-                                {showCustomCta ? plan.customFields[customFieldCta] : LABELS.SELECT_PLAN}
+                                {showCustomCta
+                                  ? plan.customFields[customFieldCta]
+                                  : LABELS.SELECT_PLAN}
                               </Button>
                               {featuresComponent(plan)}
                             </BlockStack>
                           </Card>
                         </Grid.Cell>
-                      )
+                      );
                     })}
                   </Grid>
                 </BlockStack>
@@ -295,5 +366,5 @@ export const HighlightedCard = ({
         </Layout>
       </Box>
     </Page>
-  )
-}
+  );
+};

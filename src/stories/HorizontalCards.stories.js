@@ -1,4 +1,4 @@
-import { HorizontalCards } from '../components';
+import { HorizontalCards } from '..';
 import { Plans } from './test_data/plans';
 import { Customer } from './test_data/customer';
 
