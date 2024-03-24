@@ -89,7 +89,7 @@ export const PlanPricingSection = ({ plan, discount, useShortFormPlanIntervals =
  */
 export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
   <BlockStack gap="300">
-    {trialDaysAsFeature && plan.trialDays && plan.trialDays > 0 && (
+    {trialDaysAsFeature && plan.trialDays && plan.trialDays > 0 ? (
       <InlineStack align="center" blockAlign="center" gap="100">
         <Box>
           <Icon source={CheckIcon} tone="positive" />
@@ -98,7 +98,7 @@ export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
           {Labels.FreeTrialLength.replace("{{ trialDays }}", plan.trialDays)}
         </Text>
       </InlineStack>
-    )}
+    ) : null}
     {plan.featuresOrder.map((feature, index) => {
       const planFeature = plan.features[feature];
       const showFeature = planFeature.type !== "boolean" || planFeature.value === true;
@@ -124,18 +124,19 @@ export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
 
 /**
  * Highlighted plan card component.
- * 
+ *
  * @param {object} props
  * @param {Plan} props.plan - The Mantle Plan object.
  * @param {Discount} props.discount - The Mantle Discount object.
  * @param {string} [props.buttonLabel] - The label for the button.
  * @param {(plan: Plan) => void} props.onSelectPlan - The callback when the button is clicked.
  * @param {boolean} [props.useShortFormPlanIntervals] - Whether to use short form plan intervals.
- * @param {boolean} [props.isRecommendedPlan] - Whether the plan is recommended.
- * @param {boolean} [props.isActivePlan] - Whether the plan is the active plan.
- * @param {boolean} [props.isCustomPlan] - Whether the plan is a custom plan.
  * @param {boolean} [props.trialDaysAsFeature] - Whether to show the trial days as a feature.
  * @param {boolean} [props.expanded] - Whether the card is expanded to match recommended plans.
+ * @param {boolean} [props.isRecommendedPlan] - Whether the plan is recommended. Shows a badge and expands the card.
+ * @param {boolean} [props.isActivePlan] - Whether the plan is the active plan.
+ * @param {boolean} [props.isCustomPlan] - Whether the plan is a custom plan.
+ * @param {boolean} [props.showRecommendedPlanBadge] - Whether to show the recommended plan badge.
  * @returns {JSX.Element}
  */
 export const HighlightedPlanCard = ({
@@ -149,16 +150,17 @@ export const HighlightedPlanCard = ({
   isActivePlan = false,
   isRecommendedPlan = false,
   isCustomPlan = false,
+  showRecommendedPlanBadge = false,
 }) => {
   return (
     <Box position="relative" minHeight="100%">
-      <Box paddingBlock={!expanded || isRecommendedPlan ? undefined : "800"} minHeight="100%">
+      <Box paddingBlock={expanded || isRecommendedPlan ? undefined : "800"} minHeight="100%">
         <Box
           background={isRecommendedPlan || isCustomPlan ? "bg-surface" : "bg-surface-secondary"}
           borderStyle="solid"
           borderColor="border"
           borderWidth="025"
-          paddingBlock={expanded && isRecommendedPlan ? "1600" : "800"}
+          paddingBlock={expanded || isRecommendedPlan ? "1600" : "800"}
           paddingInline="400"
           borderRadius="200"
           minHeight={`calc(100% - calc(var(--p-space-800) * 2))`}
@@ -181,7 +183,7 @@ export const HighlightedPlanCard = ({
               {buttonLabel || Labels.SelectPlan}
             </Button>
             <PlanFeaturesSection plan={plan} trialDaysAsFeature={trialDaysAsFeature} />
-            {isRecommendedPlan && (
+            {isRecommendedPlan && showRecommendedPlanBadge && (
               <InlineStack align="center" gap="100">
                 <Badge tone="success">{Labels.MostPopular}</Badge>
               </InlineStack>

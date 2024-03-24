@@ -87,7 +87,7 @@ export const PlanPricingSection = ({ plan, discount, useShortFormPlanIntervals =
  */
 export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
   <BlockStack gap="100">
-    {trialDaysAsFeature && plan.trialDays && plan.trialDays > 0 && (
+    {trialDaysAsFeature && plan.trialDays && plan.trialDays > 0 ? (
       <InlineStack align="start" gap="100">
         <Box>
           <Icon source={CheckIcon} tone="positive" />
@@ -96,7 +96,7 @@ export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
           {Labels.FreeTrialLength.replace("{{ trialDays }}", plan.trialDays)}
         </Text>
       </InlineStack>
-    )}
+    ) : null}
     {plan.featuresOrder.map((feature, index) => {
       const planFeature = plan.features[feature];
       const showFeature = planFeature.type !== "boolean" || planFeature.value === true;
@@ -123,7 +123,7 @@ export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
 
 /**
  * Horizontal plan card component.
- * 
+ *
  * @param {object} props
  * @param {Plan} props.plan - The Mantle Plan object.
  * @param {Discount} props.discount - The Mantle Discount object.
@@ -132,7 +132,7 @@ export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
  * @param {boolean} [props.useShortFormPlanIntervals] - Whether to use short form plan intervals.
  * @param {boolean} [props.trialDaysAsFeature] - Whether to show the trial days as a feature.
  * @param {boolean} [props.isActivePlan] - Whether the plan is the active plan.
- * @param {boolean} [props.isRecommendedPlan] - Whether the plan is recommended.
+ * @param {boolean} [props.isRecommendedPlan] - Whether the plan is recommended, shows a badge.
  * @returns {JSX.Element}
  */
 export const HorizontalPlanCard = ({
