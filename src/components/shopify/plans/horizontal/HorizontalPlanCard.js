@@ -12,14 +12,14 @@ import { Labels, intervalLabel, money } from "../../../../utils";
  * Title section component for HoritzontalPlanCard.
  * @param {object} props
  * @param {Plan} props.plan - The Mantle Plan object.
- * @param {boolean} [props.recommended] - Whether the plan is recommended.
+ * @param {boolean} [props.isRecommendedPlan] - Whether the plan is recommended.
  * @returns {JSX.Element}
  */
-export const TitleSection = ({ plan, recommended = false }) => (
+export const PlanTitleSection = ({ plan, isRecommendedPlan = false }) => (
   <BlockStack>
     <InlineStack align="space-between" gap="100">
       <Text variant="bodyLg">{plan.name}</Text>
-      {recommended && <Badge tone="success">{Labels.MostPopular}</Badge>}
+      {isRecommendedPlan && <Badge tone="success">{Labels.MostPopular}</Badge>}
     </InlineStack>
     {plan.description && <Text tone="subdued">{plan.description}</Text>}
   </BlockStack>
@@ -33,7 +33,7 @@ export const TitleSection = ({ plan, recommended = false }) => (
  * @param {boolean} [props.useShortFormPlanIntervals] - Whether to use short form plan intervals.
  * @returns {JSX.Element}
  */
-export const PricingSection = ({ plan, discount, useShortFormPlanIntervals = true }) => (
+export const PlanPricingSection = ({ plan, discount, useShortFormPlanIntervals = true }) => (
   <BlockStack gap="100">
     {!!discount && (
       <InlineStack blockAlign="center" gap="200">
@@ -85,7 +85,7 @@ export const PricingSection = ({ plan, discount, useShortFormPlanIntervals = tru
  * @param {boolean} [props.trialDaysAsFeature] - Whether to show the trial days as a feature.
  * @returns {JSX.Element}
  */
-export const FeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
+export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
   <BlockStack gap="100">
     {trialDaysAsFeature && plan.trialDays && plan.trialDays > 0 && (
       <InlineStack align="start" gap="100">
@@ -123,15 +123,16 @@ export const FeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
 
 /**
  * Horizontal plan card component.
+ * 
  * @param {object} props
  * @param {Plan} props.plan - The Mantle Plan object.
  * @param {Discount} props.discount - The Mantle Discount object.
  * @param {string} [props.buttonLabel] - The label for the button.
  * @param {(plan: Plan) => void} props.onSelectPlan - The callback when the button is clicked.
- * @param {boolean} [props.activePlan] - Whether the plan is the active plan.
  * @param {boolean} [props.useShortFormPlanIntervals] - Whether to use short form plan intervals.
- * @param {boolean} [props.recommended] - Whether the plan is recommended.
  * @param {boolean} [props.trialDaysAsFeature] - Whether to show the trial days as a feature.
+ * @param {boolean} [props.isActivePlan] - Whether the plan is the active plan.
+ * @param {boolean} [props.isRecommendedPlan] - Whether the plan is recommended.
  * @returns {JSX.Element}
  */
 export const HorizontalPlanCard = ({
@@ -139,30 +140,30 @@ export const HorizontalPlanCard = ({
   discount,
   buttonLabel,
   onSelectPlan,
-  activePlan = false,
   useShortFormPlanIntervals = true,
-  recommended = false,
   trialDaysAsFeature = false,
+  isRecommendedPlan = false,
+  isActivePlan = false,
 }) => (
   <Card>
     <BlockStack gap="400">
-      <TitleSection plan={plan} recommended={recommended} />
-      <PricingSection
+      <PlanTitleSection plan={plan} isRecommendedPlan={isRecommendedPlan} />
+      <PlanPricingSection
         plan={plan}
         discount={discount}
         useShortFormPlanIntervals={useShortFormPlanIntervals}
       />
       <Button
         size="large"
-        variant={recommended ? "primary" : "secondary"}
+        variant={isRecommendedPlan ? "primary" : "secondary"}
         onClick={() => {
           onSelectPlan(plan);
         }}
-        disabled={activePlan}
+        disabled={isActivePlan}
       >
-        {activePlan ? Labels.CurrentPlan : (buttonLabel || Labels.SelectPlan)}
+        {isActivePlan ? Labels.CurrentPlan : buttonLabel || Labels.SelectPlan}
       </Button>
-      <FeaturesSection plan={plan} trialDaysAsFeature={trialDaysAsFeature} />
+      <PlanFeaturesSection plan={plan} trialDaysAsFeature={trialDaysAsFeature} />
     </BlockStack>
   </Card>
 );

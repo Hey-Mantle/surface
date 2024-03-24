@@ -1,17 +1,12 @@
 import React, { useState } from "react";
-import { CheckIcon, PlusIcon } from "@shopify/polaris-icons";
 import {
-  Badge,
   Banner,
   Box,
   BlockStack,
   Button,
   ButtonGroup,
-  Card,
   Divider,
   Grid,
-  InlineStack,
-  Icon,
   Layout,
   Page,
   Text,
@@ -118,19 +113,24 @@ export const HorizontalPlanCards = ({
                         prev.discountedAmount < current.discountedAmount ? prev : current
                       )
                     : null;
-                const buttonLabel = customFieldCta && plan.customFields ? plan.customFields[customFieldCta] : undefined;
+                const buttonLabel =
+                  customFieldCta && plan.customFields
+                    ? plan.customFields[customFieldCta]
+                    : undefined;
                 return (
                   <Grid.Cell key={`plan-${index}`} columnSpan={columnSpan()}>
                     <HorizontalPlanCard
                       plan={plan}
                       discount={discount}
                       onSelectPlan={(plan) => {
-                        onSubscribe(plan)
+                        onSubscribe(plan);
                       }}
-                      activePlan={currentPlan?.id === plan.id}
+                      isActivePlan={currentPlan?.id === plan.id}
                       useShortFormPlanIntervals={useShortFormPlanIntervals}
-                      recommended={
-                        showRecommendedBadge && plan.customFields && plan.customFields[customFieldPlanRecommended]
+                      isRecommendedPlan={
+                        showRecommendedBadge &&
+                        plan.customFields &&
+                        plan.customFields[customFieldPlanRecommended]
                       }
                       trialDaysAsFeature={showTrialDaysAsFeature}
                       buttonLabel={buttonLabel}
@@ -153,19 +153,24 @@ export const HorizontalPlanCards = ({
                             prev.discountedAmount < current.discountedAmount ? prev : current
                           )
                         : null;
-                    const buttonLabel = customFieldCta && plan.customFields ? plan.customFields[customFieldCta] : undefined;
+                    const buttonLabel =
+                      customFieldCta && plan.customFields
+                        ? plan.customFields[customFieldCta]
+                        : undefined;
                     return (
                       <Grid.Cell key={`custom-plan-${index}`} columnSpan={columnSpan()}>
                         <HorizontalPlanCard
                           plan={plan}
                           discount={discount}
                           onSelectPlan={(plan) => {
-                            onSubscribe(plan)
+                            onSubscribe(plan);
                           }}
-                          activePlan={currentPlan?.id === plan.id}
+                          isActivePlan={currentPlan?.id === plan.id}
                           useShortFormPlanIntervals={useShortFormPlanIntervals}
-                          recommended={
-                            showRecommendedBadge && plan.customFields && plan.customFields[customFieldPlanRecommended]
+                          isRecommendedPlan={
+                            showRecommendedBadge &&
+                            plan.customFields &&
+                            plan.customFields[customFieldPlanRecommended]
                           }
                           trialDaysAsFeature={showTrialDaysAsFeature}
                           buttonLabel={buttonLabel}
