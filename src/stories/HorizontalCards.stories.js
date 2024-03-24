@@ -1,10 +1,10 @@
-import { HorizontalCards } from '..';
+import { HorizontalPlanCards } from '..';
 import { Plans } from './test_data/plans';
 import { Customer } from './test_data/customer';
 
 export default {
-  title: 'Plans/HorizontalCards',
-  component: HorizontalCards,
+  title: 'Plans/HorizontalPlanCards',
+  component: HorizontalPlanCards,
   tags: ['autodocs'],
   argTypes: {
     pageWidth: {

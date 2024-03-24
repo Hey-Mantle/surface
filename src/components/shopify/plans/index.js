@@ -1,3 +1,3 @@
-export * from "./HorizontalCards";
-export * from "./HighlightedCard";
-export * from "./VerticalCards";
+export * from "./horizontal";
+export * from "./highlighted";
+export * from "./vertical";

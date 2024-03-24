@@ -1,10 +1,10 @@
-import { HighlightedCard } from '..';
+import { HighlightedPlanCards } from '..';
 import { Plans } from './test_data/plans';
 import { Customer } from './test_data/customer';
 
 export default {
-  title: 'Plans/HighlightedCard',
-  component: HighlightedCard,
+  title: 'Plans/HighlightedPlanCards',
+  component: HighlightedPlanCards,
   tags: ['autodocs'],
   argTypes: {
     pageWidth: {

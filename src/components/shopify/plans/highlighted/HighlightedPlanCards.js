@@ -43,7 +43,7 @@ const PLAN_INTERVALS = {
   ANNUAL: "ANNUAL",
 };
 
-export const HighlightedCard = ({
+export const HighlightedPlanCards = ({
   customer,
   plans,
   onSubscribe,

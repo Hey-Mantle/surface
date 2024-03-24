@@ -23,6 +23,7 @@ const LABELS = {
   CURRENT_PLAN: "Current plan",
   CUSTOM_PLANS: "Custom plans",
   CUSTOM_PLANS_DESCRIPTION: "Plans tailored to your specific needs",
+  FEATURES: "Features on this plan",
   FREE_TRIAL_LENGTH: "{{ trialDays }}-day free trial",
   MONTH: "month",
   MONTH_SHORT: "mo",
@@ -43,7 +44,7 @@ const PLAN_INTERVALS = {
   ANNUAL: "ANNUAL",
 };
 
-export const HorizontalCards = ({
+export const VerticalPlanCards = ({
   customer,
   plans,
   onSubscribe,
@@ -52,7 +53,7 @@ export const HorizontalCards = ({
   customFieldCta = null, // string: value of the custom plan field to use as the CTA. e.g. "cta"
   customFieldPlanRecommended = "Recommended", // string: value of the custom plan field to use as the recommended badge
   showCurrencySymbol = true, // boolean
-  showPlanIntervalToggle = true, // boolean
+  showPlanIntervalToggle = false, // boolean
   showTrialDaysAsFeature = true, // boolean
   useShortFormPlanIntervals = true, // boolean: e.g. show "$ / mo" instead of "$ / month"
   pageWidth = "default", // string: "full", "narrow", or "default"
@@ -87,24 +88,10 @@ export const HorizontalCards = ({
     urlParams.get("subscribed") === "true"
   );
 
-  const columnSpan = (count = plansToShow.length) => {
-    if (count % 4 === 0) return { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 };
-    if (count % 3 === 0) return { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 };
-    if (count % 2 === 0) return { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 };
-    if (count === 1) return { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 };
-    return { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 };
-  };
-
   const titleComponent = ({ plan, discount }) => {
-    const planIsRecommended = plan.customFields && plan.customFields[customFieldPlanRecommended];
     return (
       <BlockStack>
-        <InlineStack align="space-between" gap="100">
-          <Text variant="bodyLg">{plan.name}</Text>
-          {planIsRecommended && showRecommendedBadge && (
-            <Badge tone="success">{LABELS.MOST_POPULAR}</Badge>
-          )}
-        </InlineStack>
+        <Text variant="bodyLg">{plan.name}</Text>
         {plan.description && <Text tone="subdued">{plan.description}</Text>}
       </BlockStack>
     );
@@ -112,37 +99,40 @@ export const HorizontalCards = ({
 
   const featuresComponent = ({ plan, discount }) => {
     return (
-      <BlockStack gap="100">
-        {showTrialDaysAsFeature && plan.trialDays !== 0 && (
-          <InlineStack align="start" gap="100">
-            <Box>
-              <Icon source={CheckIcon} tone="positive" />
-            </Box>
-            <Text tone="subdued">
-              {LABELS.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", plan.trialDays)}
-            </Text>
-          </InlineStack>
-        )}
-        {plan.featuresOrder.map((feature, index) => {
-          const planFeature = plan.features[feature];
-          const showFeature = planFeature.type !== "boolean" || planFeature.value === true;
-          if (showFeature) {
-            return (
-              <InlineStack key={`plan-feature-${index}`} align="start" gap="100">
-                <Box>
-                  <Icon source={CheckIcon} tone="positive" />
-                </Box>
-                {planFeature.type === "boolean" ? (
-                  <Text tone="subdued">{planFeature.name}</Text>
-                ) : (
-                  <Text tone="subdued">
-                    {planFeature.value} {planFeature.name}
-                  </Text>
-                )}
-              </InlineStack>
-            );
-          }
-        })}
+      <BlockStack gap="200">
+        <Text fontWeight="medium">{LABELS.FEATURES}</Text>
+        <BlockStack gap="100">
+          {showTrialDaysAsFeature && plan.trialDays !== 0 && (
+            <InlineStack align="start" gap="100">
+              <Box>
+                <Icon source={CheckIcon} tone="positive" />
+              </Box>
+              <Text tone="subdued">
+                {LABELS.FREE_TRIAL_LENGTH.replace("{{ trialDays }}", plan.trialDays)}
+              </Text>
+            </InlineStack>
+          )}
+          {plan.featuresOrder.map((feature, index) => {
+            const planFeature = plan.features[feature];
+            const showFeature = planFeature.type !== "boolean" || planFeature.value === true;
+            if (showFeature) {
+              return (
+                <InlineStack key={`plan-feature-${index}`} align="start" gap="100">
+                  <Box>
+                    <Icon source={CheckIcon} tone="positive" />
+                  </Box>
+                  {planFeature.type === "boolean" ? (
+                    <Text tone="subdued">{planFeature.name}</Text>
+                  ) : (
+                    <Text tone="subdued">
+                      {planFeature.value} {planFeature.name}
+                    </Text>
+                  )}
+                </InlineStack>
+              );
+            }
+          })}
+        </BlockStack>
       </BlockStack>
     );
   };
@@ -215,18 +205,25 @@ export const HorizontalCards = ({
     const showCustomCta = customFieldCta && plan.customFields[customFieldCta];
     const planIsRecommended = plan.customFields && plan.customFields[customFieldPlanRecommended];
     return (
-      <Button
-        size="large"
-        variant={planIsRecommended ? "primary" : "secondary"}
-        onClick={() => onSubscribe({ planId: plan.id, discountId: discount?.id })}
-        disabled={currentPlan?.id === plan.id}
-      >
-        {currentPlan?.id === plan.id
-          ? LABELS.CURRENT_PLAN
-          : showCustomCta
-          ? plan.customFields[customFieldCta]
-          : LABELS.SELECT_PLAN}
-      </Button>
+      <InlineStack blockAlign="center" gap="400">
+        <Button
+          size="large"
+          variant={planIsRecommended ? "primary" : "secondary"}
+          onClick={() => onSubscribe({ planId: plan.id, discountId: discount?.id })}
+          disabled={currentPlan?.id === plan.id}
+        >
+          {currentPlan?.id === plan.id
+            ? LABELS.CURRENT_PLAN
+            : showCustomCta
+            ? plan.customFields[customFieldCta]
+            : LABELS.SELECT_PLAN}
+        </Button>
+        {planIsRecommended && showRecommendedBadge && (
+          <Box>
+            <Badge tone="success">{LABELS.MOST_POPULAR}</Badge>
+          </Box>
+        )}
+      </InlineStack>
     );
   };
 
@@ -257,7 +254,7 @@ export const HorizontalCards = ({
     >
       <Layout>
         <Layout.Section>
-          <BlockStack gap="1000">
+          <BlockStack gap="400">
             {showSuccessBanner && (
               <Banner
                 tone="success"
@@ -270,28 +267,33 @@ export const HorizontalCards = ({
                 {LABELS.SUBSCRIBE_SUCCESS_BODY}
               </Banner>
             )}
-            <Grid>
-              {plansToShow.map((plan, index) => {
-                const discount =
-                  plan.discounts?.length > 0
-                    ? plan.discounts.reduce((prev, current) =>
-                        prev.discountedAmount < current.discountedAmount ? prev : current
-                      )
-                    : null;
-                return (
-                  <Grid.Cell key={`plan-${index}`} columnSpan={columnSpan()}>
-                    <Card>
+            {plansToShow.map((plan, index) => {
+              const discount =
+                plan.discounts?.length > 0
+                  ? plan.discounts.reduce((prev, current) =>
+                      prev.discountedAmount < current.discountedAmount ? prev : current
+                    )
+                  : null;
+              // { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }
+              return (
+                <Card key={`plan-${index}`}>
+                  <Grid>
+                    <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 3, lg: 6, xl: 12 }}>
                       <BlockStack gap="400">
-                        {titleComponent({ plan, discount })}
-                        {pricingComponent({ plan, discount })}
-                        {ctaComponent({ plan, discount })}
-                        {featuresComponent({ plan, discount })}
+                        <BlockStack gap="200">
+                          {titleComponent({ plan, discount })}
+                          {pricingComponent({ plan, discount })}
+                        </BlockStack>
+                        <Box>{ctaComponent({ plan, discount })}</Box>
                       </BlockStack>
-                    </Card>
-                  </Grid.Cell>
-                );
-              })}
-            </Grid>
+                    </Grid.Cell>
+                    <Grid.Cell columnSpan={{ xs: 6, sm: 6, md: 3, lg: 6, xl: 12 }}>
+                      {featuresComponent({ plan, discount })}
+                    </Grid.Cell>
+                  </Grid>
+                </Card>
+              );
+            })}
             {customPlans?.length > 0 && <Divider borderColor="border" />}
             {customPlans?.length > 0 && (
               <BlockStack gap="300">
