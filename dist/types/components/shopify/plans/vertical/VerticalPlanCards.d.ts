@@ -1,4 +1,4 @@
-export function VerticalPlanCards({ customer, plans, onSubscribe, backUrl, showRecommendedBadge, customFieldCta, customFieldPlanRecommended, showCurrencySymbol, showPlanIntervalToggle, showTrialDaysAsFeature, useShortFormPlanIntervals, pageWidth, showCustomPlans, }: {
+export function VerticalPlanCards({ customer, plans, onSubscribe, backUrl, showRecommendedBadge, customFieldCta, customFieldPlanRecommended, showPlanIntervalToggle, showTrialDaysAsFeature, useShortFormPlanIntervals, pageWidth, showCustomPlans, }: {
     customer: any;
     plans: any;
     onSubscribe: any;
@@ -6,7 +6,6 @@ export function VerticalPlanCards({ customer, plans, onSubscribe, backUrl, showR
     showRecommendedBadge?: boolean;
     customFieldCta?: any;
     customFieldPlanRecommended?: string;
-    showCurrencySymbol?: boolean;
     showPlanIntervalToggle?: boolean;
     showTrialDaysAsFeature?: boolean;
     useShortFormPlanIntervals?: boolean;

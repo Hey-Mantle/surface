@@ -1,24 +1,23 @@
-import { HighlightedPlanCards } from '..';
-import { Plans } from './test_data/plans';
-import { Customer } from './test_data/customer';
+import { HighlightedPlanCards } from "..";
+import { Plans } from "./test_data/plans";
+import { Customer } from "./test_data/customer";
 
 export default {
-  title: 'Plans/HighlightedPlanCards',
+  title: "Plans/HighlightedPlanCards",
   component: HighlightedPlanCards,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     pageWidth: {
       options: ["default", "narrow", "full"],
-      control: { type: 'radio' },
+      control: { type: "radio" },
     },
   },
   args: {
     pageWidth: "default",
     showRecommendedBadge: true,
-    showCurrencySymbol: true,
     showPlanIntervalToggle: true,
     showTrialDaysAsFeature: true,
-    useShortFormPlanIntevals: true,
+    useShortFormPlanIntervals: true,
     addSpacingToNonRecommendedPlans: true,
     customFieldCta: null,
     customFieldPlanRecommended: "Recommended",
@@ -27,7 +26,7 @@ export default {
     onSubscribe: () => {},
     customer: Customer,
     plans: Plans,
-  }
+  },
 };
 
 export const FourColumns = {
@@ -36,18 +35,25 @@ export const FourColumns = {
 
 export const ThreeColumns = {
   args: {
-    plans: Plans.filter(plan => plan.name !== "Ultra"),
+    plans: Plans.filter((plan) => plan.name !== "Ultra"),
   },
 };
 
 export const TwoColumns = {
   args: {
-    plans: Plans.filter(plan => plan.name !== "Ultra" && plan.name !== "Advanced"),
-  }
+    plans: Plans.filter(
+      (plan) => plan.name !== "Ultra" && plan.name !== "Advanced",
+    ),
+  },
 };
 
 export const OneColumn = {
   args: {
-    plans: Plans.filter(plan => plan.name !== "Ultra" && plan.name !== "Advanced" && plan.name !== "Pro"),
-  }
+    plans: Plans.filter(
+      (plan) =>
+        plan.name !== "Ultra" &&
+        plan.name !== "Advanced" &&
+        plan.name !== "Pro",
+    ),
+  },
 };

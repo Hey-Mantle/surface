@@ -1,7 +1,7 @@
 {
   "name": "@heymantle/surface",
   "description": "Mantle's frontend component library",
-  "version": "0.3.1",
+  "version": "0.3.4",
   "private": false,
   "license": "MIT",
   "author": "Mantle <josh@heymantle.com>",

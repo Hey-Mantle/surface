@@ -1,13 +1,5 @@
 /// <reference types="@heymantle/client" />
 
-/**
- * @typedef {import('.').Feature} Feature
- * @typedef {import('.').Customer} Customer
- * @typedef {import('.').Subscription} Subscription
- * @typedef {import('.').Plan} Plan
- * @typedef {import('.').TMantleContext} TMantleContext
- */
-
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { MantleClient } from "@heymantle/client";
 
@@ -48,14 +40,14 @@ export const MantleProvider = ({
    * @type {MantleClient}
    */
   const mantleClient = new MantleClient({ appId, customerApiToken, apiUrl });
-
+  
   /**
    * @type {[Customer, React.Dispatch<React.SetStateAction<Customer>>, boolean, React.Dispatch<React.SetStateAction<boolean>>]}
    */
   const [customer, setCustomer] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
+  
   const fetchCustomer = async () => {
     try {
       setLoading(true);
@@ -137,3 +129,59 @@ export const useMantle = () => {
 
   return context;
 };
+
+/**
+ * @typedef {import('@heymantle/client').Feature} Feature
+ * @typedef {import('@heymantle/client').Customer} Customer
+ * @typedef {import('@heymantle/client').Subscription} Subscription
+ * @typedef {import('@heymantle/client').Plan} Plan
+ */
+
+/**
+ * @typedef TMantleContext
+ * @property {Customer} customer - The current customer
+ * @property {Subscription} subscription - The current subscription
+ * @property {Plan} currentPlan - The current plan
+ * @property {Array.<Plan>} plans - The available plans
+ * @property {boolean} loading - Whether the current customer is loading
+ * @property {RefetchCallback} refetch - A function to refetch the current customer
+ * @property {PushEventCallback} pushEvent - A function to push an event to the event queue
+ * @property {FeatureEnabledCallback} isFeatureEnabled - A function to check if a feature is enabled
+ * @property {FeatureLimitCallback} limitForFeature - A function to get the limit for a feature
+ * @property {ClearEventQueueCallback} clearEventQueue - An function to clear the event queue
+ * @property {MantleClient} mantleClient - The Mantle client instance
+ */
+
+/**
+ * @callback RefetchCallback
+ * @returns {Promise<void>} a promise that resolves when the customer is refetched
+ */
+
+/**
+ * @callback ClearEventQueueCallback
+ * @returns {Promise<void>} a promise that resolves when the event queue is cleared
+ */
+
+/**
+ * @callback PushEventCallback
+ * @param {Object} event - The event to push into the stored event queue
+ * @param {string} event.eventName - The name of the event
+ * @param {Object} event.properties - The properties of the event
+ * @param {boolean} [clearEventQueue=false] - Whether to purge the event queue before pushing the event
+ * @returns {Promise<void>} a promise that resolves when the event is pushed
+ */
+
+/**
+ * @callback FeatureEnabledCallback
+ * @param {Object} params
+ * @param {string} params.featureKey - The key of the feature to evaluate
+ * @param {number} [params.count] - The count to evaluate against the feature limit if there is one
+ * @returns {boolean} whether the feature is enabled for this customer
+ */
+
+/**
+ * @callback FeatureLimitCallback
+ * @param {Object} params
+ * @param {string} params.featureKey - The key of the feature to evaluate
+ * @returns {number} the max limit for this feature, returns -1 if there is no limit
+ */

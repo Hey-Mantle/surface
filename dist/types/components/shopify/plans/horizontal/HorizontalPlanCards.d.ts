@@ -1,15 +1,14 @@
-export function HorizontalPlanCards({ customer, plans, onSubscribe, backUrl, showRecommendedBadge, customFieldCta, customFieldPlanRecommended, showCurrencySymbol, showPlanIntervalToggle, showTrialDaysAsFeature, useShortFormPlanIntervals, pageWidth, showCustomPlans, }: {
+export function HorizontalPlanCards({ customer, plans, onSubscribe, backUrl, showRecommendedBadge, customFieldCta, customFieldPlanRecommended, showPlanIntervalToggle, showTrialDaysAsFeature, useShortFormPlanIntervals, pageWidth, showCustomPlans, }: {
     customer: any;
     plans: any;
     onSubscribe: any;
     backUrl?: string;
     showRecommendedBadge?: boolean;
-    customFieldCta?: any;
+    customFieldCta: any;
     customFieldPlanRecommended?: string;
-    showCurrencySymbol?: boolean;
     showPlanIntervalToggle?: boolean;
     showTrialDaysAsFeature?: boolean;
-    useShortFormPlanIntervals?: boolean;
+    useShortFormPlanIntervals: any;
     pageWidth?: string;
     showCustomPlans?: boolean;
 }): React.JSX.Element;

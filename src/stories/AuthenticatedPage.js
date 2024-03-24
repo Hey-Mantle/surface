@@ -1,10 +1,9 @@
 import { BlockStack, Page, Spinner, Text } from "@shopify/polaris";
-import { useMantle } from "..";
-import { PlanGrid } from "../components";
+import { useMantle, HorizontalPlanCards } from "..";
 
 export const AuthenticatedPage = () => {
-  const { plans, currentPlan, error, loading } = useMantle();
-
+  const { plans, error, loading, mantleClient } = useMantle();
+  
   return (
     <Page title="Authenticated Page" fullWidth>
       <BlockStack align="center" inlineAlign="center">
@@ -12,7 +11,9 @@ export const AuthenticatedPage = () => {
         {!loading && (error || plans?.length == 0) && (
           <Text tone="critical">appId and customerApiToken are required</Text>
         )}
-        {!loading && !error && <PlanGrid plans={plans} currentPlan={currentPlan} />}
+        {!loading && !error && (
+          <HorizontalPlanCards plans={plans} />
+        )}
       </BlockStack>
     </Page>
   );

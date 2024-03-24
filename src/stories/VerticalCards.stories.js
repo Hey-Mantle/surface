@@ -1,24 +1,23 @@
-import { VerticalPlanCards } from '..';
-import { Plans } from './test_data/plans';
-import { Customer } from './test_data/customer';
+import { VerticalPlanCards } from "..";
+import { Plans } from "./test_data/plans";
+import { Customer } from "./test_data/customer";
 
 export default {
-  title: 'Plans/VerticalPlanCards',
+  title: "Plans/VerticalPlanCards",
   component: VerticalPlanCards,
-  tags: ['autodocs'],
+  tags: ["autodocs"],
   argTypes: {
     pageWidth: {
       options: ["default", "narrow", "full"],
-      control: { type: 'radio' },
+      control: { type: "radio" },
     },
   },
   args: {
     pageWidth: "default",
     showRecommendedBadge: true,
-    showCurrencySymbol: true,
     showPlanIntervalToggle: false,
     showTrialDaysAsFeature: true,
-    useShortFormPlanIntevals: true,
+    useShortFormPlanIntervals: true,
     customFieldCta: null,
     customFieldPlanRecommended: "Recommended",
     showCustomPlans: false,
@@ -26,23 +25,36 @@ export default {
     onSubscribe: () => {},
     customer: Customer,
     plans: Plans,
-  }
+  },
 };
 
 export const SinglePlan = {
   args: {
-    plans: Plans.filter(plan => plan.interval !== "ANNUAL" && plan.name !== "Ultra" && plan.name !== "Advanced" && plan.name !== "Pro"),
-  }
+    plans: Plans.filter(
+      (plan) =>
+        plan.interval !== "ANNUAL" &&
+        plan.name !== "Ultra" &&
+        plan.name !== "Advanced" &&
+        plan.name !== "Pro",
+    ),
+  },
 };
 
 export const TwoPlans = {
   args: {
-    plans: Plans.filter(plan => plan.interval !== "ANNUAL" && plan.name !== "Ultra" && plan.name !== "Advanced"),
-  }
+    plans: Plans.filter(
+      (plan) =>
+        plan.interval !== "ANNUAL" &&
+        plan.name !== "Ultra" &&
+        plan.name !== "Advanced",
+    ),
+  },
 };
 
 export const ThreePlans = {
   args: {
-    plans: Plans.filter(plan => plan.interval !== "ANNUAL" && plan.name !== "Ultra"),
-  }
+    plans: Plans.filter(
+      (plan) => plan.interval !== "ANNUAL" && plan.name !== "Ultra",
+    ),
+  },
 };

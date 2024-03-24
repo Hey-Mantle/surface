@@ -1,25 +1,21 @@
-const largeMoneyFormatter = (currency = "USD") =>
+const moneyFormatter = (currencyCode = "USD") =>
   new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency,
-    notation: "compact",
-  });
-
-const moneyFormatter = (currency = "USD") =>
-  new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency,
+    currency: currencyCode,
     notation: "standard",
   });
 
-export const money = ({ amount = 0, currency = "USD" }) => {
-  return moneyFormatter(currency).format(amount);
-};
-
-export const moneyWithoutCents = ({ amount = 0, currency = "USD" }) => {
-  return moneyFormatter(currency).format(amount).replace(/\.00$/, "");
-};
-
-export const largeMoney = ({ amount = 0, currency = "USD" }) => {
-  return largeMoneyFormatter(currency).format(amount);
-};
+/**
+ * Formats the given amount of money based on the specified currency code.
+ * @param {number} amount - The amount of money to format.
+ * @param {string} [currencyCode="USD"] - The currency code to use for formatting. Defaults to "USD".
+ * @param {boolean} [removeCents=true] - Specifies whether to remove the cents from the formatted result. Defaults to true.
+ * @returns {string} The formatted money string.
+ */
+export const money = (amount, currencyCode = "USD", removeCents = true) => {
+  let result = moneyFormatter(currencyCode).format(amount);
+  if (removeCents) {
+    result = result.replace(/\.00$/, '');
+  }
+  return result;
+}
