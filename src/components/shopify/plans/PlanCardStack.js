@@ -1,6 +1,5 @@
 import {
   PlanAvailability,
-  PlanInterval,
   customButtonLabel,
   isRecommendedPlan,
 } from "../../../utils";
@@ -43,40 +42,31 @@ export const PlanCardType = {
  * @param {Array<Plan>} props.plans - An array of plans to display
  * @param {Customer} props.customer - The current Mantle customer object
  * @param {(plan: Plan) => void} props.onSelectPlan - A callback function to handle the plan selection process
- * @param {boolean} [props.showIntervalToggle=true] - Whether to show the interval toggle
+ * @param {"EVERY_30_DAYS"|"ANNUAL"} [props.planInterval] - The interval to filter the plans by, defaults to all plans
  * @param {PlanCardType} [props.cardType=PlanCardType.Horizontal] - The type of plan card to display
  * @param {boolean} [props.trialDaysAsFeature=true] - Whether to show the trial days as a feature in the feature list
  * @param {boolean} [props.useShortFormPlanIntervals=true] - Whether to use short form plan intervals, ie. "mo" instead of "month"
  * @param {string} [props.keyForRecommended="recommended"] - The Plan custom field key to check for the recommended status
  * @param {string} [props.keyForCustomButtonLabel="buttonLabel"] - The Plan custom field key to check for the custom button label
- * @returns
+ * @param {boolean} [props.showRecommendedPlanBadge=true] - Whether to show the recommended plan badge
+ * @returns {JSX.Element} The plan card stack component
  */
 export const PlanCardStack = ({
   plans,
   customer,
   onSelectPlan,
-  showIntervalToggle: _showIntervalToggle = true,
+  planInterval,
   cardType = PlanCardType.Horizontal,
   trialDaysAsFeature = true,
   useShortFormPlanIntervals = true,
   keyForRecommended = "recommended",
   keyForCustomButtonLabel = "buttonLabel",
+  showRecommendedPlanBadge = true,
 }) => {
-  const showIntervalToggle =
-    _showIntervalToggle &&
-    plans.some((plan) => plan.interval === PlanInterval.Annual) &&
-    plans.some((plan) => plan.interval === PlanInterval.Every30Days);
-
   const activeSubscription = customer?.subscription?.active ? customer.subscription : undefined;
   const currentPlan = activeSubscription?.plan;
 
-  const [interval, setInterval] = useState(
-    currentPlan?.interval || (showIntervalToggle ? PlanInterval.Annual : PlanInterval.Every30Days)
-  );
-
-  const plansToShow = showIntervalToggle
-    ? plans.filter((plan) => plan.interval === interval)
-    : plans;
+  const plansToShow = !!planInterval ? plans.filter((plan) => plan.interval === planInterval) : plans;
 
   const _columnCount = cardType === PlanCardType.Vertical ? 1 : columnCount(plansToShow.length);
   const _columnSpan = columnSpan(_columnCount);
@@ -96,6 +86,7 @@ export const PlanCardStack = ({
               isCustomPlan={plan.availability !== PlanAvailability.Public}
               isRecommendedPlan={isRecommendedPlan({ plan, customFieldKey: keyForRecommended })}
               buttonLabel={customButtonLabel({ plan, customFieldKey: keyForCustomButtonLabel })}
+              showRecommendedPlanBadge={showRecommendedPlanBadge}
             />
           )}
           {cardType === PlanCardType.Horizontal && (
@@ -108,6 +99,7 @@ export const PlanCardStack = ({
               useShortFormPlanIntervals={useShortFormPlanIntervals}
               isRecommendedPlan={isRecommendedPlan({ plan, customFieldKey: keyForRecommended })}
               buttonLabel={customButtonLabel({ plan, customFieldKey: keyForCustomButtonLabel })}
+              showRecommendedPlanBadge={showRecommendedPlanBadge}
             />
           )}
         </Grid.Cell>

@@ -11,8 +11,9 @@ import {
   Page,
   Text,
 } from "@shopify/polaris";
-import { Labels, PlanInterval } from "../../../../utils";
+import { Labels, PlanAvailability, PlanInterval } from "../../../../utils";
 import { HorizontalPlanCard } from "./HorizontalPlanCard";
+import { PlanCardStack, PlanCardType } from "../PlanCardStack";
 
 export const HorizontalPlanCards = ({
   customer,
@@ -30,9 +31,11 @@ export const HorizontalPlanCards = ({
 }) => {
   const subscription = customer?.subscription;
   const urlParams = new URLSearchParams(window.location.search);
+
   const hasMonthlyAndYearlyPlans =
     plans.some((plan) => plan.interval === PlanInterval.Annual) &&
     plans.some((plan) => plan.interval === PlanInterval.Every30Days);
+
   const currentPlan = plans.find((plan) => plan.id === subscription?.plan.id);
   const [planInterval, setPlanInterval] = useState(
     currentPlan
@@ -41,29 +44,15 @@ export const HorizontalPlanCards = ({
       ? PlanInterval.Annual
       : PlanInterval.Every30Days
   );
-  const availablePlans = plans.filter(
-    (plan) => plan.availability !== "customerTag" && plan.availability !== "customer"
-  );
-  const plansToShow =
-    showPlanIntervalToggle && hasMonthlyAndYearlyPlans
-      ? availablePlans.filter((plan) => plan.interval === planInterval)
-      : availablePlans;
+
+  const publicPlans = plans.filter((plan) => plan.availability === PlanAvailability.Public);
   const customPlans = showCustomPlans
-    ? plans.filter(
-        (plan) => plan.availability === "customerTag" || plan.availability === "customer"
-      )
+    ? plans.filter((plan) => plan.availability !== PlanAvailability.Public)
     : [];
+
   const [showSuccessBanner, setShowSuccessBanner] = useState(
     urlParams.get("subscribed") === "true"
   );
-
-  const columnSpan = (count = plansToShow.length) => {
-    if (count % 4 === 0) return { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 };
-    if (count % 3 === 0) return { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 };
-    if (count % 2 === 0) return { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 };
-    if (count === 1) return { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 };
-    return { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 };
-  };
 
   return (
     <Page
@@ -105,80 +94,34 @@ export const HorizontalPlanCards = ({
                 {Labels.SubscribeSuccessBody}
               </Banner>
             )}
-            <Grid>
-              {plansToShow.map((plan, index) => {
-                const discount =
-                  plan.discounts?.length > 0
-                    ? plan.discounts.reduce((prev, current) =>
-                        prev.discountedAmount < current.discountedAmount ? prev : current
-                      )
-                    : null;
-                const buttonLabel =
-                  customFieldCta && plan.customFields
-                    ? plan.customFields[customFieldCta]
-                    : undefined;
-                return (
-                  <Grid.Cell key={`plan-${index}`} columnSpan={columnSpan()}>
-                    <HorizontalPlanCard
-                      plan={plan}
-                      discount={discount}
-                      onSelectPlan={(plan) => {
-                        onSubscribe(plan);
-                      }}
-                      isActivePlan={currentPlan?.id === plan.id}
-                      useShortFormPlanIntervals={useShortFormPlanIntervals}
-                      isRecommendedPlan={
-                        showRecommendedBadge &&
-                        plan.customFields &&
-                        plan.customFields[customFieldPlanRecommended]
-                      }
-                      trialDaysAsFeature={showTrialDaysAsFeature}
-                      buttonLabel={buttonLabel}
-                    />
-                  </Grid.Cell>
-                );
-              })}
-            </Grid>
+            <PlanCardStack
+              plans={publicPlans}
+              onSelectPlan={onSubscribe}
+              planInterval={planInterval}
+              cardType={PlanCardType.Horizontal}
+              keyForRecommended={customFieldPlanRecommended}
+              keyForCustomButtonLabel={customFieldCta}
+              trialDaysAsFeature={showTrialDaysAsFeature}
+              useShortFormPlanIntervals={useShortFormPlanIntervals}
+              showRecommendedPlanBadge={showRecommendedBadge}
+            />
             {customPlans?.length > 0 && <Divider borderColor="border" />}
             {customPlans?.length > 0 && (
               <BlockStack gap="300">
                 <Box paddingInline={{ xs: 400, sm: 0 }}>
                   <Text variant="headingMd">{Labels.CustomPlans}</Text>
                 </Box>
-                <Grid>
-                  {customPlans.map((plan, index) => {
-                    const discount =
-                      plan.discounts?.length > 0
-                        ? plan.discounts.reduce((prev, current) =>
-                            prev.discountedAmount < current.discountedAmount ? prev : current
-                          )
-                        : null;
-                    const buttonLabel =
-                      customFieldCta && plan.customFields
-                        ? plan.customFields[customFieldCta]
-                        : undefined;
-                    return (
-                      <Grid.Cell key={`custom-plan-${index}`} columnSpan={columnSpan()}>
-                        <HorizontalPlanCard
-                          plan={plan}
-                          discount={discount}
-                          onSelectPlan={(plan) => {
-                            onSubscribe(plan);
-                          }}
-                          isActivePlan={currentPlan?.id === plan.id}
-                          useShortFormPlanIntervals={useShortFormPlanIntervals}
-                          isRecommendedPlan={
-                            showRecommendedBadge &&
-                            plan.customFields &&
-                            plan.customFields[customFieldPlanRecommended]
-                          }
-                          trialDaysAsFeature={showTrialDaysAsFeature}
-                          buttonLabel={buttonLabel}
-                        />
-                      </Grid.Cell>
-                    );
-                  })}
-                </Grid>
+                <PlanCardStack
+                  plans={customPlans}
+                  onSelectPlan={onSubscribe}
+                  planInterval={planInterval}
+                  cardType={PlanCardType.Horizontal}
+                  keyForRecommended={customFieldPlanRecommended}
+                  keyForCustomButtonLabel={customFieldCta}
+                  trialDaysAsFeature={showTrialDaysAsFeature}
+                  useShortFormPlanIntervals={useShortFormPlanIntervals}
+                  showRecommendedPlanBadge={showRecommendedBadge}
+                />
               </BlockStack>
             )}
           </BlockStack>
