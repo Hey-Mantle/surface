@@ -65,3 +65,17 @@ export const isRecommendedPlan = ({ plan, customFieldKey = "recommended" }) => {
 export const customButtonLabel = ({ plan, customFieldKey = "buttonLabel" }) => {
   return plan.customFields?.[customFieldKey] || Labels.SelectPlan;
 };
+
+/**
+ * Get the best discount for the plan
+ * @param {object} params
+ * @param {import('@heymantle/client').Plan} params.plan - The Mantle plan to check for a discount
+ * @returns {import('@heymantle/client').Discount} The highest discount for the plan, or undefined if none found
+ */
+export const highestDiscount = ({ plan }) => {
+  return plan.discounts?.length > 0
+    ? plan.discounts.reduce((prev, current) =>
+        prev.discountedAmount < current.discountedAmount ? prev : current
+      )
+    : undefined;
+};

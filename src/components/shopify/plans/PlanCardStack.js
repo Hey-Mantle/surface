@@ -1,12 +1,12 @@
 import {
   PlanAvailability,
   customButtonLabel,
+  highestDiscount,
   isRecommendedPlan,
 } from "../../../utils";
 import { columnCount, columnSpan } from "../../../utils/views";
 import { HighlightedPlanCard } from "./highlighted/HighlightedPlanCard";
 import { HorizontalPlanCard } from "./horizontal";
-import { VerticalPlanCard } from "./vertical/VerticalPlanCard";
 import { Grid } from "@shopify/polaris";
 
 /**
@@ -49,6 +49,7 @@ export const PlanCardType = {
  * @param {string} [props.keyForRecommended="recommended"] - The Plan custom field key to check for the recommended status
  * @param {string} [props.keyForCustomButtonLabel="buttonLabel"] - The Plan custom field key to check for the custom button label
  * @param {boolean} [props.showRecommendedPlanBadge=true] - Whether to show the recommended plan badge
+ * @param {boolean} [props.applyDiscount=true] - Whether to apply a valid discount to the plan card
  * @returns {JSX.Element} The plan card stack component
  */
 export const PlanCardStack = ({
@@ -62,48 +63,57 @@ export const PlanCardStack = ({
   keyForRecommended = "recommended",
   keyForCustomButtonLabel = "buttonLabel",
   showRecommendedPlanBadge = true,
+  applyDiscount = true,
 }) => {
   const activeSubscription = customer?.subscription?.active ? customer.subscription : undefined;
   const currentPlan = activeSubscription?.plan;
 
-  const plansToShow = !!planInterval ? plans.filter((plan) => plan.interval === planInterval) : plans;
+  const plansToShow = !!planInterval
+    ? plans.filter((plan) => plan.interval === planInterval)
+    : plans;
 
   const _columnCount = cardType === PlanCardType.Vertical ? 1 : columnCount(plansToShow.length);
   const _columnSpan = columnSpan(_columnCount);
 
   return (
     <Grid columns={_columnCount}>
-      {plansToShow.map((plan) => (
-        <Grid.Cell columnSpan={_columnSpan} key={plan.id}>
-          {cardType === PlanCardType.Highlighted && (
-            <HighlightedPlanCard
-              key={`HighlightedPlanCard-${plan.id}`}
-              plan={plan}
-              onSelectPlan={onSelectPlan}
-              isActivePlan={currentPlan?.id === plan.id}
-              trialDaysAsFeature={trialDaysAsFeature}
-              useShortFormPlanIntervals={useShortFormPlanIntervals}
-              isCustomPlan={plan.availability !== PlanAvailability.Public}
-              isRecommendedPlan={isRecommendedPlan({ plan, customFieldKey: keyForRecommended })}
-              buttonLabel={customButtonLabel({ plan, customFieldKey: keyForCustomButtonLabel })}
-              showRecommendedPlanBadge={showRecommendedPlanBadge}
-            />
-          )}
-          {cardType === PlanCardType.Horizontal && (
-            <HorizontalPlanCard
-              key={`HorizontalPlanCard-${plan.id}`}
-              plan={plan}
-              onSelectPlan={onSelectPlan}
-              isActivePlan={currentPlan?.id === plan.id}
-              trialDaysAsFeature={trialDaysAsFeature}
-              useShortFormPlanIntervals={useShortFormPlanIntervals}
-              isRecommendedPlan={isRecommendedPlan({ plan, customFieldKey: keyForRecommended })}
-              buttonLabel={customButtonLabel({ plan, customFieldKey: keyForCustomButtonLabel })}
-              showRecommendedPlanBadge={showRecommendedPlanBadge}
-            />
-          )}
-        </Grid.Cell>
-      ))}
+      {plansToShow.map((plan) => {
+        const discount = applyDiscount ? highestDiscount({ plan }) : undefined;
+
+        return (
+          <Grid.Cell columnSpan={_columnSpan} key={plan.id}>
+            {cardType === PlanCardType.Highlighted && (
+              <HighlightedPlanCard
+                key={`HighlightedPlanCard-${plan.id}`}
+                plan={plan}
+                discount={discount}
+                onSelectPlan={onSelectPlan}
+                isActivePlan={currentPlan?.id === plan.id}
+                trialDaysAsFeature={trialDaysAsFeature}
+                useShortFormPlanIntervals={useShortFormPlanIntervals}
+                isCustomPlan={plan.availability !== PlanAvailability.Public}
+                isRecommendedPlan={isRecommendedPlan({ plan, customFieldKey: keyForRecommended })}
+                buttonLabel={customButtonLabel({ plan, customFieldKey: keyForCustomButtonLabel })}
+                showRecommendedPlanBadge={showRecommendedPlanBadge}
+              />
+            )}
+            {cardType === PlanCardType.Horizontal && (
+              <HorizontalPlanCard
+                key={`HorizontalPlanCard-${plan.id}`}
+                plan={plan}
+                discount={discount}
+                onSelectPlan={onSelectPlan}
+                isActivePlan={currentPlan?.id === plan.id}
+                trialDaysAsFeature={trialDaysAsFeature}
+                useShortFormPlanIntervals={useShortFormPlanIntervals}
+                isRecommendedPlan={isRecommendedPlan({ plan, customFieldKey: keyForRecommended })}
+                buttonLabel={customButtonLabel({ plan, customFieldKey: keyForCustomButtonLabel })}
+                showRecommendedPlanBadge={showRecommendedPlanBadge}
+              />
+            )}
+          </Grid.Cell>
+        );
+      })}
     </Grid>
   );
 };

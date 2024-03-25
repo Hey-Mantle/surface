@@ -1,6 +1,6 @@
-import e, { createContext as le, useState as T, useEffect as se, useContext as ce } from "react";
-import { BlockStack as g, InlineStack as f, Text as m, Badge as Z, Box as A, Icon as U, Card as G, Button as $, Page as J, ButtonGroup as K, Layout as H, Banner as Q, Grid as Y, Divider as ee } from "@shopify/polaris";
-class ie {
+import e, { createContext as ie, useState as R, useEffect as oe, useContext as ue } from "react";
+import { Box as C, BlockStack as d, Button as $, InlineStack as w, Badge as V, Text as o, Icon as H, Grid as q, Page as G, ButtonGroup as Z, Layout as W, Banner as J, Divider as Q, Card as K } from "@shopify/polaris";
+class me {
   /**
    * Creates a new MantleClient. If being used in the browser, or any frontend code, never use the apiKey parameter,
    * always use the customerApiToken for the customer that is currently authenticated on the frontend.
@@ -10,14 +10,14 @@ class ie {
    * @param {string} params.customerApiToken - The Mantle Customer API Token returned by the /identify endpoint. This should be used in the browser.
    * @param {string} [params.apiUrl] - The Mantle API URL to use
    */
-  constructor({ appId: n, apiKey: o, customerApiToken: i, apiUrl: r = "https://appapi.heymantle.com/v1" }) {
+  constructor({ appId: n, apiKey: r, customerApiToken: c, apiUrl: l = "https://appapi.heymantle.com/v1" }) {
     if (!n)
       throw new Error("MantleClient appId is required");
-    if (typeof window < "u" && o)
+    if (typeof window < "u" && r)
       throw new Error("MantleClient apiKey should never be used in the browser");
-    if (!o && !i)
+    if (!r && !c)
       throw new Error("MantleClient one of apiKey or customerApiToken is required");
-    this.appId = n, this.apiKey = o, this.customerApiToken = i, this.apiUrl = r;
+    this.appId = n, this.apiKey = r, this.customerApiToken = c, this.apiUrl = l;
   }
   /**
    * Makes a request to the Mantle API
@@ -27,10 +27,10 @@ class ie {
    * @param {JSON} [params.body] - The request body
    * @returns {Promise<JSON>} a promise that resolves to the response body
    */
-  async mantleRequest({ path: n, method: o = "GET", body: i }) {
+  async mantleRequest({ path: n, method: r = "GET", body: c }) {
     try {
       return await (await fetch(`${this.apiUrl}${n.startsWith("/") ? "" : "/"}${n}`, {
-        method: o,
+        method: r,
         headers: {
           "Content-Type": "application/json",
           Accept: "application/json",
@@ -38,12 +38,12 @@ class ie {
           ...this.apiKey ? { "X-Mantle-App-Api-Key": this.apiKey } : {},
           ...this.customerApiToken ? { "X-Mantle-Customer-Api-Token": this.customerApiToken } : {}
         },
-        ...i && {
-          body: JSON.stringify(i)
+        ...c && {
+          body: JSON.stringify(c)
         }
       })).json();
-    } catch (r) {
-      throw console.error(`[mantleRequest] ${n} error: ${r.message}`), r;
+    } catch (l) {
+      throw console.error(`[mantleRequest] ${n} error: ${l.message}`), l;
     }
   }
   /**
@@ -60,17 +60,17 @@ class ie {
    */
   async identify({
     platformId: n,
-    myshopifyDomain: o,
-    platform: i = "shopify",
-    accessToken: r,
-    name: s,
-    email: w,
-    customFields: C
+    myshopifyDomain: r,
+    platform: c = "shopify",
+    accessToken: l,
+    name: i,
+    email: b,
+    customFields: f
   }) {
     return await this.mantleRequest({
       path: "identify",
       method: "POST",
-      body: { platformId: n, myshopifyDomain: o, platform: i, accessToken: r, name: s, email: w, customFields: C }
+      body: { platformId: n, myshopifyDomain: r, platform: c, accessToken: l, name: i, email: b, customFields: f }
     });
   }
   /**
@@ -90,11 +90,11 @@ class ie {
    * @param {string} [params.billingProvider] - The name of the billing provider to use, if none is provided, use sensible default
    * @returns {Promise<Subscription>} a promise that resolves to the created subscription
    */
-  async subscribe({ planId: n, planIds: o, discountId: i, returnUrl: r, billingProvider: s }) {
+  async subscribe({ planId: n, planIds: r, discountId: c, returnUrl: l, billingProvider: i }) {
     return await this.mantleRequest({
       path: "subscriptions",
       method: "POST",
-      body: { planId: n, planIds: o, discountId: i, returnUrl: r, billingProvider: s }
+      body: { planId: n, planIds: r, discountId: c, returnUrl: l, billingProvider: i }
     });
   }
   /**
@@ -119,11 +119,11 @@ class ie {
    * @param {number} params.cappedAmount - The capped amount of the usage charge
    * @returns {Promise<Subscription>} a promise that resolves to the updated subscription
    */
-  async updateSubscription({ id: n, cappedAmount: o }) {
+  async updateSubscription({ id: n, cappedAmount: r }) {
     return await this.mantleRequest({
       path: "subscriptions",
       method: "PUT",
-      body: { id: n, cappedAmount: o }
+      body: { id: n, cappedAmount: r }
     });
   }
   /**
@@ -135,15 +135,15 @@ class ie {
    * @param {Object.<string, any>} params.properties - The event properties
    * @returns {Promise<boolean>} true if the event was sent successfully
    */
-  async sendUsageEvent({ eventId: n, eventName: o, customerId: i, properties: r = {} }) {
+  async sendUsageEvent({ eventId: n, eventName: r, customerId: c, properties: l = {} }) {
     return await this.mantleRequest({
       path: "usage_events",
       method: "POST",
       body: {
         eventId: n,
-        eventName: o,
-        ...i ? { customerId: i } : {},
-        properties: r
+        eventName: r,
+        ...c ? { customerId: c } : {},
+        properties: l
       }
     });
   }
@@ -163,76 +163,82 @@ class ie {
     });
   }
 }
-var oe = {
-  MantleClient: ie
+var de = {
+  MantleClient: me
 };
-const re = le(), ue = ({ feature: t, count: n = 0 }) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? n < t.value || t.value === -1 : !1, Ae = ({
+const se = ie(), ge = ({ feature: t, count: n = 0 }) => (t == null ? void 0 : t.type) === "boolean" ? t.value : (t == null ? void 0 : t.type) === "limit" ? n < t.value || t.value === -1 : !1, xe = ({
   appId: t,
   customerApiToken: n,
-  apiUrl: o = "https://appapi.heymantle.com/v1",
-  children: i
+  apiUrl: r = "https://appapi.heymantle.com/v1",
+  children: c
 }) => {
-  const r = new oe.MantleClient({ appId: t, customerApiToken: n, apiUrl: o }), [s, w] = T(null), [C, P] = T(!0), [k, D] = T(null), F = async () => {
+  const l = new de.MantleClient({ appId: t, customerApiToken: n, apiUrl: r }), [i, b] = R(null), [f, p] = R(!0), [P, A] = R(null), M = async () => {
     try {
-      P(!0);
-      const p = await r.getCustomer();
-      w(p);
-    } catch (p) {
-      D(p);
+      p(!0);
+      const g = await l.getCustomer();
+      b(g);
+    } catch (g) {
+      A(g);
     } finally {
-      P(!1);
+      p(!1);
     }
-  }, _ = async (p) => {
-    await r.sendUsageEvent(p);
-  }, B = async ({ planId: p, planIds: M, discountId: h, billingProvider: L, returnUrl: I }) => await r.subscribe({
-    planId: p,
-    planIds: M,
-    discountId: h,
-    billingProvider: L,
-    returnUrl: I
-  }), N = async () => await r.cancelSubscription();
-  se(() => {
-    n && F();
+  }, v = async (g) => {
+    await l.sendUsageEvent(g);
+  }, T = async ({ planId: g, planIds: h, discountId: L, billingProvider: Y, returnUrl: E }) => await l.subscribe({
+    planId: g,
+    planIds: h,
+    discountId: L,
+    billingProvider: Y,
+    returnUrl: E
+  }), D = async () => await l.cancelSubscription();
+  oe(() => {
+    n && M();
   }, [n]);
-  const v = (s == null ? void 0 : s.plans) || [], S = s == null ? void 0 : s.subscription, R = S == null ? void 0 : S.plan;
+  const S = (i == null ? void 0 : i.plans) || [], y = i == null ? void 0 : i.subscription, m = y == null ? void 0 : y.plan;
   return /* @__PURE__ */ e.createElement(
-    re.Provider,
+    se.Provider,
     {
       value: {
-        customer: s,
-        subscription: S,
-        plans: v,
-        loading: C,
-        error: k,
-        client: r,
-        sendUsageEvent: _,
-        subscribe: B,
-        cancelSubscription: N,
-        isFeatureEnabled: ({ featureKey: p, count: M = 0 }) => s != null && s.features[p] ? ue({ feature: s.features[p], count: M }) : !1,
-        limitForFeature: ({ featureKey: p }) => s != null && s.features[p] && R.features[p].type === "limit" ? s.features[p].value : -1,
+        customer: i,
+        subscription: y,
+        plans: S,
+        loading: f,
+        error: P,
+        client: l,
+        sendUsageEvent: v,
+        subscribe: T,
+        cancelSubscription: D,
+        isFeatureEnabled: ({ featureKey: g, count: h = 0 }) => i != null && i.features[g] ? ge({ feature: i.features[g], count: h }) : !1,
+        limitForFeature: ({ featureKey: g }) => i != null && i.features[g] && m.features[g].type === "limit" ? i.features[g].value : -1,
         refetch: async () => {
-          await F();
+          await M();
         }
       }
     },
-    i
+    c
   );
-}, we = () => {
-  const t = ce(re);
+}, Be = () => {
+  const t = ue(se);
   if (t === void 0)
     throw new Error("useMantle must be used within a MantleProvider");
   return t;
-}, te = (t) => t.type === "boolean" && t.value == !0 || t.type === "limit" && t.value !== 0, Ce = (t, n) => te(n) - te(t) || t.name.localeCompare(n.name), me = (t = "USD") => new Intl.NumberFormat("en-US", {
+}, re = (t) => t.type === "boolean" && t.value == !0 || t.type === "limit" && t.value !== 0, Fe = (t, n) => re(n) - re(t) || t.name.localeCompare(n.name), Ee = (t = "USD") => new Intl.NumberFormat("en-US", {
   style: "currency",
   currency: t,
   notation: "standard"
-}), O = (t, n = "USD", o = !0) => {
-  let i = me(n).format(t);
-  return o && (i = i.replace(/\.00$/, "")), i;
-}, d = {
-  ANNUAL: "ANNUAL",
-  EVERY_30_DAYS: "EVERY_30_DAYS"
+}), O = (t, n = "USD", r = !0) => {
+  let c = Ee(n).format(t);
+  return r && (c = c.replace(/\.00$/, "")), c;
 }, u = {
+  Annual: "ANNUAL",
+  Every30Days: "EVERY_30_DAYS"
+}, N = {
+  Public: "public",
+  CustomerTag: "customerTag",
+  ShopifyPlan: "shopifyPlan",
+  Customer: "customer",
+  Hidden: "hidden"
+}, s = {
   Back: "Back",
   CurrentPlan: "Current plan",
   CustomPlans: "Custom plans",
@@ -251,27 +257,38 @@ const re = le(), ue = ({ feature: t, count: n = 0 }) => (t == null ? void 0 : t.
   SelectPlan: "Select plan",
   SubscribeSuccessTitle: "Subscription successful",
   SubscribeSuccessBody: "Thanks for subscribing to our app!"
-}, de = (t = d.EVERY_30_DAYS) => {
+}, ye = (t = u.Every30Days) => {
   switch (t) {
-    case d.ANNUAL:
+    case u.Annual:
       return "year";
-    case d.EVERY_30_DAYS:
+    case u.Every30Days:
     default:
       return "month";
   }
-}, Ee = (t = d.EVERY_30_DAYS) => {
+}, he = (t = u.Every30Days) => {
   switch (t) {
-    case d.ANNUAL:
+    case u.Annual:
       return "yr";
-    case d.EVERY_30_DAYS:
+    case u.Every30Days:
     default:
       return "mo";
   }
-}, j = ({
-  interval: t = d.EVERY_30_DAYS,
+}, X = ({
+  interval: t = u.Every30Days,
   useShortFormPlanIntervals: n = !0
-}) => n ? Ee(t) : de(t);
-var W = function(n) {
+}) => n ? he(t) : ye(t), le = ({ plan: t, customFieldKey: n = "recommended" }) => {
+  var r;
+  return !!((r = t.customFields) != null && r[n]);
+}, ce = ({ plan: t, customFieldKey: n = "buttonLabel" }) => {
+  var r;
+  return ((r = t.customFields) == null ? void 0 : r[n]) || s.SelectPlan;
+}, be = ({ plan: t }) => {
+  var n;
+  return ((n = t.discounts) == null ? void 0 : n.length) > 0 ? t.discounts.reduce(
+    (r, c) => r.discountedAmount < c.discountedAmount ? r : c
+  ) : void 0;
+}, ve = (t = 4) => t % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : t % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : t % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : t === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, pe = (t = 4) => t % 4 === 0 ? 4 : t % 3 === 0 ? 3 : t % 2 === 0 ? 2 : t === 1 ? 1 : 4;
+var U = function(n) {
   return /* @__PURE__ */ e.createElement("svg", Object.assign({
     viewBox: "0 0 20 20"
   }, n), /* @__PURE__ */ e.createElement("path", {
@@ -279,164 +296,17 @@ var W = function(n) {
     d: "M15.78 5.97a.75.75 0 0 1 0 1.06l-6.5 6.5a.75.75 0 0 1-1.06 0l-3.25-3.25a.75.75 0 1 1 1.06-1.06l2.72 2.72 5.97-5.97a.75.75 0 0 1 1.06 0Z"
   }));
 };
-W.displayName = "CheckIcon";
-var z = function(n) {
+U.displayName = "CheckIcon";
+var j = function(n) {
   return /* @__PURE__ */ e.createElement("svg", Object.assign({
     viewBox: "0 0 20 20"
   }, n), /* @__PURE__ */ e.createElement("path", {
     d: "M10.75 6.75a.75.75 0 0 0-1.5 0v2.5h-2.5a.75.75 0 0 0 0 1.5h2.5v2.5a.75.75 0 0 0 1.5 0v-2.5h2.5a.75.75 0 0 0 0-1.5h-2.5v-2.5Z"
   }));
 };
-z.displayName = "PlusIcon";
-const ge = ({ plan: t, isRecommendedPlan: n = !1 }) => /* @__PURE__ */ e.createElement(g, null, /* @__PURE__ */ e.createElement(f, { align: "space-between", gap: "100" }, /* @__PURE__ */ e.createElement(m, { variant: "bodyLg" }, t.name), n && /* @__PURE__ */ e.createElement(Z, { tone: "success" }, u.MostPopular)), t.description && /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, t.description)), he = ({ plan: t, discount: n, useShortFormPlanIntervals: o = !0 }) => /* @__PURE__ */ e.createElement(g, { gap: "100" }, !!n && /* @__PURE__ */ e.createElement(f, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(m, { variant: "headingXl" }, O(n.discountedAmount, t.currency)), /* @__PURE__ */ e.createElement(
-  m,
-  {
-    variant: "headingXl",
-    tone: "subdued",
-    fontWeight: "medium",
-    textDecorationLine: "line-through"
-  },
-  t.amount
-), /* @__PURE__ */ e.createElement(m, { variant: "bodyLg", tone: "subdued" }, u.Per, " ", j({ interval: t.interval, useShortFormPlanIntervals: o }))), !n && /* @__PURE__ */ e.createElement(f, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(m, { alignment: "center", variant: "headingXl" }, O(t.amount, t.currency)), /* @__PURE__ */ e.createElement(m, { alignment: "center", variant: "bodyLg", tone: "subdued" }, u.Per, " ", j({ interval: t.interval, useShortFormPlanIntervals: o }))), t.usageCharges && t.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(g, null, t.usageCharges.map((i, r) => /* @__PURE__ */ e.createElement(f, { key: `plan-usageCharge-${r}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: z, tone: "positive" })), /* @__PURE__ */ e.createElement(m, { variant: "bodyLg" }, i.terms))))), ye = ({ plan: t, trialDaysAsFeature: n = !1 }) => /* @__PURE__ */ e.createElement(g, { gap: "100" }, n && t.trialDays && t.trialDays > 0 ? /* @__PURE__ */ e.createElement(f, { align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: W, tone: "positive" })), /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, u.FreeTrialLength.replace("{{ trialDays }}", t.trialDays))) : null, t.featuresOrder.map((o, i) => {
-  const r = t.features[o];
-  if (r.type !== "boolean" || r.value === !0)
-    return /* @__PURE__ */ e.createElement(f, { key: `plan-feature-${i}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: W, tone: "positive" })), r.type === "boolean" ? /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, r.name) : /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, r.value, " ", r.name));
-})), ne = ({
-  plan: t,
-  discount: n,
-  buttonLabel: o,
-  onSelectPlan: i,
-  useShortFormPlanIntervals: r = !0,
-  trialDaysAsFeature: s = !1,
-  isRecommendedPlan: w = !1,
-  isActivePlan: C = !1
-}) => /* @__PURE__ */ e.createElement(G, null, /* @__PURE__ */ e.createElement(g, { gap: "400" }, /* @__PURE__ */ e.createElement(ge, { plan: t, isRecommendedPlan: w }), /* @__PURE__ */ e.createElement(
-  he,
-  {
-    plan: t,
-    discount: n,
-    useShortFormPlanIntervals: r
-  }
-), /* @__PURE__ */ e.createElement(
-  $,
-  {
-    size: "large",
-    variant: w ? "primary" : "secondary",
-    onClick: () => {
-      i(t);
-    },
-    disabled: C
-  },
-  C ? u.CurrentPlan : o || u.SelectPlan
-), /* @__PURE__ */ e.createElement(ye, { plan: t, trialDaysAsFeature: s }))), Pe = ({
-  customer: t,
-  plans: n,
-  onSubscribe: o,
-  backUrl: i = "",
-  // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
-  showRecommendedBadge: r = !0,
-  // boolean
-  customFieldCta: s,
-  // string: value of the custom plan field to use as the CTA. e.g. "cta"
-  customFieldPlanRecommended: w = "Recommended",
-  // string: value of the custom plan field to use as the recommended badge
-  showPlanIntervalToggle: C = !0,
-  // boolean
-  showTrialDaysAsFeature: P = !0,
-  // boolean
-  useShortFormPlanIntervals: k,
-  // boolean: e.g. show "$ / mo" instead of "$ / month"
-  pageWidth: D = "default",
-  // string: "full", "narrow", or "default"
-  showCustomPlans: F = !0
-  // boolean: show custom plans
-}) => {
-  const _ = t == null ? void 0 : t.subscription, B = new URLSearchParams(window.location.search), N = n.some((c) => c.interval === d.ANNUAL) && n.some((c) => c.interval === d.EVERY_30_DAYS), v = n.find((c) => c.id === (_ == null ? void 0 : _.plan.id)), [S, R] = T(
-    v ? v.interval : N ? d.ANNUAL : d.EVERY_30_DAYS
-  ), p = n.filter(
-    (c) => c.availability !== "customerTag" && c.availability !== "customer"
-  ), M = C && N ? p.filter((c) => c.interval === S) : p, h = F ? n.filter(
-    (c) => c.availability === "customerTag" || c.availability === "customer"
-  ) : [], [L, I] = T(
-    B.get("subscribed") === "true"
-  ), q = (c = M.length) => c % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : c % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : c % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : c === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 };
-  return /* @__PURE__ */ e.createElement(
-    J,
-    {
-      title: u.Plans,
-      backAction: i ? { content: u.Back, url: i } : void 0,
-      secondaryActions: C && N ? /* @__PURE__ */ e.createElement(K, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
-        $,
-        {
-          pressed: S === d.EVERY_30_DAYS,
-          onClick: () => R(d.EVERY_30_DAYS)
-        },
-        u.Monthly
-      ), /* @__PURE__ */ e.createElement(
-        $,
-        {
-          pressed: S === d.ANNUAL,
-          onClick: () => R(d.ANNUAL)
-        },
-        u.Yearly
-      )) : void 0,
-      fullWidth: D === "full",
-      narrowWidth: D === "narrow"
-    },
-    /* @__PURE__ */ e.createElement(H, null, /* @__PURE__ */ e.createElement(H.Section, null, /* @__PURE__ */ e.createElement(g, { gap: "1000" }, L && /* @__PURE__ */ e.createElement(
-      Q,
-      {
-        tone: "success",
-        title: u.SubscribeSuccessTitle,
-        onDismiss: () => {
-          I(!1), window.history.replaceState({}, document.title, window.location.pathname);
-        }
-      },
-      u.SubscribeSuccessBody
-    ), /* @__PURE__ */ e.createElement(Y, null, M.map((c, V) => {
-      var y;
-      const l = ((y = c.discounts) == null ? void 0 : y.length) > 0 ? c.discounts.reduce(
-        (E, b) => E.discountedAmount < b.discountedAmount ? E : b
-      ) : null, a = s && c.customFields ? c.customFields[s] : void 0;
-      return /* @__PURE__ */ e.createElement(Y.Cell, { key: `plan-${V}`, columnSpan: q() }, /* @__PURE__ */ e.createElement(
-        ne,
-        {
-          plan: c,
-          discount: l,
-          onSelectPlan: (E) => {
-            o(E);
-          },
-          isActivePlan: (v == null ? void 0 : v.id) === c.id,
-          useShortFormPlanIntervals: k,
-          isRecommendedPlan: r && c.customFields && c.customFields[w],
-          trialDaysAsFeature: P,
-          buttonLabel: a
-        }
-      ));
-    })), (h == null ? void 0 : h.length) > 0 && /* @__PURE__ */ e.createElement(ee, { borderColor: "border" }), (h == null ? void 0 : h.length) > 0 && /* @__PURE__ */ e.createElement(g, { gap: "300" }, /* @__PURE__ */ e.createElement(A, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(m, { variant: "headingMd" }, u.CustomPlans)), /* @__PURE__ */ e.createElement(Y, null, h.map((c, V) => {
-      var y;
-      const l = ((y = c.discounts) == null ? void 0 : y.length) > 0 ? c.discounts.reduce(
-        (E, b) => E.discountedAmount < b.discountedAmount ? E : b
-      ) : null, a = s && c.customFields ? c.customFields[s] : void 0;
-      return /* @__PURE__ */ e.createElement(Y.Cell, { key: `custom-plan-${V}`, columnSpan: q() }, /* @__PURE__ */ e.createElement(
-        ne,
-        {
-          plan: c,
-          discount: l,
-          onSelectPlan: (E) => {
-            o(E);
-          },
-          isActivePlan: (v == null ? void 0 : v.id) === c.id,
-          useShortFormPlanIntervals: k,
-          isRecommendedPlan: r && c.customFields && c.customFields[w],
-          trialDaysAsFeature: P,
-          buttonLabel: a
-        }
-      ));
-    }))))))
-  );
-}, be = ({ plan: t }) => /* @__PURE__ */ e.createElement(g, { gap: "100" }, /* @__PURE__ */ e.createElement(m, { variant: "headingMd", alignment: "center" }, t.name), t.description && /* @__PURE__ */ e.createElement(m, { variant: "bodyLg", tone: "subdued", alignment: "center" }, t.description)), ve = ({ plan: t, discount: n, useShortFormPlanIntervals: o = !0 }) => /* @__PURE__ */ e.createElement(g, { gap: "100" }, !!n && /* @__PURE__ */ e.createElement(f, { align: "center", blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(m, { variant: "heading3xl" }, O(discountedAmount, t.currency, !0)), /* @__PURE__ */ e.createElement(
-  m,
+j.displayName = "PlusIcon";
+const fe = ({ plan: t }) => /* @__PURE__ */ e.createElement(d, { gap: "100" }, /* @__PURE__ */ e.createElement(o, { variant: "headingMd", alignment: "center" }, t.name), t.description && /* @__PURE__ */ e.createElement(o, { variant: "bodyLg", tone: "subdued", alignment: "center" }, t.description)), Se = ({ plan: t, discount: n, useShortFormPlanIntervals: r = !0 }) => /* @__PURE__ */ e.createElement(d, { gap: "100" }, !!n && /* @__PURE__ */ e.createElement(w, { align: "center", blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(o, { variant: "heading3xl" }, O(discountedAmount, t.currency, !0)), /* @__PURE__ */ e.createElement(
+  o,
   {
     variant: "heading3xl",
     tone: "subdued",
@@ -444,201 +314,369 @@ const ge = ({ plan: t, isRecommendedPlan: n = !1 }) => /* @__PURE__ */ e.createE
     textDecorationLine: "line-through"
   },
   O(t.amount, t.currency, !0)
-), /* @__PURE__ */ e.createElement(m, { variant: "bodyLg", tone: "subdued" }, u.Per, " ", j({ interval: t.interval, useShortFormPlanIntervals: o }))), !n && /* @__PURE__ */ e.createElement(f, { align: "center", blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(m, { alignment: "center", variant: "heading3xl" }, O(t.amount, t.currency, !0)), /* @__PURE__ */ e.createElement(m, { alignment: "center", variant: "bodyLg", tone: "subdued" }, u.Per, " ", j({ interval: t.interval, useShortFormPlanIntervals: o }))), t.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(g, null, t.usageCharges.map((i, r) => /* @__PURE__ */ e.createElement(f, { key: `plan-usageCharge-${r}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: z, tone: "positive" })), /* @__PURE__ */ e.createElement(m, { variant: "bodyLg" }, i.terms))))), pe = ({ plan: t, trialDaysAsFeature: n = !1 }) => /* @__PURE__ */ e.createElement(g, { gap: "300" }, n && t.trialDays && t.trialDays > 0 ? /* @__PURE__ */ e.createElement(f, { align: "center", blockAlign: "center", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: W, tone: "positive" })), /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, u.FreeTrialLength.replace("{{ trialDays }}", t.trialDays))) : null, t.featuresOrder.map((o, i) => {
-  const r = t.features[o];
-  if (r.type !== "boolean" || r.value === !0)
-    return /* @__PURE__ */ e.createElement(f, { key: `plan-feature-${i}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: W, tone: "positive" })), r.type === "boolean" ? /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, r.name) : /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, r.value, " ", r.name));
-})), ae = ({
+), /* @__PURE__ */ e.createElement(o, { variant: "bodyLg", tone: "subdued" }, s.Per, " ", X({ interval: t.interval, useShortFormPlanIntervals: r }))), !n && /* @__PURE__ */ e.createElement(w, { align: "center", blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(o, { alignment: "center", variant: "heading3xl" }, O(t.amount, t.currency, !0)), /* @__PURE__ */ e.createElement(o, { alignment: "center", variant: "bodyLg", tone: "subdued" }, s.Per, " ", X({ interval: t.interval, useShortFormPlanIntervals: r }))), t.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(d, null, t.usageCharges.map((c, l) => /* @__PURE__ */ e.createElement(w, { key: `plan-usageCharge-${l}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(o, { variant: "bodyLg" }, c.terms))))), Ce = ({ plan: t, trialDaysAsFeature: n = !1 }) => /* @__PURE__ */ e.createElement(d, { gap: "300" }, n && t.trialDays && t.trialDays > 0 ? /* @__PURE__ */ e.createElement(w, { align: "center", blockAlign: "center", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: U, tone: "positive" })), /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, s.FreeTrialLength.replace("{{ trialDays }}", t.trialDays))) : null, t.featuresOrder.map((r, c) => {
+  const l = t.features[r];
+  if (l.type !== "boolean" || l.value === !0)
+    return /* @__PURE__ */ e.createElement(w, { key: `plan-feature-${c}`, align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: U, tone: "positive" })), l.type === "boolean" ? /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, l.name) : /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, l.value, " ", l.name));
+})), we = ({
   plan: t,
   discount: n,
-  buttonLabel: o,
-  onSelectPlan: i,
-  useShortFormPlanIntervals: r = !0,
-  trialDaysAsFeature: s = !1,
-  expanded: w = !1,
-  isActivePlan: C = !1,
-  isRecommendedPlan: P = !1,
-  isCustomPlan: k = !1,
-  showRecommendedPlanBadge: D = !1
-}) => /* @__PURE__ */ e.createElement(A, { position: "relative", minHeight: "100%" }, /* @__PURE__ */ e.createElement(A, { paddingBlock: w || P ? void 0 : "800", minHeight: "100%" }, /* @__PURE__ */ e.createElement(
-  A,
+  buttonLabel: r,
+  onSelectPlan: c,
+  useShortFormPlanIntervals: l = !0,
+  trialDaysAsFeature: i = !1,
+  expanded: b = !1,
+  isActivePlan: f = !1,
+  isRecommendedPlan: p = !1,
+  isCustomPlan: P = !1,
+  showRecommendedPlanBadge: A = !0
+}) => /* @__PURE__ */ e.createElement(C, { position: "relative", minHeight: "100%" }, /* @__PURE__ */ e.createElement(C, { paddingBlock: b || p ? void 0 : "800", minHeight: "100%" }, /* @__PURE__ */ e.createElement(
+  C,
   {
-    background: P || k ? "bg-surface" : "bg-surface-secondary",
+    background: p || P ? "bg-surface" : "bg-surface-secondary",
     borderStyle: "solid",
     borderColor: "border",
     borderWidth: "025",
-    paddingBlock: w || P ? "1600" : "800",
+    paddingBlock: b || p ? "1600" : "800",
     paddingInline: "400",
     borderRadius: "200",
     minHeight: "calc(100% - calc(var(--p-space-800) * 2))"
   },
-  /* @__PURE__ */ e.createElement(g, { gap: "800" }, /* @__PURE__ */ e.createElement(g, { gap: "400" }, /* @__PURE__ */ e.createElement(be, { plan: t }), /* @__PURE__ */ e.createElement(
-    ve,
+  /* @__PURE__ */ e.createElement(d, { gap: "800" }, /* @__PURE__ */ e.createElement(d, { gap: "400" }, /* @__PURE__ */ e.createElement(fe, { plan: t }), /* @__PURE__ */ e.createElement(
+    Se,
     {
       plan: t,
       discount: n,
-      useShortFormPlanIntervals: r
+      useShortFormPlanIntervals: l
     }
   )), /* @__PURE__ */ e.createElement(
     $,
     {
       size: "large",
-      variant: P ? "primary" : "secondary",
-      onClick: () => i(t),
-      disabled: C
+      variant: p ? "primary" : "secondary",
+      onClick: () => {
+        c ? c({ plan: t, discount: n }) : console.log("No onSelectPlan callback provided");
+      },
+      disabled: f
     },
-    o || u.SelectPlan
-  ), /* @__PURE__ */ e.createElement(pe, { plan: t, trialDaysAsFeature: s }), P && D && /* @__PURE__ */ e.createElement(f, { align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(Z, { tone: "success" }, u.MostPopular)))
-))), Le = ({
+    r || s.SelectPlan
+  ), /* @__PURE__ */ e.createElement(Ce, { plan: t, trialDaysAsFeature: i }), p && A && /* @__PURE__ */ e.createElement(w, { align: "center", gap: "100" }, /* @__PURE__ */ e.createElement(V, { tone: "success" }, s.MostPopular)))
+))), I = {
+  /**
+   * Recommended plans will be highlighted and optionally expanded
+   */
+  Highlighted: "highlighted",
+  /**
+   * All plans will be displayed in a horizontal stack based on the screen size
+   */
+  Horizontal: "horizontal",
+  /**
+   * All plans will be displayed in a vertical stack
+   */
+  Vertical: "vertical"
+}, _ = ({
+  plans: t,
+  customer: n,
+  onSelectPlan: r,
+  planInterval: c,
+  cardType: l = I.Horizontal,
+  trialDaysAsFeature: i = !0,
+  useShortFormPlanIntervals: b = !0,
+  keyForRecommended: f = "recommended",
+  keyForCustomButtonLabel: p = "buttonLabel",
+  showRecommendedPlanBadge: P = !0,
+  applyDiscount: A = !0
+}) => {
+  var y;
+  const M = (y = n == null ? void 0 : n.subscription) != null && y.active ? n.subscription : void 0, v = M == null ? void 0 : M.plan, T = c ? t.filter((m) => m.interval === c) : t, D = l === I.Vertical ? 1 : pe(T.length), S = ve(D);
+  return /* @__PURE__ */ React.createElement(q, { columns: D }, T.map((m) => {
+    const g = A ? be({ plan: m }) : void 0;
+    return /* @__PURE__ */ React.createElement(q.Cell, { columnSpan: S, key: m.id }, l === I.Highlighted && /* @__PURE__ */ React.createElement(
+      we,
+      {
+        key: `HighlightedPlanCard-${m.id}`,
+        plan: m,
+        discount: g,
+        onSelectPlan: r,
+        isActivePlan: (v == null ? void 0 : v.id) === m.id,
+        trialDaysAsFeature: i,
+        useShortFormPlanIntervals: b,
+        isCustomPlan: m.availability !== N.Public,
+        isRecommendedPlan: le({ plan: m, customFieldKey: f }),
+        buttonLabel: ce({ plan: m, customFieldKey: p }),
+        showRecommendedPlanBadge: P
+      }
+    ), l === I.Horizontal && /* @__PURE__ */ React.createElement(
+      De,
+      {
+        key: `HorizontalPlanCard-${m.id}`,
+        plan: m,
+        discount: g,
+        onSelectPlan: r,
+        isActivePlan: (v == null ? void 0 : v.id) === m.id,
+        trialDaysAsFeature: i,
+        useShortFormPlanIntervals: b,
+        isRecommendedPlan: le({ plan: m, customFieldKey: f }),
+        buttonLabel: ce({ plan: m, customFieldKey: p }),
+        showRecommendedPlanBadge: P
+      }
+    ));
+  }));
+}, Te = ({
   customer: t,
   plans: n,
-  onSubscribe: o,
-  backUrl: i = "",
+  onSubscribe: r,
+  backUrl: c = "",
   // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
-  showRecommendedBadge: r = !0,
+  showRecommendedBadge: l = !0,
   // boolean
-  customFieldCta: s = null,
+  customFieldCta: i,
   // string: value of the custom plan field to use as the CTA. e.g. "cta"
-  customFieldPlanRecommended: w = "Recommended",
+  customFieldPlanRecommended: b = "Recommended",
   // string: value of the custom plan field to use as the recommended badge
-  addSpacingToNonRecommendedPlans: C = !0,
+  showPlanIntervalToggle: f = !0,
   // boolean
-  showPlanIntervalToggle: P = !0,
+  showTrialDaysAsFeature: p = !0,
   // boolean
-  showTrialDaysAsFeature: k = !0,
-  // boolean
-  useShortFormPlanIntervals: D = !0,
+  useShortFormPlanIntervals: P,
   // boolean: e.g. show "$ / mo" instead of "$ / month"
-  pageWidth: F = "default",
+  pageWidth: A = "default",
   // string: "full", "narrow", or "default"
-  showCustomPlans: _ = !0
+  showCustomPlans: M = !0
   // boolean: show custom plans
 }) => {
-  const B = t == null ? void 0 : t.subscription, N = new URLSearchParams(window.location.search), v = n.some((l) => l.interval === d.ANNUAL) && n.some((l) => l.interval === d.EVERY_30_DAYS), S = n.find((l) => l.id === (B == null ? void 0 : B.plan.id)), [R, p] = T(
-    S ? S.interval : v ? d.ANNUAL : d.EVERY_30_DAYS
-  ), M = n.filter(
-    (l) => l.availability !== "customerTag" && l.availability !== "customer"
-  ), h = P && v ? M.filter((l) => l.interval === R) : M, L = _ ? n.filter(
-    (l) => l.availability === "customerTag" || l.availability === "customer"
-  ) : [], [I, q] = T(
-    N.get("subscribed") === "true"
-  ), c = (l = h.length) => l % 4 === 0 ? { xs: 6, sm: 6, md: 2, lg: 3, xl: 3 } : l % 3 === 0 ? { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 } : l % 2 === 0 ? { xs: 6, sm: 6, md: 3, lg: 6, xl: 6 } : l === 1 ? { xs: 6, sm: 6, md: 6, lg: 12, xl: 12 } : { xs: 6, sm: 6, md: 2, lg: 4, xl: 4 }, V = () => h.length % 4 === 0 ? 4 : h.length % 3 === 0 ? 3 : h.length % 2 === 0 ? 2 : h.length === 1 ? 1 : 4;
+  const v = t == null ? void 0 : t.subscription, T = new URLSearchParams(window.location.search), D = n.some((E) => E.interval === u.Annual) && n.some((E) => E.interval === u.Every30Days), S = n.find((E) => E.id === (v == null ? void 0 : v.plan.id)), [y, m] = R(
+    S ? S.interval : D ? u.Annual : u.Every30Days
+  ), g = n.filter((E) => E.availability === N.Public), h = M ? n.filter((E) => E.availability !== N.Public) : [], [L, Y] = R(
+    T.get("subscribed") === "true"
+  );
   return /* @__PURE__ */ e.createElement(
-    J,
+    G,
     {
-      title: u.Plans,
-      backAction: i && i !== "" ? { content: u.Back, url: i } : void 0,
-      secondaryActions: P && v ? /* @__PURE__ */ e.createElement(K, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
+      title: s.Plans,
+      backAction: c ? { content: s.Back, url: c } : void 0,
+      secondaryActions: f && D ? /* @__PURE__ */ e.createElement(Z, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
         $,
         {
-          pressed: R === d.EVERY_30_DAYS,
-          onClick: () => p(d.EVERY_30_DAYS)
+          pressed: y === u.Every30Days,
+          onClick: () => m(u.Every30Days)
         },
-        u.Monthly
+        s.Monthly
       ), /* @__PURE__ */ e.createElement(
         $,
         {
-          pressed: R === d.ANNUAL,
-          onClick: () => p(d.ANNUAL)
+          pressed: y === u.Annual,
+          onClick: () => m(u.Annual)
         },
-        u.Yearly
+        s.Yearly
       )) : void 0,
-      fullWidth: F === "full",
-      narrowWidth: F === "narrow"
+      fullWidth: A === "full",
+      narrowWidth: A === "narrow"
     },
-    /* @__PURE__ */ e.createElement(A, { paddingBlockEnd: "800" }, /* @__PURE__ */ e.createElement(H, null, /* @__PURE__ */ e.createElement(H.Section, null, /* @__PURE__ */ e.createElement(g, { gap: "1000" }, I && /* @__PURE__ */ e.createElement(
-      Q,
+    /* @__PURE__ */ e.createElement(W, null, /* @__PURE__ */ e.createElement(W.Section, null, /* @__PURE__ */ e.createElement(d, { gap: "1000" }, L && /* @__PURE__ */ e.createElement(
+      J,
       {
         tone: "success",
-        title: u.SubscribeSuccessTitle,
+        title: s.SubscribeSuccessTitle,
         onDismiss: () => {
-          q(!1), window.history.replaceState({}, document.title, window.location.pathname);
+          Y(!1), window.history.replaceState({}, document.title, window.location.pathname);
         }
       },
-      u.SubscribeSuccessBody
-    ), /* @__PURE__ */ e.createElement(Y, { columns: V() }, h.map((l, a) => {
-      var b;
-      const y = l.customFields && l.customFields[w], E = s && l.customFields[s];
-      return /* @__PURE__ */ e.createElement(Y.Cell, { key: `plan-${a}`, columnSpan: c() }, /* @__PURE__ */ e.createElement(
-        ae,
-        {
-          plan: l,
-          discount: ((b = l.discounts) == null ? void 0 : b.length) > 0 ? l.discounts[0] : null,
-          buttonLabel: E ? l.customFields[s] : void 0,
-          onSelectPlan: o,
-          useShortFormPlanIntervals: D,
-          trialDaysAsFeature: k,
-          expanded: C || y,
-          isActivePlan: (S == null ? void 0 : S.id) === l.id,
-          isRecommendedPlan: y,
-          showRecommendedPlanBadge: r
-        }
-      ));
-    })), (L == null ? void 0 : L.length) > 0 && /* @__PURE__ */ e.createElement(ee, { borderColor: "border" }), (L == null ? void 0 : L.length) > 0 && /* @__PURE__ */ e.createElement(g, { gap: "300" }, /* @__PURE__ */ e.createElement(A, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(m, { variant: "headingMd" }, u.CustomPlans)), /* @__PURE__ */ e.createElement(Y, null, L.map((l, a) => {
-      var b;
-      const y = l.customFields && l.customFields[w], E = s && l.customFields[s];
-      return /* @__PURE__ */ e.createElement(
-        Y.Cell,
-        {
-          key: `custom-plan-${a}`,
-          columnSpan: c(L.length)
-        },
-        /* @__PURE__ */ e.createElement(
-          ae,
-          {
-            plan: l,
-            discount: ((b = l.discounts) == null ? void 0 : b.length) > 0 ? l.discounts[0] : null,
-            buttonLabel: E ? l.customFields[s] : void 0,
-            onSelectPlan: o,
-            useShortFormPlanIntervals: D,
-            trialDaysAsFeature: k,
-            expanded: C || y,
-            isActivePlan: (S == null ? void 0 : S.id) === l.id,
-            isRecommendedPlan: y,
-            showRecommendedPlanBadge: r,
-            isCustomPlan: !0
-          }
-        )
-      );
-    })))))))
+      s.SubscribeSuccessBody
+    ), /* @__PURE__ */ e.createElement(
+      _,
+      {
+        plans: g,
+        onSelectPlan: r,
+        planInterval: y,
+        cardType: I.Horizontal,
+        keyForRecommended: b,
+        keyForCustomButtonLabel: i,
+        trialDaysAsFeature: p,
+        useShortFormPlanIntervals: P,
+        showRecommendedPlanBadge: l
+      }
+    ), (h == null ? void 0 : h.length) > 0 && /* @__PURE__ */ e.createElement(Q, { borderColor: "border" }), (h == null ? void 0 : h.length) > 0 && /* @__PURE__ */ e.createElement(d, { gap: "300" }, /* @__PURE__ */ e.createElement(C, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(o, { variant: "headingMd" }, s.CustomPlans)), /* @__PURE__ */ e.createElement(
+      _,
+      {
+        plans: h,
+        onSelectPlan: r,
+        planInterval: y,
+        cardType: I.Horizontal,
+        keyForRecommended: b,
+        keyForCustomButtonLabel: i,
+        trialDaysAsFeature: p,
+        useShortFormPlanIntervals: P,
+        showRecommendedPlanBadge: l
+      }
+    )))))
   );
-}, Ye = ({
+}, Pe = ({ plan: t, isRecommendedPlan: n = !1 }) => /* @__PURE__ */ e.createElement(d, null, /* @__PURE__ */ e.createElement(w, { align: "space-between", gap: "100" }, /* @__PURE__ */ e.createElement(o, { variant: "bodyLg" }, t.name), n && /* @__PURE__ */ e.createElement(V, { tone: "success" }, s.MostPopular)), t.description && /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, t.description)), ke = ({ plan: t, discount: n, useShortFormPlanIntervals: r = !0 }) => /* @__PURE__ */ e.createElement(d, { gap: "100" }, !!n && /* @__PURE__ */ e.createElement(w, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(o, { variant: "headingXl" }, O(n.discountedAmount, t.currency)), /* @__PURE__ */ e.createElement(
+  o,
+  {
+    variant: "headingXl",
+    tone: "subdued",
+    fontWeight: "medium",
+    textDecorationLine: "line-through"
+  },
+  t.amount
+), /* @__PURE__ */ e.createElement(o, { variant: "bodyLg", tone: "subdued" }, s.Per, " ", X({ interval: t.interval, useShortFormPlanIntervals: r }))), !n && /* @__PURE__ */ e.createElement(w, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(o, { alignment: "center", variant: "headingXl" }, O(t.amount, t.currency)), /* @__PURE__ */ e.createElement(o, { alignment: "center", variant: "bodyLg", tone: "subdued" }, s.Per, " ", X({ interval: t.interval, useShortFormPlanIntervals: r }))), t.usageCharges && t.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(d, null, t.usageCharges.map((c, l) => /* @__PURE__ */ e.createElement(w, { key: `plan-usageCharge-${l}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(o, { variant: "bodyLg" }, c.terms))))), Ae = ({ plan: t, trialDaysAsFeature: n = !1 }) => /* @__PURE__ */ e.createElement(d, { gap: "100" }, n && t.trialDays && t.trialDays > 0 ? /* @__PURE__ */ e.createElement(w, { align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: U, tone: "positive" })), /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, s.FreeTrialLength.replace("{{ trialDays }}", t.trialDays))) : null, t.featuresOrder.map((r, c) => {
+  const l = t.features[r];
+  if (l.type !== "boolean" || l.value === !0)
+    return /* @__PURE__ */ e.createElement(w, { key: `plan-feature-${c}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: U, tone: "positive" })), l.type === "boolean" ? /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, l.name) : /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, l.value, " ", l.name));
+})), De = ({
+  plan: t,
+  discount: n,
+  buttonLabel: r,
+  onSelectPlan: c,
+  useShortFormPlanIntervals: l = !0,
+  trialDaysAsFeature: i = !1,
+  isRecommendedPlan: b = !1,
+  isActivePlan: f = !1
+}) => /* @__PURE__ */ e.createElement(K, null, /* @__PURE__ */ e.createElement(d, { gap: "400" }, /* @__PURE__ */ e.createElement(Pe, { plan: t, isRecommendedPlan: b }), /* @__PURE__ */ e.createElement(
+  ke,
+  {
+    plan: t,
+    discount: n,
+    useShortFormPlanIntervals: l
+  }
+), /* @__PURE__ */ e.createElement(
+  $,
+  {
+    size: "large",
+    variant: b ? "primary" : "secondary",
+    onClick: () => {
+      c ? c({ plan: t, discount: n }) : console.log("No onSelectPlan callback provided");
+    },
+    disabled: f
+  },
+  f ? s.CurrentPlan : r || s.SelectPlan
+), /* @__PURE__ */ e.createElement(Ae, { plan: t, trialDaysAsFeature: i }))), Re = ({
   customer: t,
   plans: n,
-  onSubscribe: o,
-  backUrl: i = "",
+  onSubscribe: r,
+  backUrl: c = "",
   // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
-  showRecommendedBadge: r = !0,
+  showRecommendedBadge: l = !0,
   // boolean
-  customFieldCta: s = null,
+  customFieldCta: i = null,
   // string: value of the custom plan field to use as the CTA. e.g. "cta"
-  customFieldPlanRecommended: w = "Recommended",
+  customFieldPlanRecommended: b = "Recommended",
   // string: value of the custom plan field to use as the recommended badge
-  showPlanIntervalToggle: C = !1,
+  showPlanIntervalToggle: f = !0,
   // boolean
-  showTrialDaysAsFeature: P = !0,
+  showTrialDaysAsFeature: p = !0,
   // boolean
-  useShortFormPlanIntervals: k = !0,
+  useShortFormPlanIntervals: P = !0,
   // boolean: e.g. show "$ / mo" instead of "$ / month"
-  pageWidth: D = "default",
+  pageWidth: A = "default",
   // string: "full", "narrow", or "default"
-  showCustomPlans: F = !0
+  showCustomPlans: M = !0
   // boolean: show custom plans
 }) => {
-  const _ = t == null ? void 0 : t.subscription, B = new URLSearchParams(window.location.search), N = n.some((a) => a.interval === d.ANNUAL) && n.some((a) => a.interval === d.EVERY_30_DAYS), v = n.find((a) => a.id === (_ == null ? void 0 : _.plan.id)), [S, R] = T(
-    v ? v.interval : N ? d.ANNUAL : d.EVERY_30_DAYS
-  ), p = n.filter(
+  const v = t == null ? void 0 : t.subscription, T = new URLSearchParams(window.location.search), D = n.some((E) => E.interval === u.Annual) && n.some((E) => E.interval === u.Every30Days), S = n.find((E) => E.id === (v == null ? void 0 : v.plan.id)), [y, m] = R(
+    S ? S.interval : D ? u.Annual : u.Every30Days
+  ), g = n.filter((E) => E.availability === N.Public), h = M ? n.filter((E) => E.availability !== N.Public) : [], [L, Y] = R(
+    T.get("subscribed") === "true"
+  );
+  return /* @__PURE__ */ e.createElement(
+    G,
+    {
+      title: s.Plans,
+      backAction: c && c !== "" ? { content: s.Back, url: c } : void 0,
+      secondaryActions: f && D ? /* @__PURE__ */ e.createElement(Z, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
+        $,
+        {
+          pressed: y === u.Every30Days,
+          onClick: () => m(u.Every30Days)
+        },
+        s.Monthly
+      ), /* @__PURE__ */ e.createElement(
+        $,
+        {
+          pressed: y === u.Annual,
+          onClick: () => m(u.Annual)
+        },
+        s.Yearly
+      )) : void 0,
+      fullWidth: A === "full",
+      narrowWidth: A === "narrow"
+    },
+    /* @__PURE__ */ e.createElement(C, { paddingBlockEnd: "800" }, /* @__PURE__ */ e.createElement(W, null, /* @__PURE__ */ e.createElement(W.Section, null, /* @__PURE__ */ e.createElement(d, { gap: "1000" }, L && /* @__PURE__ */ e.createElement(
+      J,
+      {
+        tone: "success",
+        title: s.SubscribeSuccessTitle,
+        onDismiss: () => {
+          Y(!1), window.history.replaceState({}, document.title, window.location.pathname);
+        }
+      },
+      s.SubscribeSuccessBody
+    ), /* @__PURE__ */ e.createElement(
+      _,
+      {
+        plans: g,
+        onSelectPlan: r,
+        planInterval: y,
+        cardType: I.Highlighted,
+        keyForRecommended: b,
+        keyForCustomButtonLabel: i,
+        trialDaysAsFeature: p,
+        useShortFormPlanIntervals: P,
+        showRecommendedPlanBadge: l
+      }
+    ), (h == null ? void 0 : h.length) > 0 && /* @__PURE__ */ e.createElement(Q, { borderColor: "border" }), (h == null ? void 0 : h.length) > 0 && /* @__PURE__ */ e.createElement(d, { gap: "300" }, /* @__PURE__ */ e.createElement(C, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(o, { variant: "headingMd" }, s.CustomPlans)), /* @__PURE__ */ e.createElement(
+      _,
+      {
+        plans: h,
+        onSelectPlan: r,
+        planInterval: y,
+        cardType: I.Highlighted,
+        keyForRecommended: b,
+        keyForCustomButtonLabel: i,
+        trialDaysAsFeature: p,
+        useShortFormPlanIntervals: P,
+        showRecommendedPlanBadge: l
+      }
+    ))))))
+  );
+}, $e = ({
+  customer: t,
+  plans: n,
+  onSubscribe: r,
+  backUrl: c = "",
+  // string: URL to use as "back" breadcrumb URL. leave as empty string or null to hide the back button
+  showRecommendedBadge: l = !0,
+  // boolean
+  customFieldCta: i = null,
+  // string: value of the custom plan field to use as the CTA. e.g. "cta"
+  customFieldPlanRecommended: b = "Recommended",
+  // string: value of the custom plan field to use as the recommended badge
+  showPlanIntervalToggle: f = !1,
+  // boolean
+  showTrialDaysAsFeature: p = !0,
+  // boolean
+  useShortFormPlanIntervals: P = !0,
+  // boolean: e.g. show "$ / mo" instead of "$ / month"
+  pageWidth: A = "default",
+  // string: "full", "narrow", or "default"
+  showCustomPlans: M = !0
+  // boolean: show custom plans
+}) => {
+  const v = t == null ? void 0 : t.subscription, T = new URLSearchParams(window.location.search), D = n.some((a) => a.interval === u.Annual) && n.some((a) => a.interval === u.Every30Days), S = n.find((a) => a.id === (v == null ? void 0 : v.plan.id)), [y, m] = R(
+    S ? S.interval : D ? u.Annual : u.Every30Days
+  ), g = n.filter(
     (a) => a.availability !== "customerTag" && a.availability !== "customer"
-  ), M = C && N ? p.filter((a) => a.interval === S) : p, h = F ? n.filter(
+  ), h = f && D ? g.filter((a) => a.interval === y) : g, L = M ? n.filter(
     (a) => a.availability === "customerTag" || a.availability === "customer"
-  ) : [], [L, I] = T(
-    B.get("subscribed") === "true"
-  ), q = ({ plan: a, discount: y }) => /* @__PURE__ */ e.createElement(g, null, /* @__PURE__ */ e.createElement(m, { variant: "bodyLg" }, a.name), a.description && /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, a.description)), c = ({ plan: a, discount: y }) => /* @__PURE__ */ e.createElement(g, { gap: "200" }, /* @__PURE__ */ e.createElement(m, { fontWeight: "medium" }, u.Features), /* @__PURE__ */ e.createElement(g, { gap: "100" }, P && a.trialDays !== 0 && /* @__PURE__ */ e.createElement(f, { align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: W, tone: "positive" })), /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, u.FreeTrialLength.replace("{{ trialDays }}", a.trialDays))), a.featuresOrder.map((E, b) => {
-    const x = a.features[E];
-    if (x.type !== "boolean" || x.value === !0)
-      return /* @__PURE__ */ e.createElement(f, { key: `plan-feature-${b}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: W, tone: "positive" })), x.type === "boolean" ? /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, x.name) : /* @__PURE__ */ e.createElement(m, { tone: "subdued" }, x.value, " ", x.name));
-  }))), V = ({ plan: a, discount: y }) => /* @__PURE__ */ e.createElement(g, { gap: "100" }, y ? /* @__PURE__ */ e.createElement(f, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(m, { variant: "headingXl" }, O(y.discountedAmount, a.currency)), /* @__PURE__ */ e.createElement(
-    m,
+  ) : [], [Y, E] = R(
+    T.get("subscribed") === "true"
+  ), ee = ({ plan: a, discount: x }) => /* @__PURE__ */ e.createElement(d, null, /* @__PURE__ */ e.createElement(o, { variant: "bodyLg" }, a.name), a.description && /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, a.description)), te = ({ plan: a, discount: x }) => /* @__PURE__ */ e.createElement(d, { gap: "200" }, /* @__PURE__ */ e.createElement(o, { fontWeight: "medium" }, s.Features), /* @__PURE__ */ e.createElement(d, { gap: "100" }, p && a.trialDays !== 0 && /* @__PURE__ */ e.createElement(w, { align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: U, tone: "positive" })), /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, s.FreeTrialLength.replace("{{ trialDays }}", a.trialDays))), a.featuresOrder.map((k, B) => {
+    const F = a.features[k];
+    if (F.type !== "boolean" || F.value === !0)
+      return /* @__PURE__ */ e.createElement(w, { key: `plan-feature-${B}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: U, tone: "positive" })), F.type === "boolean" ? /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, F.name) : /* @__PURE__ */ e.createElement(o, { tone: "subdued" }, F.value, " ", F.name));
+  }))), ne = ({ plan: a, discount: x }) => /* @__PURE__ */ e.createElement(d, { gap: "100" }, x ? /* @__PURE__ */ e.createElement(w, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(o, { variant: "headingXl" }, O(x.discountedAmount, a.currency)), /* @__PURE__ */ e.createElement(
+    o,
     {
       variant: "headingXl",
       tone: "subdued",
@@ -646,83 +684,89 @@ const ge = ({ plan: t, isRecommendedPlan: n = !1 }) => /* @__PURE__ */ e.createE
       textDecorationLine: "line-through"
     },
     a.amount
-  ), /* @__PURE__ */ e.createElement(m, { variant: "bodyLg", tone: "subdued" }, u.Per, " ", j({ interval: a.interval, useShortFormPlanIntervals: k }))) : /* @__PURE__ */ e.createElement(f, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(m, { alignment: "center", variant: "headingXl" }, O(a.amount, a.currency)), /* @__PURE__ */ e.createElement(m, { alignment: "center", variant: "bodyLg", tone: "subdued" }, u.Per, " ", j({ interval: a.interval, useShortFormPlanIntervals: k }))), a.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(g, null, a.usageCharges.map((E, b) => /* @__PURE__ */ e.createElement(f, { key: `plan-usageCharge-${b}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(U, { source: z, tone: "positive" })), /* @__PURE__ */ e.createElement(m, { variant: "bodyLg" }, E.terms))))), l = ({ plan: a, discount: y }) => {
-    const E = s && a.customFields[s], b = a.customFields && a.customFields[w];
-    return /* @__PURE__ */ e.createElement(f, { blockAlign: "center", gap: "400" }, /* @__PURE__ */ e.createElement(
+  ), /* @__PURE__ */ e.createElement(o, { variant: "bodyLg", tone: "subdued" }, s.Per, " ", X({ interval: a.interval, useShortFormPlanIntervals: P }))) : /* @__PURE__ */ e.createElement(w, { blockAlign: "center", gap: "200" }, /* @__PURE__ */ e.createElement(o, { alignment: "center", variant: "headingXl" }, O(a.amount, a.currency)), /* @__PURE__ */ e.createElement(o, { alignment: "center", variant: "bodyLg", tone: "subdued" }, s.Per, " ", X({ interval: a.interval, useShortFormPlanIntervals: P }))), a.usageCharges.length > 0 && /* @__PURE__ */ e.createElement(d, null, a.usageCharges.map((k, B) => /* @__PURE__ */ e.createElement(w, { key: `plan-usageCharge-${B}`, align: "start", gap: "100" }, /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(H, { source: j, tone: "positive" })), /* @__PURE__ */ e.createElement(o, { variant: "bodyLg" }, k.terms))))), ae = ({ plan: a, discount: x }) => {
+    const k = i && a.customFields[i], B = a.customFields && a.customFields[b];
+    return /* @__PURE__ */ e.createElement(w, { blockAlign: "center", gap: "400" }, /* @__PURE__ */ e.createElement(
       $,
       {
         size: "large",
-        variant: b ? "primary" : "secondary",
-        onClick: () => o({ planId: a.id, discountId: y == null ? void 0 : y.id }),
-        disabled: (v == null ? void 0 : v.id) === a.id
+        variant: B ? "primary" : "secondary",
+        onClick: () => r({ planId: a.id, discountId: x == null ? void 0 : x.id }),
+        disabled: (S == null ? void 0 : S.id) === a.id
       },
-      (v == null ? void 0 : v.id) === a.id ? u.CurrentPlan : E ? a.customFields[s] : u.SelectPlan
-    ), b && r && /* @__PURE__ */ e.createElement(A, null, /* @__PURE__ */ e.createElement(Z, { tone: "success" }, u.MostPopular)));
+      (S == null ? void 0 : S.id) === a.id ? s.CurrentPlan : k ? a.customFields[i] : s.SelectPlan
+    ), B && l && /* @__PURE__ */ e.createElement(C, null, /* @__PURE__ */ e.createElement(V, { tone: "success" }, s.MostPopular)));
   };
   return /* @__PURE__ */ e.createElement(
-    J,
+    G,
     {
-      title: u.Plans,
-      backAction: i !== "" ? { content: u.Back, url: i } : void 0,
-      secondaryActions: C && N ? /* @__PURE__ */ e.createElement(K, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
+      title: s.Plans,
+      backAction: c !== "" ? { content: s.Back, url: c } : void 0,
+      secondaryActions: f && D ? /* @__PURE__ */ e.createElement(Z, { variant: "segmented" }, /* @__PURE__ */ e.createElement(
         $,
         {
-          pressed: S === d.EVERY_30_DAYS,
-          onClick: () => R(d.EVERY_30_DAYS)
+          pressed: y === u.Every30Days,
+          onClick: () => m(u.Every30Days)
         },
-        u.Monthly
+        s.Monthly
       ), /* @__PURE__ */ e.createElement(
         $,
         {
-          pressed: S === d.ANNUAL,
-          onClick: () => R(d.ANNUAL)
+          pressed: y === u.Annual,
+          onClick: () => m(u.Annual)
         },
-        u.Year
+        s.Year
       )) : void 0,
-      fullWidth: D === "full",
-      narrowWidth: D === "narrow"
+      fullWidth: A === "full",
+      narrowWidth: A === "narrow"
     },
-    /* @__PURE__ */ e.createElement(H, null, /* @__PURE__ */ e.createElement(H.Section, null, /* @__PURE__ */ e.createElement(g, { gap: "400" }, L && /* @__PURE__ */ e.createElement(
-      Q,
+    /* @__PURE__ */ e.createElement(W, null, /* @__PURE__ */ e.createElement(W.Section, null, /* @__PURE__ */ e.createElement(d, { gap: "400" }, Y && /* @__PURE__ */ e.createElement(
+      J,
       {
         tone: "success",
-        title: u.SubscribeSuccessTitle,
+        title: s.SubscribeSuccessTitle,
         onDismiss: () => {
-          I(!1), window.history.replaceState({}, document.title, window.location.pathname);
+          E(!1), window.history.replaceState({}, document.title, window.location.pathname);
         }
       },
-      u.SubscribeSuccessBody
-    ), M.map((a, y) => {
-      var b;
-      const E = ((b = a.discounts) == null ? void 0 : b.length) > 0 ? a.discounts.reduce(
-        (x, X) => x.discountedAmount < X.discountedAmount ? x : X
+      s.SubscribeSuccessBody
+    ), h.map((a, x) => {
+      var B;
+      const k = ((B = a.discounts) == null ? void 0 : B.length) > 0 ? a.discounts.reduce(
+        (F, z) => F.discountedAmount < z.discountedAmount ? F : z
       ) : null;
-      return /* @__PURE__ */ e.createElement(G, { key: `plan-${y}` }, /* @__PURE__ */ e.createElement(Y, null, /* @__PURE__ */ e.createElement(Y.Cell, { columnSpan: { xs: 6, sm: 6, md: 3, lg: 6, xl: 12 } }, /* @__PURE__ */ e.createElement(g, { gap: "400" }, /* @__PURE__ */ e.createElement(g, { gap: "200" }, q({ plan: a, discount: E }), V({ plan: a, discount: E })), /* @__PURE__ */ e.createElement(A, null, l({ plan: a, discount: E })))), /* @__PURE__ */ e.createElement(Y.Cell, { columnSpan: { xs: 6, sm: 6, md: 3, lg: 6, xl: 12 } }, c({ plan: a, discount: E }))));
-    }), (h == null ? void 0 : h.length) > 0 && /* @__PURE__ */ e.createElement(ee, { borderColor: "border" }), (h == null ? void 0 : h.length) > 0 && /* @__PURE__ */ e.createElement(g, { gap: "300" }, /* @__PURE__ */ e.createElement(A, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(m, { variant: "headingMd" }, u.CustomPlans)), /* @__PURE__ */ e.createElement(Y, null, h.map((a, y) => {
-      var b;
-      const E = ((b = a.discounts) == null ? void 0 : b.length) > 0 ? a.discounts.reduce(
-        (x, X) => x.discountedAmount < X.discountedAmount ? x : X
+      return /* @__PURE__ */ e.createElement(K, { key: `plan-${x}` }, /* @__PURE__ */ e.createElement(q, null, /* @__PURE__ */ e.createElement(q.Cell, { columnSpan: { xs: 6, sm: 6, md: 3, lg: 6, xl: 12 } }, /* @__PURE__ */ e.createElement(d, { gap: "400" }, /* @__PURE__ */ e.createElement(d, { gap: "200" }, ee({ plan: a, discount: k }), ne({ plan: a, discount: k })), /* @__PURE__ */ e.createElement(C, null, ae({ plan: a, discount: k })))), /* @__PURE__ */ e.createElement(q.Cell, { columnSpan: { xs: 6, sm: 6, md: 3, lg: 6, xl: 12 } }, te({ plan: a, discount: k }))));
+    }), (L == null ? void 0 : L.length) > 0 && /* @__PURE__ */ e.createElement(Q, { borderColor: "border" }), (L == null ? void 0 : L.length) > 0 && /* @__PURE__ */ e.createElement(d, { gap: "300" }, /* @__PURE__ */ e.createElement(C, { paddingInline: { xs: 400, sm: 0 } }, /* @__PURE__ */ e.createElement(o, { variant: "headingMd" }, s.CustomPlans)), /* @__PURE__ */ e.createElement(q, null, L.map((a, x) => {
+      var B;
+      const k = ((B = a.discounts) == null ? void 0 : B.length) > 0 ? a.discounts.reduce(
+        (F, z) => F.discountedAmount < z.discountedAmount ? F : z
       ) : null;
-      return /* @__PURE__ */ e.createElement(Y.Cell, { key: `custom-plan-${y}`, columnSpan: columnSpan() }, /* @__PURE__ */ e.createElement(G, null, /* @__PURE__ */ e.createElement(g, { gap: "400" }, q({ plan: a, discount: E }), V({ plan: a, discount: E }), l({ plan: a, discount: E }), c({ plan: a, discount: E }))));
+      return /* @__PURE__ */ e.createElement(q.Cell, { key: `custom-plan-${x}`, columnSpan: columnSpan() }, /* @__PURE__ */ e.createElement(K, null, /* @__PURE__ */ e.createElement(d, { gap: "400" }, ee({ plan: a, discount: k }), ne({ plan: a, discount: k }), ae({ plan: a, discount: k }), te({ plan: a, discount: k }))));
     }))))))
   );
 };
 export {
-  Le as HighlightedPlanCards,
-  ne as HorizontalPlanCard,
-  Pe as HorizontalPlanCards,
-  u as Labels,
-  Ae as MantleProvider,
-  ye as PlanFeaturesSection,
-  d as PlanInterval,
-  he as PlanPricingSection,
-  ge as PlanTitleSection,
-  Ye as VerticalPlanCards,
-  te as featureEnabled,
-  Ce as featureSort,
-  j as intervalLabel,
-  de as intervalLabelLong,
-  Ee as intervalLabelShort,
+  Re as HighlightedPlanCards,
+  De as HorizontalPlanCard,
+  Te as HorizontalPlanCards,
+  s as Labels,
+  xe as MantleProvider,
+  N as PlanAvailability,
+  _ as PlanCardStack,
+  I as PlanCardType,
+  Ae as PlanFeaturesSection,
+  u as PlanInterval,
+  ke as PlanPricingSection,
+  Pe as PlanTitleSection,
+  $e as VerticalPlanCards,
+  ce as customButtonLabel,
+  re as featureEnabled,
+  Fe as featureSort,
+  be as highestDiscount,
+  X as intervalLabel,
+  ye as intervalLabelLong,
+  he as intervalLabelShort,
+  le as isRecommendedPlan,
   O as money,
-  we as useMantle
+  Be as useMantle
 };

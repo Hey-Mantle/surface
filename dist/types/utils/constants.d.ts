@@ -1,6 +1,13 @@
 export namespace PlanInterval {
-    let ANNUAL: string;
-    let EVERY_30_DAYS: string;
+    let Annual: string;
+    let Every30Days: string;
+}
+export namespace PlanAvailability {
+    let Public: string;
+    let CustomerTag: string;
+    let ShopifyPlan: string;
+    let Customer: string;
+    let Hidden: string;
 }
 export namespace Labels {
     let Back: string;

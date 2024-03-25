@@ -1,4 +1,4 @@
-export function HighlightedPlanCards({ customer, plans, onSubscribe, backUrl, showRecommendedBadge, customFieldCta, customFieldPlanRecommended, addSpacingToNonRecommendedPlans, showPlanIntervalToggle, showTrialDaysAsFeature, useShortFormPlanIntervals, pageWidth, showCustomPlans, }: {
+export function HighlightedPlanCards({ customer, plans, onSubscribe, backUrl, showRecommendedBadge, customFieldCta, customFieldPlanRecommended, showPlanIntervalToggle, showTrialDaysAsFeature, useShortFormPlanIntervals, pageWidth, showCustomPlans, }: {
     customer: any;
     plans: any;
     onSubscribe: any;
@@ -6,7 +6,6 @@ export function HighlightedPlanCards({ customer, plans, onSubscribe, backUrl, sh
     showRecommendedBadge?: boolean;
     customFieldCta?: any;
     customFieldPlanRecommended?: string;
-    addSpacingToNonRecommendedPlans?: boolean;
     showPlanIntervalToggle?: boolean;
     showTrialDaysAsFeature?: boolean;
     useShortFormPlanIntervals?: boolean;

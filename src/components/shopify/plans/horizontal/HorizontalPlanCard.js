@@ -128,7 +128,7 @@ export const PlanFeaturesSection = ({ plan, trialDaysAsFeature = false }) => (
  * @param {Plan} props.plan - The Mantle Plan object.
  * @param {Discount} props.discount - The Mantle Discount object.
  * @param {string} [props.buttonLabel] - The label for the button.
- * @param {(plan: Plan) => void} props.onSelectPlan - The callback when the button is clicked.
+ * @param {({ plan: Plan, discount: Discount }) => void} [props.onSelectPlan] - The callback for selecting a plan.
  * @param {boolean} [props.useShortFormPlanIntervals] - Whether to use short form plan intervals.
  * @param {boolean} [props.trialDaysAsFeature] - Whether to show the trial days as a feature.
  * @param {boolean} [props.isActivePlan] - Whether the plan is the active plan.
@@ -157,7 +157,11 @@ export const HorizontalPlanCard = ({
         size="large"
         variant={isRecommendedPlan ? "primary" : "secondary"}
         onClick={() => {
-          onSelectPlan(plan);
+          if (onSelectPlan) {
+            onSelectPlan({ plan, discount });
+          } else {
+            console.log("No onSelectPlan callback provided");
+          }
         }}
         disabled={isActivePlan}
       >

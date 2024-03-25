@@ -14,7 +14,10 @@ export function HighlightedPlanCard({ plan, discount, buttonLabel, onSelectPlan,
     plan: Plan;
     discount: Discount;
     buttonLabel?: string;
-    onSelectPlan: (plan: Plan) => void;
+    onSelectPlan?: ({ plan: Plan, discount: Discount }: {
+        plan: any;
+        discount: any;
+    }) => void;
     useShortFormPlanIntervals?: boolean;
     trialDaysAsFeature?: boolean;
     expanded?: boolean;

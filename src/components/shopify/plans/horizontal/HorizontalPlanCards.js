@@ -6,13 +6,11 @@ import {
   Button,
   ButtonGroup,
   Divider,
-  Grid,
   Layout,
   Page,
   Text,
 } from "@shopify/polaris";
 import { Labels, PlanAvailability, PlanInterval } from "../../../../utils";
-import { HorizontalPlanCard } from "./HorizontalPlanCard";
 import { PlanCardStack, PlanCardType } from "../PlanCardStack";
 
 export const HorizontalPlanCards = ({
