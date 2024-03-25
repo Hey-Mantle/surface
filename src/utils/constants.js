@@ -3,6 +3,14 @@ export const PlanInterval = {
   EVERY_30_DAYS: "EVERY_30_DAYS",
 };
 
+export const PlanAvailability = {
+  Public: "public",
+  CustomerTag: "customerTag",
+  ShopifyPlan: "shopifyPlan",
+  Customer: "customer",
+  Hidden: "hidden",
+};
+
 export const Labels = {
   Back: "Back",
   CurrentPlan: "Current plan",

@@ -150,7 +150,7 @@ export const HighlightedPlanCard = ({
   isActivePlan = false,
   isRecommendedPlan = false,
   isCustomPlan = false,
-  showRecommendedPlanBadge = false,
+  showRecommendedPlanBadge = true,
 }) => {
   return (
     <Box position="relative" minHeight="100%">

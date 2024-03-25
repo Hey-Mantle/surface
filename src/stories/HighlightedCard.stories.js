@@ -18,7 +18,7 @@ export default {
     showPlanIntervalToggle: true,
     showTrialDaysAsFeature: true,
     useShortFormPlanIntervals: true,
-    addSpacingToNonRecommendedPlans: true,
+    addSpacingToNonRecommendedPlans: false,
     customFieldCta: null,
     customFieldPlanRecommended: "Recommended",
     showCustomPlans: false,

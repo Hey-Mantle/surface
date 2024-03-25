@@ -1,22 +1,17 @@
 import React, { useState } from "react";
-import { CheckIcon, PlusIcon } from "@shopify/polaris-icons";
 import {
-  Badge,
   Banner,
   Box,
   BlockStack,
   Button,
   ButtonGroup,
-  Card,
   Divider,
   Grid,
-  InlineStack,
-  Icon,
   Layout,
   Page,
   Text,
 } from "@shopify/polaris";
-import { Labels, PlanInterval, intervalLabel, money } from "../../../../utils";
+import { Labels, PlanInterval } from "../../../../utils";
 import { HighlightedPlanCard } from "./HighlightedPlanCard";
 
 export const HighlightedPlanCards = ({
@@ -27,7 +22,7 @@ export const HighlightedPlanCards = ({
   showRecommendedBadge = true, // boolean
   customFieldCta = null, // string: value of the custom plan field to use as the CTA. e.g. "cta"
   customFieldPlanRecommended = "Recommended", // string: value of the custom plan field to use as the recommended badge
-  addSpacingToNonRecommendedPlans = true, // boolean
+  addSpacingToNonRecommendedPlans = false, // boolean
   showPlanIntervalToggle = true, // boolean
   showTrialDaysAsFeature = true, // boolean
   useShortFormPlanIntervals = true, // boolean: e.g. show "$ / mo" instead of "$ / month"
