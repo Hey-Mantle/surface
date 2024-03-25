@@ -100,7 +100,7 @@ export const MantleProvider = ({
         plans,
         loading,
         error,
-        client: mantleClient,
+        mantleClient,
         sendUsageEvent,
         subscribe,
         cancelSubscription,
