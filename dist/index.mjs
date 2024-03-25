@@ -204,7 +204,7 @@ const se = ie(), ge = ({ feature: t, count: n = 0 }) => (t == null ? void 0 : t.
         plans: S,
         loading: f,
         error: P,
-        client: l,
+        mantleClient: l,
         sendUsageEvent: v,
         subscribe: T,
         cancelSubscription: D,
