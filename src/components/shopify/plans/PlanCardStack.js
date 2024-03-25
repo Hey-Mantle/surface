@@ -41,7 +41,7 @@ export const PlanCardType = {
  * @param {Object} props
  * @param {Array<Plan>} props.plans - An array of plans to display
  * @param {Customer} props.customer - The current Mantle customer object
- * @param {(plan: Plan) => void} props.onSelectPlan - A callback function to handle the plan selection process
+ * @param {({ plan: Plan, discount: Discount }) => void} [props.onSelectPlan] - The callback for selecting a plan.
  * @param {"EVERY_30_DAYS"|"ANNUAL"} [props.planInterval] - The interval to filter the plans by, defaults to all plans
  * @param {PlanCardType} [props.cardType=PlanCardType.Horizontal] - The type of plan card to display
  * @param {boolean} [props.trialDaysAsFeature=true] - Whether to show the trial days as a feature in the feature list

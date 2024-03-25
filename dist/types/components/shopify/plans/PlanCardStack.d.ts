@@ -10,7 +10,10 @@ export namespace PlanCardType {
 export function PlanCardStack({ plans, customer, onSelectPlan, planInterval, cardType, trialDaysAsFeature, useShortFormPlanIntervals, keyForRecommended, keyForCustomButtonLabel, showRecommendedPlanBadge, applyDiscount, }: {
     plans: Array<Plan>;
     customer: Customer;
-    onSelectPlan: (plan: Plan) => void;
+    onSelectPlan?: ({ plan: Plan, discount: Discount }: {
+        plan: any;
+        discount: any;
+    }) => void;
     planInterval?: "EVERY_30_DAYS" | "ANNUAL";
     cardType?: PlanCardType;
     trialDaysAsFeature?: boolean;

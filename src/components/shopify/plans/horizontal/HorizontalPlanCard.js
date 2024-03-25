@@ -10,7 +10,7 @@ import { Labels, intervalLabel, money } from "../../../../utils";
 
 /**
  * Title section component for HoritzontalPlanCard.
- * @param {object} props
+ * @param {Object} props
  * @param {Plan} props.plan - The Mantle Plan object.
  * @param {boolean} [props.isRecommendedPlan] - Whether the plan is recommended.
  * @returns {JSX.Element}
@@ -27,7 +27,7 @@ export const PlanTitleSection = ({ plan, isRecommendedPlan = false }) => (
 
 /**
  * Pricing section component for HoritzontalPlanCard.
- * @param {object} props
+ * @param {Object} props
  * @param {Plan} props.plan - The Mantle Plan object.
  * @param {Discount} props.discount - The Mantle Discount object.
  * @param {boolean} [props.useShortFormPlanIntervals] - Whether to use short form plan intervals.
@@ -80,7 +80,7 @@ export const PlanPricingSection = ({ plan, discount, useShortFormPlanIntervals =
 
 /**
  * Features section component for HoritzontalPlanCard.
- * @param {object} props
+ * @param {Object} props
  * @param {Plan} props.plan - The Mantle Plan object.
  * @param {boolean} [props.trialDaysAsFeature] - Whether to show the trial days as a feature.
  * @returns {JSX.Element}
