@@ -55,7 +55,7 @@ export const PlanCardStack = ({
   plans,
   customer,
   onSelectPlan,
-  interval = PlanInterval.Every30Days,
+  showIntervalToggle: _showIntervalToggle = true,
   cardType = PlanCardType.Horizontal,
   trialDaysAsFeature = true,
   useShortFormPlanIntervals = true,
