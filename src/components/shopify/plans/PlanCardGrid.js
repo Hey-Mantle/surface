@@ -1,4 +1,9 @@
-import { PlanAvailability, PlanInterval, customButtonLabel, isRecommendedPlan } from "../../../utils";
+import {
+  PlanAvailability,
+  PlanInterval,
+  customButtonLabel,
+  isRecommendedPlan,
+} from "../../../utils";
 import { columnCount, columnSpan } from "../../../utils/views";
 import { HighlightedPlanCard } from "./highlighted/HighlightedPlanCard";
 import { HorizontalPlanCard } from "./horizontal";
@@ -50,7 +55,7 @@ export const PlanCardStack = ({
   plans,
   customer,
   onSelectPlan,
-  showIntervalToggle: _showIntervalToggle = true,
+  interval = PlanInterval.Every30Days,
   cardType = PlanCardType.Horizontal,
   trialDaysAsFeature = true,
   useShortFormPlanIntervals = true,
@@ -59,14 +64,14 @@ export const PlanCardStack = ({
 }) => {
   const showIntervalToggle =
     _showIntervalToggle &&
-    plans.some((plan) => plan.interval === PlanInterval.ANNUAL) &&
-    plans.some((plan) => plan.interval === PlanInterval.EVERY_30_DAYS);
+    plans.some((plan) => plan.interval === PlanInterval.Annual) &&
+    plans.some((plan) => plan.interval === PlanInterval.Every30Days);
 
   const activeSubscription = customer?.subscription?.active ? customer.subscription : undefined;
   const currentPlan = activeSubscription?.plan;
 
   const [interval, setInterval] = useState(
-    currentPlan?.interval || (showIntervalToggle ? PlanInterval.ANNUAL : PlanInterval.EVERY_30_DAYS)
+    currentPlan?.interval || (showIntervalToggle ? PlanInterval.Annual : PlanInterval.Every30Days)
   );
 
   const plansToShow = showIntervalToggle

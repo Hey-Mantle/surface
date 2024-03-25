@@ -31,15 +31,15 @@ export const HorizontalPlanCards = ({
   const subscription = customer?.subscription;
   const urlParams = new URLSearchParams(window.location.search);
   const hasMonthlyAndYearlyPlans =
-    plans.some((plan) => plan.interval === PlanInterval.ANNUAL) &&
-    plans.some((plan) => plan.interval === PlanInterval.EVERY_30_DAYS);
+    plans.some((plan) => plan.interval === PlanInterval.Annual) &&
+    plans.some((plan) => plan.interval === PlanInterval.Every30Days);
   const currentPlan = plans.find((plan) => plan.id === subscription?.plan.id);
   const [planInterval, setPlanInterval] = useState(
     currentPlan
       ? currentPlan.interval
       : hasMonthlyAndYearlyPlans
-      ? PlanInterval.ANNUAL
-      : PlanInterval.EVERY_30_DAYS
+      ? PlanInterval.Annual
+      : PlanInterval.Every30Days
   );
   const availablePlans = plans.filter(
     (plan) => plan.availability !== "customerTag" && plan.availability !== "customer"
@@ -73,14 +73,14 @@ export const HorizontalPlanCards = ({
         showPlanIntervalToggle && hasMonthlyAndYearlyPlans ? (
           <ButtonGroup variant="segmented">
             <Button
-              pressed={planInterval === PlanInterval.EVERY_30_DAYS}
-              onClick={() => setPlanInterval(PlanInterval.EVERY_30_DAYS)}
+              pressed={planInterval === PlanInterval.Every30Days}
+              onClick={() => setPlanInterval(PlanInterval.Every30Days)}
             >
               {Labels.Monthly}
             </Button>
             <Button
-              pressed={planInterval === PlanInterval.ANNUAL}
-              onClick={() => setPlanInterval(PlanInterval.ANNUAL)}
+              pressed={planInterval === PlanInterval.Annual}
+              onClick={() => setPlanInterval(PlanInterval.Annual)}
             >
               {Labels.Yearly}
             </Button>

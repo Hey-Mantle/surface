@@ -1,6 +1,6 @@
 export const PlanInterval = {
-  ANNUAL: "ANNUAL",
-  EVERY_30_DAYS: "EVERY_30_DAYS",
+  Annual: "ANNUAL",
+  Every30Days: "EVERY_30_DAYS",
 };
 
 export const PlanAvailability = {

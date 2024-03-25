@@ -5,11 +5,11 @@ import { Labels, PlanInterval } from "./constants";
  * @param {"ANNUAL"|"EVERY_30_DAYS"} interval - The interval to generate a label for
  * @returns {string} "year" | "month" - The long label for the interval
  */
-export const intervalLabelLong = (interval = PlanInterval.EVERY_30_DAYS) => {
+export const intervalLabelLong = (interval = PlanInterval.Every30Days) => {
   switch (interval) {
-    case PlanInterval.ANNUAL:
+    case PlanInterval.Annual:
       return "year";
-    case PlanInterval.EVERY_30_DAYS:
+    case PlanInterval.Every30Days:
     default:
       return "month";
   }
@@ -20,11 +20,11 @@ export const intervalLabelLong = (interval = PlanInterval.EVERY_30_DAYS) => {
  * @param {"ANNUAL"|"EVERY_30_DAYS"} interval - The interval to generate a label for
  * @returns {string} "yr" | "mo" - The short label for the interval
  */
-export const intervalLabelShort = (interval = PlanInterval.EVERY_30_DAYS) => {
+export const intervalLabelShort = (interval = PlanInterval.Every30Days) => {
   switch (interval) {
-    case PlanInterval.ANNUAL:
+    case PlanInterval.Annual:
       return "yr";
-    case PlanInterval.EVERY_30_DAYS:
+    case PlanInterval.Every30Days:
     default:
       return "mo";
   }
@@ -38,7 +38,7 @@ export const intervalLabelShort = (interval = PlanInterval.EVERY_30_DAYS) => {
  * @returns {string} "year" | "month" | "yr" | "mo" - The label for the interval
  */
 export const intervalLabel = ({
-  interval = PlanInterval.EVERY_30_DAYS,
+  interval = PlanInterval.Every30Days,
   useShortFormPlanIntervals = true,
 }) => {
   return useShortFormPlanIntervals ? intervalLabelShort(interval) : intervalLabelLong(interval);
